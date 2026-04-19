@@ -1,0 +1,5 @@
+Guys meke mentioned karala tiyena widihata follow krnna
+
+1) Go to your service and open it in terminal
+2) Run this command "python -m venv venv"
+3) After that run this command "pip install -r requirements.txt"
