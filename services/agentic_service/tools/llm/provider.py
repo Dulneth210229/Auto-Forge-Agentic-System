@@ -15,7 +15,7 @@ class LLMProvider(ABC):
 class OllamaProvider(LLMProvider):
     def __init__(self):
         self.base_url = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
-        self.model = os.getenv("OLLAMA_MODEL", "llama3")
+        self.model = os.getenv("OLLAMA_MODEL", "qwen3-coder")
 
     async def generate(self, prompt: str) -> str:
         async with httpx.AsyncClient(timeout=120) as client:
