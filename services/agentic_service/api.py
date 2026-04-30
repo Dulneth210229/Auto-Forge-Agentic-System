@@ -51,3 +51,13 @@ async def generate_srs(payload: dict):
     )
 
     return result
+@app.post("/requirements/srs/revise")
+async def revise_srs(payload: dict):
+    result = await requirement_agent.revise_srs(
+        run_id=payload["run_id"],
+        current_version=payload["current_version"],
+        new_version=payload["new_version"],
+        change_request=payload["change_request"]
+    )
+
+    return result
