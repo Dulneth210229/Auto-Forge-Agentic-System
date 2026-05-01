@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from agents.requirement_agent.agent import RequirementAgent
+from agents.coder_agent.agent import CoderAgent
 from tools.llm.provider import OllamaProvider
 
 app = FastAPI(
@@ -8,6 +9,7 @@ app = FastAPI(
 )
 
 requirement_agent = RequirementAgent(llm_provider=OllamaProvider())
+coder_agent = CoderAgent()
 
 
 @app.get("/health")
@@ -60,4 +62,13 @@ async def revise_srs(payload: dict):
         change_request=payload["change_request"]
     )
 
+    return result
+
+@app.post("/coder/generate")
+def generate_code(payload: dict):
+    result = coder_agent.generate_code(
+        run_id=payload.get("run_id", "RUN-0001"),
+        srs_version=payload.get("srs_version", "v1"),
+        code_version=payload.get("code_version", "v1")
+    )
     return result
