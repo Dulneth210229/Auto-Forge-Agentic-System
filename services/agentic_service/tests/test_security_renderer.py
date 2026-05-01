@@ -3,7 +3,8 @@ from agents.security_agent.schemas import (
     SecuritySummary,
     SecurityFinding,
     TraceabilityLink,
-    SecurityMetrics
+    SecurityMetrics,
+    SecurityGateDecision
 )
 from agents.security_agent.renderer import render_security_report_markdown
 
@@ -30,6 +31,13 @@ def test_security_report_markdown_rendering():
         )
     )
 
+    security_gate = SecurityGateDecision(
+        status="FAIL",
+        reason="Security gate failed because Critical vulnerabilities were detected.",
+        policy="FAIL if one or more Critical findings exist.",
+        blocking_findings=["SEC-001"]
+    )
+
     report = SecurityReport(
         run_id="RUN-0001",
         stage="security",
@@ -44,6 +52,7 @@ def test_security_report_markdown_rendering():
         findings=[finding],
         dependency_vulnerabilities=[],
         llm_findings=[],
+        security_gate=security_gate,
         metrics=SecurityMetrics(
             coverage=1.0,
             confidence=0.8
@@ -57,3 +66,9 @@ def test_security_report_markdown_rendering():
     assert "SEC-001" in markdown
     assert "Use of eval() detected" in markdown
     assert "Critical" in markdown
+
+    # Step 10 security gate assertions
+    assert "Security Gate Decision" in markdown
+    assert "FAIL" in markdown
+    assert "Critical vulnerabilities" in markdown
+    assert "SEC-001" in markdown

@@ -18,7 +18,25 @@
 
 ---
 
-## 2. Findings
+## 2. Security Gate Decision
+
+| Field | Value |
+|---|---|
+| Status | **{{ report.security_gate.status }}** |
+| Reason | {{ report.security_gate.reason }} |
+| Policy | {{ report.security_gate.policy }} |
+
+{% if report.security_gate.blocking_findings %}
+### Blocking Findings
+
+{% for finding_id in report.security_gate.blocking_findings %}
+- {{ finding_id }}
+{% endfor %}
+{% else %}
+No blocking findings.
+{% endif %}
+
+## 3. Findings
 
 {% if report.findings %}
 | ID | Title | Severity | File | Line | Method | CWE |
@@ -32,7 +50,7 @@ No security findings were detected.
 
 ---
 
-## 3. Finding Details
+## 4. Finding Details
 
 {% for finding in report.findings %}
 ### {{ finding.finding_id }} — {{ finding.title }}
@@ -58,7 +76,7 @@ No security findings were detected.
 
 ---
 
-## 4. Dependency Vulnerabilities
+## 5. Dependency Vulnerabilities
 
 {% if report.dependency_vulnerabilities %}
 | Vulnerability ID | Package | Version | Ecosystem | Severity | CWE | Source |
@@ -88,7 +106,7 @@ No dependency vulnerabilities were detected.
 
 ---
 
-## 5. LLM Findings
+## 6. LLM Findings
 
 {% if report.llm_findings %}
 | Title | Severity | File | Line | CWE | Confidence |
@@ -120,7 +138,7 @@ No LLM-assisted findings were recorded.
 
 ---
 
-## 6. Metrics
+## 7. Metrics
 
 | Metric | Value |
 |---|---:|
@@ -129,7 +147,7 @@ No LLM-assisted findings were recorded.
 
 ---
 
-## 7. Notes
+## 8. Notes
 
 This is the initial Security Agent skeleton report.  
 Real AST scanning, dependency scanning, and LLM-assisted secure code review will be added in later steps.

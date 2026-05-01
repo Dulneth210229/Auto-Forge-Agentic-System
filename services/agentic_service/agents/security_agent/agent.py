@@ -6,12 +6,14 @@ from agents.security_agent.schemas import (
     SecurityReport,
     SecuritySummary,
     SecurityFinding,
-    SecurityMetrics
+    SecurityMetrics,
+    SecurityGateDecision
 )
 from agents.security_agent.renderer import render_security_report_markdown
 from agents.security_agent.scanners.multi_scanner import MultiSecurityScanner
 from agents.security_agent.llm_reviewer import LLMSecureCodeReviewer
 from agents.security_agent.deduplicator import FindingDeduplicator
+from agents.security_agent.gate import SecurityGateEvaluator
 from tools.llm.provider import OllamaProvider
 
 
@@ -27,12 +29,14 @@ class SecurityAgent:
     - Dependency scanning with OSV.dev
     - Ollama LLM-assisted secure code review
     - Finding deduplication
+    - Security gate decision
     """
 
     def __init__(self, output_root: str = "outputs"):
         self.output_root = Path(output_root)
         self.scanner = MultiSecurityScanner()
         self.deduplicator = FindingDeduplicator()
+        self.gate_evaluator = SecurityGateEvaluator()
 
     def run(
         self,
@@ -43,12 +47,6 @@ class SecurityAgent:
     ) -> dict:
         """
         Runs the Security Agent.
-
-        If enable_llm=True:
-        - Runs Ollama LLM-assisted secure code review after rule-based scanning.
-
-        Step 9:
-        - Deduplicates overlapping AST/Dependency/LLM findings before reporting.
         """
 
         llm_findings_data: List[Dict[str, Any]] = []
@@ -72,7 +70,9 @@ class SecurityAgent:
             dependency_vulnerabilities = []
 
         before_dedup_count = len(findings)
+
         findings = self.deduplicator.deduplicate(findings)
+
         after_dedup_count = len(findings)
 
         deduplication_summary = self.deduplicator.summarize_deduplication(
@@ -80,12 +80,15 @@ class SecurityAgent:
             after_count=after_dedup_count
         )
 
+        security_gate = self.gate_evaluator.evaluate(findings)
+
         report = self.create_report(
             run_id=run_id,
             version=version,
             findings=findings,
             dependency_vulnerabilities=dependency_vulnerabilities,
-            llm_findings=llm_findings_data
+            llm_findings=llm_findings_data,
+            security_gate=security_gate
         )
 
         output_dir = self.output_root / "runs" / run_id / "security" / version
@@ -117,7 +120,8 @@ class SecurityAgent:
             "summary": report.summary.model_dump(),
             "dependency_vulnerabilities_count": len(dependency_vulnerabilities),
             "llm_findings_count": len(llm_findings_data),
-            "deduplication": deduplication_summary
+            "deduplication": deduplication_summary,
+            "security_gate": report.security_gate.model_dump()
         }
 
     def create_report(
@@ -126,7 +130,8 @@ class SecurityAgent:
         version: str,
         findings: List[SecurityFinding],
         dependency_vulnerabilities: List[Dict[str, Any]],
-        llm_findings: List[Dict[str, Any]]
+        llm_findings: List[Dict[str, Any]],
+        security_gate: SecurityGateDecision
     ) -> SecurityReport:
         """
         Creates the final SecurityReport object from all scanner findings.
@@ -147,6 +152,7 @@ class SecurityAgent:
             findings=findings,
             dependency_vulnerabilities=dependency_vulnerabilities,
             llm_findings=llm_findings,
+            security_gate=security_gate,
             metrics=metrics
         )
 

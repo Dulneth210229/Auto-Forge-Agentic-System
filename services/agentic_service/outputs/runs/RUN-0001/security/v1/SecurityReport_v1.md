@@ -18,7 +18,24 @@
 
 ---
 
-## 2. Findings
+## 2. Security Gate Decision
+
+| Field | Value |
+|---|---|
+| Status | **FAIL** |
+| Reason | Security gate failed because Critical vulnerabilities were detected. |
+| Policy | FAIL if one or more Critical findings exist. |
+
+### Blocking Findings
+
+- SEC-002
+- SEC-010
+- SEC-025
+- SEC-026
+- SEC-027
+- SEC-028
+
+## 3. Findings
 
 | ID | Title | Severity | File | Line | Method | CWE |
 |---|---|---|---|---:|---|---|
@@ -59,7 +76,7 @@
 
 ---
 
-## 3. Finding Details
+## 4. Finding Details
 
 ### SEC-001 — Hardcoded secret detected
 
@@ -710,7 +727,7 @@ Review GHSA-j8r2-6x86-q33q in OSV.dev and upgrade the affected dependency to a p
 
 ---
 
-## 4. Dependency Vulnerabilities
+## 5. Dependency Vulnerabilities
 
 | Vulnerability ID | Package | Version | Ecosystem | Severity | CWE | Source |
 |---|---|---|---|---|---|---|
@@ -1098,95 +1115,111 @@ Review PYSEC-2023-74 in OSV.dev and upgrade the affected dependency to a patched
 
 ---
 
-## 5. LLM Findings
+## 6. LLM Findings
 
 | Title | Severity | File | Line | CWE | Confidence |
 |---|---|---|---:|---|---:|
-| Weak Hash Generation | Medium | sample_ecommerce_app\app.py | 0 | CWE327 | 1.0 |
-| Arbitrary Code Execution via eval() | Critical | sample_ecommerce_app\app.py | 0 | CWE94 | 1.0 |
-| Unrestricted File Execution via subprocess | High | sample_ecommerce_app\app.py | 0 | CWE78 | 1.0 |
-| Insecure Storage of Auth Token | High | sample_ecommerce_app\frontend.js | 0 | CWE-522: Inadequate Encryption of Sensitive Data | 1.0 |
-| Untrusted Code Execution via Eval | Critical | sample_ecommerce_app\frontend.js | 9 | CWE-94: Use of Untrusted Data in Security Decision | 1.0 |
+| Insecure Use of Eval | High | sample_ecommerce_app\app.py | 0 | CWE-94 | 1.0 |
+| Unvalidated User Input in Search Endpoint | Medium | sample_ecommerce_app\app.py | 16 | CWE-89 | 1.0 |
+| Weak Hashing Function Used in 'hash' Endpoint | Low | sample_ecommerce_app\app.py | 23 | CWE-327 | 1.0 |
+| Unvalidated Shell Command in 'run' Endpoint | Critical | sample_ecommerce_app\app.py | 31 | CWE-78 | 1.0 |
+| Insecure Token Storage | High | sample_ecommerce_app\frontend.js | 0 | CWE-356 | 1.0 |
+| Code Injection Risk (eval()) | Critical | sample_ecommerce_app\frontend.js | 11 | CWE-94 | 1.0 |
 
-### Weak Hash Generation
+### Insecure Use of Eval
+
+**Severity:** High  
+**File:** sample_ecommerce_app\app.py  
+**Line:** 0  
+**CWE:** CWE-94  
+**Confidence:** 1.0  
+**Source:** ollama
+
+**Description:**  
+The 'dangerous_code' endpoint uses eval() to execute user-provided code. This allows an attacker to inject arbitrary Python code, potentially leading to remote code execution.
+
+**Recommendation:**  
+Replace eval() with a safer alternative like AST-based parsing or whitelist-approved functions.
+
+### Unvalidated User Input in Search Endpoint
 
 **Severity:** Medium  
 **File:** sample_ecommerce_app\app.py  
-**Line:** 0  
-**CWE:** CWE327  
+**Line:** 16  
+**CWE:** CWE-89  
 **Confidence:** 1.0  
 **Source:** ollama
 
 **Description:**  
-The weak_hash endpoint uses MD5 for hashing, which is considered insecure. It's recommended to use a more secure hashing algorithm such as bcrypt or Argon2.
+The 'search_product' endpoint constructs an SQL query by concatenating user-provided input without proper validation. This allows an attacker to inject arbitrary SQL code, potentially leading to SQL injection.
 
 **Recommendation:**  
-Replace MD5 with a more secure hashing algorithm
+Use parameterized queries or ORMs to prevent SQL injection attacks.
 
-### Arbitrary Code Execution via eval()
+### Weak Hashing Function Used in 'hash' Endpoint
+
+**Severity:** Low  
+**File:** sample_ecommerce_app\app.py  
+**Line:** 23  
+**CWE:** CWE-327  
+**Confidence:** 1.0  
+**Source:** ollama
+
+**Description:**  
+The 'weak_hash' endpoint uses the MD5 algorithm for hashing, which is considered insecure due to its fast computation and potential collisions.
+
+**Recommendation:**  
+Use a more secure hashing function like bcrypt or Argon2.
+
+### Unvalidated Shell Command in 'run' Endpoint
 
 **Severity:** Critical  
 **File:** sample_ecommerce_app\app.py  
-**Line:** 0  
-**CWE:** CWE94  
+**Line:** 31  
+**CWE:** CWE-78  
 **Confidence:** 1.0  
 **Source:** ollama
 
 **Description:**  
-The dangerous_code endpoint uses eval() to execute user-inputted code, which allows for arbitrary code execution and poses a significant security risk.
+The 'run_command' endpoint executes shell commands without proper validation, allowing an attacker to execute arbitrary system commands.
 
 **Recommendation:**  
-Do not use eval() or other similar functions that allow executing untrusted input. Instead, consider using a safer alternative like ast.literal_eval() for safe evaluation of literals.
+Do not allow users to execute arbitrary system commands. Instead, use a whitelist of approved commands or implement strict input validation.
 
-### Unrestricted File Execution via subprocess
-
-**Severity:** High  
-**File:** sample_ecommerce_app\app.py  
-**Line:** 0  
-**CWE:** CWE78  
-**Confidence:** 1.0  
-**Source:** ollama
-
-**Description:**  
-The run_command endpoint uses subprocess to execute commands from user-inputted strings. This allows an attacker to execute arbitrary system commands, which can lead to privilege escalation or file manipulation.
-
-**Recommendation:**  
-Validate the input command string and prevent any malicious execution by whitelisting allowed commands, using a secure shell, or avoiding direct system calls altogether.
-
-### Insecure Storage of Auth Token
+### Insecure Token Storage
 
 **Severity:** High  
 **File:** sample_ecommerce_app\frontend.js  
 **Line:** 0  
-**CWE:** CWE-522: Inadequate Encryption of Sensitive Data  
+**CWE:** CWE-356  
 **Confidence:** 1.0  
 **Source:** ollama
 
 **Description:**  
-Auth token is stored in local storage without proper encryption, allowing unauthorized access to the token.
+The token is stored in local storage with the key 'auth_token' which can be easily accessed by an attacker. Storing sensitive data like tokens should be done securely.
 
 **Recommendation:**  
-Use a secure storage mechanism such as encrypted local storage or a secure session cookie.
+Use a secure token storage mechanism, such as the browser's secure storage or a secure library
 
-### Untrusted Code Execution via Eval
+### Code Injection Risk (eval())
 
 **Severity:** Critical  
 **File:** sample_ecommerce_app\frontend.js  
-**Line:** 9  
-**CWE:** CWE-94: Use of Untrusted Data in Security Decision  
+**Line:** 11  
+**CWE:** CWE-94  
 **Confidence:** 1.0  
 **Source:** ollama
 
 **Description:**  
-The 'runDangerous' function uses eval to execute untrusted input, allowing arbitrary code execution and potential remote code injection attacks.
+The 'runDangerous' function uses eval() to execute code, which can lead to code injection attacks. This function should be avoided or replaced with a safer alternative.
 
 **Recommendation:**  
-Avoid using eval or similar functions that execute untrusted code. Instead, use a safer parsing mechanism or sandboxed execution environment.
+Remove the 'runDangerous' function or replace it with a safer alternative, such as JSON.parse() or a safe eval implementation
 
 
 ---
 
-## 6. Metrics
+## 7. Metrics
 
 | Metric | Value |
 |---|---:|
@@ -1195,7 +1228,7 @@ Avoid using eval or similar functions that execute untrusted code. Instead, use 
 
 ---
 
-## 7. Notes
+## 8. Notes
 
 This is the initial Security Agent skeleton report.  
 Real AST scanning, dependency scanning, and LLM-assisted secure code review will be added in later steps.
