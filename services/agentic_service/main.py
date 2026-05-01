@@ -13,7 +13,8 @@ def run_security(args):
 
     result = agent.run(
         run_id=args.run_id,
-        version=args.version
+        version=args.version,
+        target_path=args.target
     )
 
     print(json.dumps(result, indent=2))
@@ -24,7 +25,7 @@ def main():
     Main CLI entry point for AutoForge.
 
     Current supported command:
-    python main.py run-security --run-id RUN-0001
+    python main.py run-security --run-id RUN-0001 --target ./sample_ecommerce_app
     """
 
     parser = argparse.ArgumentParser(
@@ -48,6 +49,12 @@ def main():
         "--version",
         default="v1",
         help="Artifact version, for example v1, v2, v3"
+    )
+
+    security_parser.add_argument(
+        "--target",
+        default=None,
+        help="Target source code folder to scan"
     )
 
     security_parser.set_defaults(func=run_security)
