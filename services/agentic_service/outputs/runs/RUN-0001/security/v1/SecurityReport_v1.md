@@ -11,10 +11,10 @@
 | Severity | Count |
 |---|---:|
 | Critical | 2 |
-| High | 11 |
-| Medium | 8 |
+| High | 14 |
+| Medium | 11 |
 | Low | 0 |
-| **Total** | **21** |
+| **Total** | **27** |
 
 ---
 
@@ -43,6 +43,12 @@
 | SEC-019 | Debug configuration enabled | Medium | sample_ecommerce_app\.env | 1 | AST | CWE-489 |
 | SEC-020 | Wildcard CORS setting in configuration | Medium | sample_ecommerce_app\.env | 4 | AST | CWE-942 |
 | SEC-021 | Docker container runs as root | Medium | sample_ecommerce_app\Dockerfile | 7 | AST | CWE-250 |
+| SEC-022 | Vulnerable dependency detected: lodash | High | sample_ecommerce_app\package.json | 0 | Dependency | CWE-400 |
+| SEC-023 | Vulnerable dependency detected: axios | High | sample_ecommerce_app\package.json | 0 | Dependency | CWE-918 |
+| SEC-024 | Vulnerable dependency detected: express | Medium | sample_ecommerce_app\package.json | 0 | Dependency | CWE-937 |
+| SEC-025 | Vulnerable dependency detected: django | High | sample_ecommerce_app\requirements.txt | 1 | Dependency | CWE-937 |
+| SEC-026 | Vulnerable dependency detected: flask | Medium | sample_ecommerce_app\requirements.txt | 2 | Dependency | CWE-937 |
+| SEC-027 | Vulnerable dependency detected: requests | Medium | sample_ecommerce_app\requirements.txt | 3 | Dependency | CWE-937 |
 
 ---
 
@@ -447,12 +453,206 @@ Create and use a non-root user inside the Docker image.
 - API: 
 - Module: 
 
+### SEC-022 — Vulnerable dependency detected: lodash
+
+**Severity:** High  
+**Detection Method:** Dependency  
+**File:** sample_ecommerce_app\package.json  
+**Line:** 0  
+**CWE:** CWE-400
+
+**Description:**  
+Known vulnerable lodash version detected. Package: lodash, Version: 4.17.15, Ecosystem: npm.
+
+**Recommendation:**  
+Upgrade lodash to version 4.17.21 or later.
+
+**Traceability:**  
+- Requirement ID: 
+- API: 
+- Module: 
+
+### SEC-023 — Vulnerable dependency detected: axios
+
+**Severity:** High  
+**Detection Method:** Dependency  
+**File:** sample_ecommerce_app\package.json  
+**Line:** 0  
+**CWE:** CWE-918
+
+**Description:**  
+Known vulnerable axios version detected. Package: axios, Version: 0.18.0, Ecosystem: npm.
+
+**Recommendation:**  
+Upgrade axios to a newer secure version.
+
+**Traceability:**  
+- Requirement ID: 
+- API: 
+- Module: 
+
+### SEC-024 — Vulnerable dependency detected: express
+
+**Severity:** Medium  
+**Detection Method:** Dependency  
+**File:** sample_ecommerce_app\package.json  
+**Line:** 0  
+**CWE:** CWE-937
+
+**Description:**  
+Outdated Express version detected. Package: express, Version: 4.16.0, Ecosystem: npm.
+
+**Recommendation:**  
+Upgrade Express to a newer secure version.
+
+**Traceability:**  
+- Requirement ID: 
+- API: 
+- Module: 
+
+### SEC-025 — Vulnerable dependency detected: django
+
+**Severity:** High  
+**Detection Method:** Dependency  
+**File:** sample_ecommerce_app\requirements.txt  
+**Line:** 1  
+**CWE:** CWE-937
+
+**Description:**  
+Known vulnerable Django version detected. Package: django, Version: 1.2, Ecosystem: PyPI.
+
+**Recommendation:**  
+Upgrade Django to a currently supported secure version.
+
+**Traceability:**  
+- Requirement ID: 
+- API: 
+- Module: 
+
+### SEC-026 — Vulnerable dependency detected: flask
+
+**Severity:** Medium  
+**Detection Method:** Dependency  
+**File:** sample_ecommerce_app\requirements.txt  
+**Line:** 2  
+**CWE:** CWE-937
+
+**Description:**  
+Outdated Flask version detected. Package: flask, Version: 0.12, Ecosystem: PyPI.
+
+**Recommendation:**  
+Upgrade Flask to the latest stable version.
+
+**Traceability:**  
+- Requirement ID: 
+- API: 
+- Module: 
+
+### SEC-027 — Vulnerable dependency detected: requests
+
+**Severity:** Medium  
+**Detection Method:** Dependency  
+**File:** sample_ecommerce_app\requirements.txt  
+**Line:** 3  
+**CWE:** CWE-937
+
+**Description:**  
+Outdated requests package detected. Package: requests, Version: 2.19.0, Ecosystem: PyPI.
+
+**Recommendation:**  
+Upgrade requests to a newer secure version.
+
+**Traceability:**  
+- Requirement ID: 
+- API: 
+- Module: 
+
 
 ---
 
 ## 4. Dependency Vulnerabilities
 
-No dependency vulnerabilities were recorded in this skeleton version.
+| Package | Version | Ecosystem | Severity | Source |
+|---|---|---|---|---|
+| lodash | 4.17.15 | npm | High | mock |
+| axios | 0.18.0 | npm | High | mock |
+| express | 4.16.0 | npm | Medium | mock |
+| django | 1.2 | PyPI | High | mock |
+| flask | 0.12 | PyPI | Medium | mock |
+| requests | 2.19.0 | PyPI | Medium | mock |
+
+### lodash 4.17.15
+
+**Ecosystem:** npm  
+**Severity:** High  
+**Source:** mock
+
+**Description:**  
+Known vulnerable lodash version detected.
+
+**Recommendation:**  
+Upgrade lodash to version 4.17.21 or later.
+
+### axios 0.18.0
+
+**Ecosystem:** npm  
+**Severity:** High  
+**Source:** mock
+
+**Description:**  
+Known vulnerable axios version detected.
+
+**Recommendation:**  
+Upgrade axios to a newer secure version.
+
+### express 4.16.0
+
+**Ecosystem:** npm  
+**Severity:** Medium  
+**Source:** mock
+
+**Description:**  
+Outdated Express version detected.
+
+**Recommendation:**  
+Upgrade Express to a newer secure version.
+
+### django 1.2
+
+**Ecosystem:** PyPI  
+**Severity:** High  
+**Source:** mock
+
+**Description:**  
+Known vulnerable Django version detected.
+
+**Recommendation:**  
+Upgrade Django to a currently supported secure version.
+
+### flask 0.12
+
+**Ecosystem:** PyPI  
+**Severity:** Medium  
+**Source:** mock
+
+**Description:**  
+Outdated Flask version detected.
+
+**Recommendation:**  
+Upgrade Flask to the latest stable version.
+
+### requests 2.19.0
+
+**Ecosystem:** PyPI  
+**Severity:** Medium  
+**Source:** mock
+
+**Description:**  
+Outdated requests package detected.
+
+**Recommendation:**  
+Upgrade requests to a newer secure version.
+
 
 ---
 

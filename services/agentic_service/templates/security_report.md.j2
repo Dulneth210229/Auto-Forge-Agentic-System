@@ -61,11 +61,28 @@ No security findings were detected.
 ## 4. Dependency Vulnerabilities
 
 {% if report.dependency_vulnerabilities %}
+| Package | Version | Ecosystem | Severity | Source |
+|---|---|---|---|---|
 {% for vuln in report.dependency_vulnerabilities %}
-- {{ vuln }}
+| {{ vuln.package }} | {{ vuln.version }} | {{ vuln.ecosystem }} | {{ vuln.severity }} | {{ vuln.source }} |
+{% endfor %}
+
+{% for vuln in report.dependency_vulnerabilities %}
+### {{ vuln.package }} {{ vuln.version }}
+
+**Ecosystem:** {{ vuln.ecosystem }}  
+**Severity:** {{ vuln.severity }}  
+**Source:** {{ vuln.source }}
+
+**Description:**  
+{{ vuln.description }}
+
+**Recommendation:**  
+{{ vuln.recommendation }}
+
 {% endfor %}
 {% else %}
-No dependency vulnerabilities were recorded in this skeleton version.
+No dependency vulnerabilities were detected.
 {% endif %}
 
 ---

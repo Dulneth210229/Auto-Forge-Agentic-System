@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from typing import List
+from typing import List, Dict, Any
 
 from agents.security_agent.schemas import (
     SecurityReport,
@@ -23,11 +23,10 @@ class SecurityAgent:
     - Added Python AST scanning.
 
     Step 4:
-    - Extended to multi-scanner architecture:
-      - Python AST Scanner
-      - JavaScript/TypeScript Scanner
-      - Secret Scanner
-      - Config Scanner
+    - Extended to multi-scanner architecture.
+
+    Step 5:
+    - Added dependency scanning for requirements.txt and package.json.
     """
 
     def __init__(self, output_root: str = "outputs"):
@@ -42,23 +41,20 @@ class SecurityAgent:
     ) -> dict:
         """
         Runs the Security Agent.
-
-        If target_path is provided:
-            - Scan real project source code.
-
-        If target_path is not provided:
-            - Generate an empty report.
         """
 
         if target_path:
             findings = self.scanner.scan_directory(target_path)
+            dependency_vulnerabilities = self.scanner.get_dependency_vulnerabilities()
         else:
             findings = []
+            dependency_vulnerabilities = []
 
         report = self.create_report(
             run_id=run_id,
             version=version,
-            findings=findings
+            findings=findings,
+            dependency_vulnerabilities=dependency_vulnerabilities
         )
 
         output_dir = self.output_root / "runs" / run_id / "security" / version
@@ -86,14 +82,16 @@ class SecurityAgent:
             "target_path": target_path,
             "json_path": str(json_path),
             "markdown_path": str(md_path),
-            "summary": report.summary.model_dump()
+            "summary": report.summary.model_dump(),
+            "dependency_vulnerabilities_count": len(dependency_vulnerabilities)
         }
 
     def create_report(
         self,
         run_id: str,
         version: str,
-        findings: List[SecurityFinding]
+        findings: List[SecurityFinding],
+        dependency_vulnerabilities: List[Dict[str, Any]]
     ) -> SecurityReport:
         """
         Creates the final SecurityReport object from scanner findings.
@@ -112,7 +110,7 @@ class SecurityAgent:
             version=version,
             summary=summary,
             findings=findings,
-            dependency_vulnerabilities=[],
+            dependency_vulnerabilities=dependency_vulnerabilities,
             llm_findings=[],
             metrics=metrics
         )

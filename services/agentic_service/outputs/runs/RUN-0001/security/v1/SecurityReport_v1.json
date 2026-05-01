@@ -3,10 +3,10 @@
   "stage": "security",
   "version": "v1",
   "summary": {
-    "total_findings": 21,
+    "total_findings": 27,
     "critical": 2,
-    "high": 11,
-    "medium": 8,
+    "high": 14,
+    "medium": 11,
     "low": 0
   },
   "findings": [
@@ -345,9 +345,160 @@
         "api": "",
         "module": ""
       }
+    },
+    {
+      "finding_id": "SEC-022",
+      "title": "Vulnerable dependency detected: lodash",
+      "description": "Known vulnerable lodash version detected. Package: lodash, Version: 4.17.15, Ecosystem: npm.",
+      "severity": "High",
+      "file": "sample_ecommerce_app\\package.json",
+      "line": 0,
+      "detection_method": "Dependency",
+      "cwe": "CWE-400",
+      "recommendation": "Upgrade lodash to version 4.17.21 or later.",
+      "traceability": {
+        "requirement_id": "",
+        "api": "",
+        "module": ""
+      }
+    },
+    {
+      "finding_id": "SEC-023",
+      "title": "Vulnerable dependency detected: axios",
+      "description": "Known vulnerable axios version detected. Package: axios, Version: 0.18.0, Ecosystem: npm.",
+      "severity": "High",
+      "file": "sample_ecommerce_app\\package.json",
+      "line": 0,
+      "detection_method": "Dependency",
+      "cwe": "CWE-918",
+      "recommendation": "Upgrade axios to a newer secure version.",
+      "traceability": {
+        "requirement_id": "",
+        "api": "",
+        "module": ""
+      }
+    },
+    {
+      "finding_id": "SEC-024",
+      "title": "Vulnerable dependency detected: express",
+      "description": "Outdated Express version detected. Package: express, Version: 4.16.0, Ecosystem: npm.",
+      "severity": "Medium",
+      "file": "sample_ecommerce_app\\package.json",
+      "line": 0,
+      "detection_method": "Dependency",
+      "cwe": "CWE-937",
+      "recommendation": "Upgrade Express to a newer secure version.",
+      "traceability": {
+        "requirement_id": "",
+        "api": "",
+        "module": ""
+      }
+    },
+    {
+      "finding_id": "SEC-025",
+      "title": "Vulnerable dependency detected: django",
+      "description": "Known vulnerable Django version detected. Package: django, Version: 1.2, Ecosystem: PyPI.",
+      "severity": "High",
+      "file": "sample_ecommerce_app\\requirements.txt",
+      "line": 1,
+      "detection_method": "Dependency",
+      "cwe": "CWE-937",
+      "recommendation": "Upgrade Django to a currently supported secure version.",
+      "traceability": {
+        "requirement_id": "",
+        "api": "",
+        "module": ""
+      }
+    },
+    {
+      "finding_id": "SEC-026",
+      "title": "Vulnerable dependency detected: flask",
+      "description": "Outdated Flask version detected. Package: flask, Version: 0.12, Ecosystem: PyPI.",
+      "severity": "Medium",
+      "file": "sample_ecommerce_app\\requirements.txt",
+      "line": 2,
+      "detection_method": "Dependency",
+      "cwe": "CWE-937",
+      "recommendation": "Upgrade Flask to the latest stable version.",
+      "traceability": {
+        "requirement_id": "",
+        "api": "",
+        "module": ""
+      }
+    },
+    {
+      "finding_id": "SEC-027",
+      "title": "Vulnerable dependency detected: requests",
+      "description": "Outdated requests package detected. Package: requests, Version: 2.19.0, Ecosystem: PyPI.",
+      "severity": "Medium",
+      "file": "sample_ecommerce_app\\requirements.txt",
+      "line": 3,
+      "detection_method": "Dependency",
+      "cwe": "CWE-937",
+      "recommendation": "Upgrade requests to a newer secure version.",
+      "traceability": {
+        "requirement_id": "",
+        "api": "",
+        "module": ""
+      }
     }
   ],
-  "dependency_vulnerabilities": [],
+  "dependency_vulnerabilities": [
+    {
+      "package": "lodash",
+      "version": "4.17.15",
+      "ecosystem": "npm",
+      "severity": "High",
+      "description": "Known vulnerable lodash version detected.",
+      "recommendation": "Upgrade lodash to version 4.17.21 or later.",
+      "source": "mock"
+    },
+    {
+      "package": "axios",
+      "version": "0.18.0",
+      "ecosystem": "npm",
+      "severity": "High",
+      "description": "Known vulnerable axios version detected.",
+      "recommendation": "Upgrade axios to a newer secure version.",
+      "source": "mock"
+    },
+    {
+      "package": "express",
+      "version": "4.16.0",
+      "ecosystem": "npm",
+      "severity": "Medium",
+      "description": "Outdated Express version detected.",
+      "recommendation": "Upgrade Express to a newer secure version.",
+      "source": "mock"
+    },
+    {
+      "package": "django",
+      "version": "1.2",
+      "ecosystem": "PyPI",
+      "severity": "High",
+      "description": "Known vulnerable Django version detected.",
+      "recommendation": "Upgrade Django to a currently supported secure version.",
+      "source": "mock"
+    },
+    {
+      "package": "flask",
+      "version": "0.12",
+      "ecosystem": "PyPI",
+      "severity": "Medium",
+      "description": "Outdated Flask version detected.",
+      "recommendation": "Upgrade Flask to the latest stable version.",
+      "source": "mock"
+    },
+    {
+      "package": "requests",
+      "version": "2.19.0",
+      "ecosystem": "PyPI",
+      "severity": "Medium",
+      "description": "Outdated requests package detected.",
+      "recommendation": "Upgrade requests to a newer secure version.",
+      "source": "mock"
+    }
+  ],
   "llm_findings": [],
   "metrics": {
     "coverage": 1.0,
