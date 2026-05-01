@@ -3,11 +3,13 @@ from pydantic import BaseModel, Field
 
 
 class DomainWorkflowStep(BaseModel):
+    """Single step within a domain workflow."""
     step_number: int
     description: str
 
 
 class DomainWorkflow(BaseModel):
+    """Business workflow with steps, exceptions, and related requirements."""
     id: str = Field(..., description="Workflow ID such as WF-001")
     name: str
     actor: str
@@ -19,6 +21,7 @@ class DomainWorkflow(BaseModel):
 
 
 class BusinessRule(BaseModel):
+    """Normalized business rule with a category, rationale, and traceability."""
     id: str = Field(..., description="Business rule ID such as BR-001")
     category: Literal[
         "Catalog",
@@ -39,6 +42,7 @@ class BusinessRule(BaseModel):
 
 
 class DomainException(BaseModel):
+    """Exception scenario and expected system response."""
     id: str = Field(..., description="Exception ID such as EX-001")
     scenario: str
     system_response: str
@@ -46,6 +50,7 @@ class DomainException(BaseModel):
 
 
 class DomainEntity(BaseModel):
+    """Key domain entity and its important fields."""
     id: str = Field(..., description="Entity ID such as DE-001")
     name: str
     description: str
@@ -53,12 +58,14 @@ class DomainEntity(BaseModel):
 
 
 class DomainPolicy(BaseModel):
+    """Policy statement that governs domain behavior."""
     id: str = Field(..., description="Policy ID such as DP-001")
     name: str
     description: str
 
 
 class DomainPack(BaseModel):
+    """Top-level bundle of extracted domain knowledge for a project."""
     project_name: str
     version: str
     domain: Literal["E-commerce"]
