@@ -3,10 +3,10 @@
   "stage": "security",
   "version": "v1",
   "summary": {
-    "total_findings": 9,
-    "critical": 1,
-    "high": 5,
-    "medium": 3,
+    "total_findings": 21,
+    "critical": 2,
+    "high": 11,
+    "medium": 8,
     "low": 0
   },
   "findings": [
@@ -93,13 +93,13 @@
     {
       "finding_id": "SEC-006",
       "title": "Weak hashing algorithm detected",
-      "description": "The code uses hashlib.md5, which is considered weak for security-sensitive hashing.",
+      "description": "The code uses hashlib.md5, which is weak for security-sensitive hashing.",
       "severity": "Medium",
       "file": "sample_ecommerce_app\\app.py",
       "line": 37,
       "detection_method": "AST",
       "cwe": "CWE-327",
-      "recommendation": "Use SHA-256, SHA-512, bcrypt, Argon2, or another secure hashing approach depending on the use case.",
+      "recommendation": "Use SHA-256, bcrypt, Argon2, or another secure hashing approach.",
       "traceability": {
         "requirement_id": "",
         "api": "",
@@ -148,6 +148,198 @@
       "detection_method": "AST",
       "cwe": "CWE-89",
       "recommendation": "Use parameterized queries or an ORM query builder.",
+      "traceability": {
+        "requirement_id": "",
+        "api": "",
+        "module": ""
+      }
+    },
+    {
+      "finding_id": "SEC-010",
+      "title": "Direct innerHTML assignment detected",
+      "description": "Assigning content to innerHTML may introduce XSS if the content includes user input.",
+      "severity": "High",
+      "file": "sample_ecommerce_app\\frontend.js",
+      "line": 2,
+      "detection_method": "AST",
+      "cwe": "CWE-79",
+      "recommendation": "Use textContent or sanitize HTML before assigning it to the DOM.",
+      "traceability": {
+        "requirement_id": "",
+        "api": "",
+        "module": ""
+      }
+    },
+    {
+      "finding_id": "SEC-011",
+      "title": "Sensitive token stored in localStorage",
+      "description": "Storing authentication tokens in localStorage can increase exposure to XSS attacks.",
+      "severity": "Medium",
+      "file": "sample_ecommerce_app\\frontend.js",
+      "line": 6,
+      "detection_method": "AST",
+      "cwe": "CWE-922",
+      "recommendation": "Prefer secure, HttpOnly cookies for sensitive session tokens.",
+      "traceability": {
+        "requirement_id": "",
+        "api": "",
+        "module": ""
+      }
+    },
+    {
+      "finding_id": "SEC-012",
+      "title": "JavaScript eval() usage detected",
+      "description": "JavaScript eval() can execute arbitrary code and may lead to code injection.",
+      "severity": "Critical",
+      "file": "sample_ecommerce_app\\frontend.js",
+      "line": 10,
+      "detection_method": "AST",
+      "cwe": "CWE-95",
+      "recommendation": "Avoid eval(). Use safe parsing or explicit logic instead.",
+      "traceability": {
+        "requirement_id": "",
+        "api": "",
+        "module": ""
+      }
+    },
+    {
+      "finding_id": "SEC-013",
+      "title": "Sensitive data logged to console",
+      "description": "Logging secrets or tokens can expose sensitive information in logs.",
+      "severity": "Medium",
+      "file": "sample_ecommerce_app\\frontend.js",
+      "line": 13,
+      "detection_method": "AST",
+      "cwe": "CWE-532",
+      "recommendation": "Remove sensitive data from logs.",
+      "traceability": {
+        "requirement_id": "",
+        "api": "",
+        "module": ""
+      }
+    },
+    {
+      "finding_id": "SEC-014",
+      "title": "Possible hardcoded secret detected",
+      "description": "A possible hardcoded secret, password, token, or API key was found in a text-based file.",
+      "severity": "High",
+      "file": "sample_ecommerce_app\\.env",
+      "line": 2,
+      "detection_method": "AST",
+      "cwe": "CWE-798",
+      "recommendation": "Move secrets to environment variables or a dedicated secret manager.",
+      "traceability": {
+        "requirement_id": "",
+        "api": "",
+        "module": ""
+      }
+    },
+    {
+      "finding_id": "SEC-015",
+      "title": "Possible hardcoded secret detected",
+      "description": "A possible hardcoded secret, password, token, or API key was found in a text-based file.",
+      "severity": "High",
+      "file": "sample_ecommerce_app\\.env",
+      "line": 3,
+      "detection_method": "AST",
+      "cwe": "CWE-798",
+      "recommendation": "Move secrets to environment variables or a dedicated secret manager.",
+      "traceability": {
+        "requirement_id": "",
+        "api": "",
+        "module": ""
+      }
+    },
+    {
+      "finding_id": "SEC-016",
+      "title": "Possible hardcoded secret detected",
+      "description": "A possible hardcoded secret, password, token, or API key was found in a text-based file.",
+      "severity": "High",
+      "file": "sample_ecommerce_app\\app.py",
+      "line": 8,
+      "detection_method": "AST",
+      "cwe": "CWE-798",
+      "recommendation": "Move secrets to environment variables or a dedicated secret manager.",
+      "traceability": {
+        "requirement_id": "",
+        "api": "",
+        "module": ""
+      }
+    },
+    {
+      "finding_id": "SEC-017",
+      "title": "Possible hardcoded secret detected",
+      "description": "A possible hardcoded secret, password, token, or API key was found in a text-based file.",
+      "severity": "High",
+      "file": "sample_ecommerce_app\\app.py",
+      "line": 9,
+      "detection_method": "AST",
+      "cwe": "CWE-798",
+      "recommendation": "Move secrets to environment variables or a dedicated secret manager.",
+      "traceability": {
+        "requirement_id": "",
+        "api": "",
+        "module": ""
+      }
+    },
+    {
+      "finding_id": "SEC-018",
+      "title": "Possible hardcoded secret detected",
+      "description": "A possible hardcoded secret, password, token, or API key was found in a text-based file.",
+      "severity": "High",
+      "file": "sample_ecommerce_app\\app.py",
+      "line": 10,
+      "detection_method": "AST",
+      "cwe": "CWE-798",
+      "recommendation": "Move secrets to environment variables or a dedicated secret manager.",
+      "traceability": {
+        "requirement_id": "",
+        "api": "",
+        "module": ""
+      }
+    },
+    {
+      "finding_id": "SEC-019",
+      "title": "Debug configuration enabled",
+      "description": "Debug mode appears to be enabled in a configuration file.",
+      "severity": "Medium",
+      "file": "sample_ecommerce_app\\.env",
+      "line": 1,
+      "detection_method": "AST",
+      "cwe": "CWE-489",
+      "recommendation": "Disable debug mode in production configurations.",
+      "traceability": {
+        "requirement_id": "",
+        "api": "",
+        "module": ""
+      }
+    },
+    {
+      "finding_id": "SEC-020",
+      "title": "Wildcard CORS setting in configuration",
+      "description": "Wildcard CORS configuration may allow untrusted origins to interact with the application.",
+      "severity": "Medium",
+      "file": "sample_ecommerce_app\\.env",
+      "line": 4,
+      "detection_method": "AST",
+      "cwe": "CWE-942",
+      "recommendation": "Restrict CORS settings to trusted frontend origins.",
+      "traceability": {
+        "requirement_id": "",
+        "api": "",
+        "module": ""
+      }
+    },
+    {
+      "finding_id": "SEC-021",
+      "title": "Docker container runs as root",
+      "description": "Running containers as root increases the impact of container compromise.",
+      "severity": "Medium",
+      "file": "sample_ecommerce_app\\Dockerfile",
+      "line": 7,
+      "detection_method": "AST",
+      "cwe": "CWE-250",
+      "recommendation": "Create and use a non-root user inside the Docker image.",
       "traceability": {
         "requirement_id": "",
         "api": "",

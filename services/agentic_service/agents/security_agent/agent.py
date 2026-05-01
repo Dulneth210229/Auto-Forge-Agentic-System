@@ -9,7 +9,7 @@ from agents.security_agent.schemas import (
     SecurityMetrics
 )
 from agents.security_agent.renderer import render_security_report_markdown
-from agents.security_agent.scanner import ASTSecurityScanner
+from agents.security_agent.scanners.multi_scanner import MultiSecurityScanner
 
 
 class SecurityAgent:
@@ -20,14 +20,19 @@ class SecurityAgent:
     - Generated dummy security reports.
 
     Step 2:
-    - Scans Python source code using AST static analysis.
-    - Generates SecurityReport_v1.json.
-    - Generates SecurityReport_v1.md.
+    - Added Python AST scanning.
+
+    Step 4:
+    - Extended to multi-scanner architecture:
+      - Python AST Scanner
+      - JavaScript/TypeScript Scanner
+      - Secret Scanner
+      - Config Scanner
     """
 
     def __init__(self, output_root: str = "outputs"):
         self.output_root = Path(output_root)
-        self.ast_scanner = ASTSecurityScanner()
+        self.scanner = MultiSecurityScanner()
 
     def run(
         self,
@@ -39,14 +44,14 @@ class SecurityAgent:
         Runs the Security Agent.
 
         If target_path is provided:
-            - Scan real Python source code.
+            - Scan real project source code.
 
         If target_path is not provided:
-            - Generate empty report.
+            - Generate an empty report.
         """
 
         if target_path:
-            findings = self.ast_scanner.scan_directory(target_path)
+            findings = self.scanner.scan_directory(target_path)
         else:
             findings = []
 
