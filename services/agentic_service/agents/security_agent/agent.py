@@ -14,6 +14,7 @@ from agents.security_agent.scanners.multi_scanner import MultiSecurityScanner
 from agents.security_agent.llm_reviewer import LLMSecureCodeReviewer
 from agents.security_agent.deduplicator import FindingDeduplicator
 from agents.security_agent.gate import SecurityGateEvaluator
+from agents.security_agent.traceability import SecurityTraceabilityMapper
 from tools.llm.provider import OllamaProvider
 
 
@@ -30,6 +31,7 @@ class SecurityAgent:
     - Ollama LLM-assisted secure code review
     - Finding deduplication
     - Security gate decision
+    - Traceability mapping
     """
 
     def __init__(self, output_root: str = "outputs"):
@@ -37,6 +39,7 @@ class SecurityAgent:
         self.scanner = MultiSecurityScanner()
         self.deduplicator = FindingDeduplicator()
         self.gate_evaluator = SecurityGateEvaluator()
+        self.traceability_mapper = SecurityTraceabilityMapper()
 
     def run(
         self,
@@ -80,6 +83,10 @@ class SecurityAgent:
             after_count=after_dedup_count
         )
 
+        # Step 11:
+        # Add requirement/API/module traceability after deduplication.
+        findings = self.traceability_mapper.map_findings(findings)
+
         security_gate = self.gate_evaluator.evaluate(findings)
 
         report = self.create_report(
@@ -121,7 +128,8 @@ class SecurityAgent:
             "dependency_vulnerabilities_count": len(dependency_vulnerabilities),
             "llm_findings_count": len(llm_findings_data),
             "deduplication": deduplication_summary,
-            "security_gate": report.security_gate.model_dump()
+            "security_gate": report.security_gate.model_dump(),
+            "traceability_mapped": True
         }
 
     def create_report(

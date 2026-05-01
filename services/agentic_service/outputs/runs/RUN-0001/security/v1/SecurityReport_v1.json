@@ -21,9 +21,9 @@
       "cwe": "CWE-798",
       "recommendation": "Move secrets to environment variables or a secure secret manager.",
       "traceability": {
-        "requirement_id": "",
-        "api": "",
-        "module": ""
+        "requirement_id": "FR-006",
+        "api": "/admin",
+        "module": "admin"
       }
     },
     {
@@ -37,9 +37,9 @@
       "cwe": "CWE-95",
       "recommendation": "Avoid eval(). Use safe parsing or explicit logic instead.",
       "traceability": {
-        "requirement_id": "",
-        "api": "",
-        "module": ""
+        "requirement_id": "NFR-SEC-001",
+        "api": "N/A",
+        "module": "general_security"
       }
     },
     {
@@ -53,9 +53,9 @@
       "cwe": "CWE-78",
       "recommendation": "Use shell=False and pass command arguments as a list.",
       "traceability": {
-        "requirement_id": "",
-        "api": "",
-        "module": ""
+        "requirement_id": "NFR-SEC-001",
+        "api": "N/A",
+        "module": "general_security"
       }
     },
     {
@@ -69,9 +69,9 @@
       "cwe": "CWE-327",
       "recommendation": "Use SHA-256, bcrypt, Argon2, or another secure hashing approach.",
       "traceability": {
-        "requirement_id": "",
-        "api": "",
-        "module": ""
+        "requirement_id": "NFR-SEC-001",
+        "api": "N/A",
+        "module": "general_security"
       }
     },
     {
@@ -85,9 +85,9 @@
       "cwe": "CWE-489",
       "recommendation": "Disable debug mode in production environments.",
       "traceability": {
-        "requirement_id": "",
-        "api": "",
-        "module": ""
+        "requirement_id": "FR-001",
+        "api": "/products",
+        "module": "catalog"
       }
     },
     {
@@ -101,9 +101,9 @@
       "cwe": "CWE-942",
       "recommendation": "Restrict CORS origins to trusted frontend domains.",
       "traceability": {
-        "requirement_id": "",
-        "api": "",
-        "module": ""
+        "requirement_id": "NFR-001",
+        "api": "N/A",
+        "module": "security_configuration"
       }
     },
     {
@@ -117,9 +117,9 @@
       "cwe": "CWE-89",
       "recommendation": "Use parameterized queries or an ORM query builder.",
       "traceability": {
-        "requirement_id": "",
-        "api": "",
-        "module": ""
+        "requirement_id": "NFR-SEC-001",
+        "api": "N/A",
+        "module": "general_security"
       }
     },
     {
@@ -133,9 +133,9 @@
       "cwe": "CWE-79",
       "recommendation": "Use textContent or sanitize HTML before assigning it to the DOM.",
       "traceability": {
-        "requirement_id": "",
-        "api": "",
-        "module": ""
+        "requirement_id": "FR-007",
+        "api": "UI",
+        "module": "frontend"
       }
     },
     {
@@ -149,9 +149,9 @@
       "cwe": "CWE-922",
       "recommendation": "Prefer secure, HttpOnly cookies for sensitive session tokens.",
       "traceability": {
-        "requirement_id": "",
-        "api": "",
-        "module": ""
+        "requirement_id": "FR-005",
+        "api": "/auth",
+        "module": "authentication"
       }
     },
     {
@@ -165,9 +165,9 @@
       "cwe": "CWE-95",
       "recommendation": "Avoid eval(). Use safe parsing or explicit logic instead.",
       "traceability": {
-        "requirement_id": "",
-        "api": "",
-        "module": ""
+        "requirement_id": "FR-007",
+        "api": "UI",
+        "module": "frontend"
       }
     },
     {
@@ -181,9 +181,9 @@
       "cwe": "CWE-798",
       "recommendation": "Move secrets to environment variables or a dedicated secret manager.",
       "traceability": {
-        "requirement_id": "",
-        "api": "",
-        "module": ""
+        "requirement_id": "FR-005",
+        "api": "/auth",
+        "module": "authentication"
       }
     },
     {
@@ -197,9 +197,9 @@
       "cwe": "CWE-489",
       "recommendation": "Disable debug mode in production configurations.",
       "traceability": {
-        "requirement_id": "",
-        "api": "",
-        "module": ""
+        "requirement_id": "FR-001",
+        "api": "/products",
+        "module": "catalog"
       }
     },
     {
@@ -213,9 +213,9 @@
       "cwe": "CWE-942",
       "recommendation": "Restrict CORS settings to trusted frontend origins.",
       "traceability": {
-        "requirement_id": "",
-        "api": "",
-        "module": ""
+        "requirement_id": "NFR-001",
+        "api": "N/A",
+        "module": "security_configuration"
       }
     },
     {
@@ -229,9 +229,9 @@
       "cwe": "CWE-250",
       "recommendation": "Create and use a non-root user inside the Docker image.",
       "traceability": {
-        "requirement_id": "",
-        "api": "",
-        "module": ""
+        "requirement_id": "NFR-001",
+        "api": "N/A",
+        "module": "security_configuration"
       }
     },
     {
@@ -245,9 +245,9 @@
       "cwe": "CWE-77",
       "recommendation": "Review GHSA-35jh-r3h4-6jhm in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
       "traceability": {
-        "requirement_id": "",
-        "api": "",
-        "module": ""
+        "requirement_id": "NFR-002",
+        "api": "N/A",
+        "module": "dependency_management"
       }
     },
     {
@@ -261,9 +261,9 @@
       "cwe": "CWE-1321",
       "recommendation": "Review GHSA-p6mc-m468-83gw in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
       "traceability": {
-        "requirement_id": "",
-        "api": "",
-        "module": ""
+        "requirement_id": "NFR-002",
+        "api": "N/A",
+        "module": "dependency_management"
       }
     },
     {
@@ -277,9 +277,9 @@
       "cwe": "CWE-94",
       "recommendation": "Review GHSA-r5fr-rjxr-66jc in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
       "traceability": {
-        "requirement_id": "",
-        "api": "",
-        "module": ""
+        "requirement_id": "NFR-002",
+        "api": "N/A",
+        "module": "dependency_management"
       }
     },
     {
@@ -293,9 +293,9 @@
       "cwe": "CWE-1333",
       "recommendation": "Review GHSA-29mw-wpgm-hmr9 in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
       "traceability": {
-        "requirement_id": "",
-        "api": "",
-        "module": ""
+        "requirement_id": "NFR-002",
+        "api": "N/A",
+        "module": "dependency_management"
       }
     },
     {
@@ -309,9 +309,9 @@
       "cwe": "CWE-20",
       "recommendation": "Review GHSA-42xw-2xvc-qx8m in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
       "traceability": {
-        "requirement_id": "",
-        "api": "",
-        "module": ""
+        "requirement_id": "NFR-002",
+        "api": "N/A",
+        "module": "dependency_management"
       }
     },
     {
@@ -325,9 +325,9 @@
       "cwe": "CWE-754",
       "recommendation": "Review GHSA-43fc-jf86-j433 in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
       "traceability": {
-        "requirement_id": "",
-        "api": "",
-        "module": ""
+        "requirement_id": "NFR-002",
+        "api": "N/A",
+        "module": "dependency_management"
       }
     },
     {
@@ -341,9 +341,9 @@
       "cwe": "CWE-918",
       "recommendation": "Review GHSA-jr5f-v2jv-69x6 in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
       "traceability": {
-        "requirement_id": "",
-        "api": "",
-        "module": ""
+        "requirement_id": "FR-005",
+        "api": "/auth",
+        "module": "authentication"
       }
     },
     {
@@ -357,9 +357,9 @@
       "cwe": "CWE-441",
       "recommendation": "Review GHSA-3p68-rc4w-qgx5 in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
       "traceability": {
-        "requirement_id": "",
-        "api": "",
-        "module": ""
+        "requirement_id": "NFR-002",
+        "api": "N/A",
+        "module": "dependency_management"
       }
     },
     {
@@ -373,9 +373,9 @@
       "cwe": "CWE-1286",
       "recommendation": "Review GHSA-rv95-896h-c2vc in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
       "traceability": {
-        "requirement_id": "",
-        "api": "",
-        "module": ""
+        "requirement_id": "NFR-002",
+        "api": "N/A",
+        "module": "dependency_management"
       }
     },
     {
@@ -389,9 +389,9 @@
       "cwe": "CWE-79",
       "recommendation": "Review GHSA-qw6h-vgh9-j6wx in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
       "traceability": {
-        "requirement_id": "",
-        "api": "",
-        "module": ""
+        "requirement_id": "NFR-002",
+        "api": "N/A",
+        "module": "dependency_management"
       }
     },
     {
@@ -405,9 +405,9 @@
       "cwe": "CWE-79",
       "recommendation": "Review GHSA-78vx-ggch-wghm in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
       "traceability": {
-        "requirement_id": "",
-        "api": "",
-        "module": ""
+        "requirement_id": "NFR-002",
+        "api": "N/A",
+        "module": "dependency_management"
       }
     },
     {
@@ -421,9 +421,9 @@
       "cwe": "CWE-22",
       "recommendation": "Review GHSA-7g9h-c88w-r7h2 in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
       "traceability": {
-        "requirement_id": "",
-        "api": "",
-        "module": ""
+        "requirement_id": "NFR-002",
+        "api": "N/A",
+        "module": "dependency_management"
       }
     },
     {
@@ -437,9 +437,9 @@
       "cwe": "CWE-89",
       "recommendation": "Review GHSA-frmv-pr5f-9mcr in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
       "traceability": {
-        "requirement_id": "",
-        "api": "",
-        "module": ""
+        "requirement_id": "NFR-002",
+        "api": "N/A",
+        "module": "dependency_management"
       }
     },
     {
@@ -453,9 +453,9 @@
       "cwe": "CWE-94",
       "recommendation": "Review GHSA-rvq6-mrpv-m6rm in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
       "traceability": {
-        "requirement_id": "",
-        "api": "",
-        "module": ""
+        "requirement_id": "NFR-002",
+        "api": "N/A",
+        "module": "dependency_management"
       }
     },
     {
@@ -469,9 +469,9 @@
       "cwe": "CWE-20",
       "recommendation": "Review GHSA-562c-5r94-xh97 in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
       "traceability": {
-        "requirement_id": "",
-        "api": "",
-        "module": ""
+        "requirement_id": "NFR-002",
+        "api": "N/A",
+        "module": "dependency_management"
       }
     },
     {
@@ -485,9 +485,9 @@
       "cwe": "CWE-400",
       "recommendation": "Review GHSA-5wv5-4vpf-pj6m in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
       "traceability": {
-        "requirement_id": "",
-        "api": "",
-        "module": ""
+        "requirement_id": "NFR-002",
+        "api": "N/A",
+        "module": "dependency_management"
       }
     },
     {
@@ -501,9 +501,9 @@
       "cwe": "CWE-539",
       "recommendation": "Review GHSA-m2qf-hxjv-5gpq in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
       "traceability": {
-        "requirement_id": "",
-        "api": "",
-        "module": ""
+        "requirement_id": "FR-005",
+        "api": "/auth",
+        "module": "authentication"
       }
     },
     {
@@ -517,9 +517,9 @@
       "cwe": "CWE-937",
       "recommendation": "Review PYSEC-2018-66 in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
       "traceability": {
-        "requirement_id": "",
-        "api": "",
-        "module": ""
+        "requirement_id": "NFR-002",
+        "api": "N/A",
+        "module": "dependency_management"
       }
     },
     {
@@ -533,9 +533,9 @@
       "cwe": "CWE-522",
       "recommendation": "Review GHSA-x84v-xcm2-53pg in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
       "traceability": {
-        "requirement_id": "",
-        "api": "",
-        "module": ""
+        "requirement_id": "FR-005",
+        "api": "/auth",
+        "module": "authentication"
       }
     },
     {
@@ -549,9 +549,9 @@
       "cwe": "CWE-200",
       "recommendation": "Review GHSA-j8r2-6x86-q33q in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
       "traceability": {
-        "requirement_id": "",
-        "api": "",
-        "module": ""
+        "requirement_id": "FR-005",
+        "api": "/auth",
+        "module": "authentication"
       }
     }
   ],
@@ -856,68 +856,57 @@
   ],
   "llm_findings": [
     {
-      "title": "Insecure Use of Eval",
-      "description": "The 'dangerous_code' endpoint uses eval() to execute user-provided code. This allows an attacker to inject arbitrary Python code, potentially leading to remote code execution.",
+      "title": "Insecure Secret Storage",
+      "description": "The SECRET_KEY is hardcoded and easily accessible.",
       "severity": "High",
       "file": "sample_ecommerce_app\\app.py",
       "line": 0,
-      "cwe": "CWE-94",
-      "recommendation": "Replace eval() with a safer alternative like AST-based parsing or whitelist-approved functions.",
+      "cwe": "CWE-312",
+      "recommendation": "Store the secret key securely using a secrets management system or environment variables.",
       "confidence": 1.0,
       "source": "ollama"
     },
     {
-      "title": "Unvalidated User Input in Search Endpoint",
-      "description": "The 'search_product' endpoint constructs an SQL query by concatenating user-provided input without proper validation. This allows an attacker to inject arbitrary SQL code, potentially leading to SQL injection.",
-      "severity": "Medium",
-      "file": "sample_ecommerce_app\\app.py",
-      "line": 16,
-      "cwe": "CWE-89",
-      "recommendation": "Use parameterized queries or ORMs to prevent SQL injection attacks.",
-      "confidence": 1.0,
-      "source": "ollama"
-    },
-    {
-      "title": "Weak Hashing Function Used in 'hash' Endpoint",
-      "description": "The 'weak_hash' endpoint uses the MD5 algorithm for hashing, which is considered insecure due to its fast computation and potential collisions.",
-      "severity": "Low",
-      "file": "sample_ecommerce_app\\app.py",
-      "line": 23,
-      "cwe": "CWE-327",
-      "recommendation": "Use a more secure hashing function like bcrypt or Argon2.",
-      "confidence": 1.0,
-      "source": "ollama"
-    },
-    {
-      "title": "Unvalidated Shell Command in 'run' Endpoint",
-      "description": "The 'run_command' endpoint executes shell commands without proper validation, allowing an attacker to execute arbitrary system commands.",
+      "title": "/danger Endpoint Vulnerable to Code Injection",
+      "description": "The /danger endpoint uses eval() function which can lead to code injection attacks.",
       "severity": "Critical",
       "file": "sample_ecommerce_app\\app.py",
-      "line": 31,
+      "line": 24,
+      "cwe": "CWE-94",
+      "recommendation": "Replace eval() with a safe evaluation method or disable the endpoint altogether.",
+      "confidence": 1.0,
+      "source": "ollama"
+    },
+    {
+      "title": "/run Endpoint Vulnerable to Command Injection",
+      "description": "The /run endpoint uses subprocess.run() function which can lead to command injection attacks.",
+      "severity": "Critical",
+      "file": "sample_ecommerce_app\\app.py",
+      "line": 34,
       "cwe": "CWE-78",
-      "recommendation": "Do not allow users to execute arbitrary system commands. Instead, use a whitelist of approved commands or implement strict input validation.",
+      "recommendation": "Disable the /run endpoint or use a safe method for executing shell commands, such as using os.system() with whitelisted commands.",
       "confidence": 1.0,
       "source": "ollama"
     },
     {
       "title": "Insecure Token Storage",
-      "description": "The token is stored in local storage with the key 'auth_token' which can be easily accessed by an attacker. Storing sensitive data like tokens should be done securely.",
-      "severity": "High",
+      "description": "Storing sensitive data like auth tokens in local storage is not secure.",
+      "severity": "Medium",
       "file": "sample_ecommerce_app\\frontend.js",
       "line": 0,
-      "cwe": "CWE-356",
-      "recommendation": "Use a secure token storage mechanism, such as the browser's secure storage or a secure library",
+      "cwe": "CWE-749",
+      "recommendation": "Use a more secure method to store and manage authentication tokens, such as using a secure token service or encrypting the data.",
       "confidence": 1.0,
       "source": "ollama"
     },
     {
-      "title": "Code Injection Risk (eval())",
-      "description": "The 'runDangerous' function uses eval() to execute code, which can lead to code injection attacks. This function should be avoided or replaced with a safer alternative.",
+      "title": "Arbitrary Code Execution",
+      "description": "The `runDangerous` function uses eval() to execute arbitrary code, which can lead to code injection attacks and arbitrary code execution.",
       "severity": "Critical",
       "file": "sample_ecommerce_app\\frontend.js",
-      "line": 11,
+      "line": 13,
       "cwe": "CWE-94",
-      "recommendation": "Remove the 'runDangerous' function or replace it with a safer alternative, such as JSON.parse() or a safe eval implementation",
+      "recommendation": "Do not use eval() or any other method that allows executing arbitrary code. Instead, consider using a safer evaluation function or parsing the input in a safe way.",
       "confidence": 1.0,
       "source": "ollama"
     }

@@ -93,9 +93,9 @@ The variable 'SECRET_KEY' appears to contain a hardcoded secret.
 Move secrets to environment variables or a secure secret manager.
 
 **Traceability:**  
-- Requirement ID: 
-- API: 
-- Module: 
+- Requirement ID: FR-006
+- API: /admin
+- Module: admin
 
 ### SEC-002 — Use of eval() detected
 
@@ -112,9 +112,9 @@ The eval() function can execute arbitrary code and may lead to remote code execu
 Avoid eval(). Use safe parsing or explicit logic instead.
 
 **Traceability:**  
-- Requirement ID: 
-- API: 
-- Module: 
+- Requirement ID: NFR-SEC-001
+- API: N/A
+- Module: general_security
 
 ### SEC-003 — Unsafe subprocess usage with shell=True
 
@@ -131,9 +131,9 @@ Using subprocess with shell=True may allow command injection.
 Use shell=False and pass command arguments as a list.
 
 **Traceability:**  
-- Requirement ID: 
-- API: 
-- Module: 
+- Requirement ID: NFR-SEC-001
+- API: N/A
+- Module: general_security
 
 ### SEC-004 — Weak hashing algorithm detected
 
@@ -150,9 +150,9 @@ The code uses hashlib.md5, which is weak for security-sensitive hashing.
 Use SHA-256, bcrypt, Argon2, or another secure hashing approach.
 
 **Traceability:**  
-- Requirement ID: 
-- API: 
-- Module: 
+- Requirement ID: NFR-SEC-001
+- API: N/A
+- Module: general_security
 
 ### SEC-005 — Debug mode enabled
 
@@ -169,9 +169,9 @@ Debug mode may expose sensitive stack traces and internal application informatio
 Disable debug mode in production environments.
 
 **Traceability:**  
-- Requirement ID: 
-- API: 
-- Module: 
+- Requirement ID: FR-001
+- API: /products
+- Module: catalog
 
 ### SEC-006 — Insecure CORS wildcard detected
 
@@ -188,9 +188,9 @@ Using wildcard CORS origins may allow untrusted websites to interact with the AP
 Restrict CORS origins to trusted frontend domains.
 
 **Traceability:**  
-- Requirement ID: 
-- API: 
-- Module: 
+- Requirement ID: NFR-001
+- API: N/A
+- Module: security_configuration
 
 ### SEC-007 — Possible raw SQL string formatting
 
@@ -207,9 +207,9 @@ SQL queries built using string formatting or concatenation may cause SQL injecti
 Use parameterized queries or an ORM query builder.
 
 **Traceability:**  
-- Requirement ID: 
-- API: 
-- Module: 
+- Requirement ID: NFR-SEC-001
+- API: N/A
+- Module: general_security
 
 ### SEC-008 — Direct innerHTML assignment detected
 
@@ -226,9 +226,9 @@ Assigning content to innerHTML may introduce XSS if the content includes user in
 Use textContent or sanitize HTML before assigning it to the DOM.
 
 **Traceability:**  
-- Requirement ID: 
-- API: 
-- Module: 
+- Requirement ID: FR-007
+- API: UI
+- Module: frontend
 
 ### SEC-009 — Sensitive token stored in localStorage
 
@@ -245,9 +245,9 @@ Storing authentication tokens in localStorage can increase exposure to XSS attac
 Prefer secure, HttpOnly cookies for sensitive session tokens.
 
 **Traceability:**  
-- Requirement ID: 
-- API: 
-- Module: 
+- Requirement ID: FR-005
+- API: /auth
+- Module: authentication
 
 ### SEC-010 — JavaScript eval() usage detected
 
@@ -264,9 +264,9 @@ JavaScript eval() can execute arbitrary code and may lead to code injection.
 Avoid eval(). Use safe parsing or explicit logic instead.
 
 **Traceability:**  
-- Requirement ID: 
-- API: 
-- Module: 
+- Requirement ID: FR-007
+- API: UI
+- Module: frontend
 
 ### SEC-011 — Possible hardcoded secret detected
 
@@ -283,9 +283,9 @@ A possible hardcoded secret, password, token, or API key was found in a text-bas
 Move secrets to environment variables or a dedicated secret manager.
 
 **Traceability:**  
-- Requirement ID: 
-- API: 
-- Module: 
+- Requirement ID: FR-005
+- API: /auth
+- Module: authentication
 
 ### SEC-012 — Debug configuration enabled
 
@@ -302,9 +302,9 @@ Debug mode appears to be enabled in a configuration file.
 Disable debug mode in production configurations.
 
 **Traceability:**  
-- Requirement ID: 
-- API: 
-- Module: 
+- Requirement ID: FR-001
+- API: /products
+- Module: catalog
 
 ### SEC-013 — Wildcard CORS setting in configuration
 
@@ -321,9 +321,9 @@ Wildcard CORS configuration may allow untrusted origins to interact with the app
 Restrict CORS settings to trusted frontend origins.
 
 **Traceability:**  
-- Requirement ID: 
-- API: 
-- Module: 
+- Requirement ID: NFR-001
+- API: N/A
+- Module: security_configuration
 
 ### SEC-014 — Docker container runs as root
 
@@ -340,9 +340,9 @@ Running containers as root increases the impact of container compromise.
 Create and use a non-root user inside the Docker image.
 
 **Traceability:**  
-- Requirement ID: 
-- API: 
-- Module: 
+- Requirement ID: NFR-001
+- API: N/A
+- Module: security_configuration
 
 ### SEC-015 — Vulnerable dependency detected: lodash
 
@@ -359,9 +359,9 @@ Command Injection in lodash Package: lodash, Version: 4.17.15, Ecosystem: npm, V
 Review GHSA-35jh-r3h4-6jhm in OSV.dev and upgrade the affected dependency to a patched or currently supported version.
 
 **Traceability:**  
-- Requirement ID: 
-- API: 
-- Module: 
+- Requirement ID: NFR-002
+- API: N/A
+- Module: dependency_management
 
 ### SEC-016 — Vulnerable dependency detected: lodash
 
@@ -378,9 +378,9 @@ Prototype Pollution in lodash Package: lodash, Version: 4.17.15, Ecosystem: npm,
 Review GHSA-p6mc-m468-83gw in OSV.dev and upgrade the affected dependency to a patched or currently supported version.
 
 **Traceability:**  
-- Requirement ID: 
-- API: 
-- Module: 
+- Requirement ID: NFR-002
+- API: N/A
+- Module: dependency_management
 
 ### SEC-017 — Vulnerable dependency detected: lodash
 
@@ -397,9 +397,9 @@ lodash vulnerable to Code Injection via `_.template` imports key names Package: 
 Review GHSA-r5fr-rjxr-66jc in OSV.dev and upgrade the affected dependency to a patched or currently supported version.
 
 **Traceability:**  
-- Requirement ID: 
-- API: 
-- Module: 
+- Requirement ID: NFR-002
+- API: N/A
+- Module: dependency_management
 
 ### SEC-018 — Vulnerable dependency detected: lodash
 
@@ -416,9 +416,9 @@ Regular Expression Denial of Service (ReDoS) in lodash Package: lodash, Version:
 Review GHSA-29mw-wpgm-hmr9 in OSV.dev and upgrade the affected dependency to a patched or currently supported version.
 
 **Traceability:**  
-- Requirement ID: 
-- API: 
-- Module: 
+- Requirement ID: NFR-002
+- API: N/A
+- Module: dependency_management
 
 ### SEC-019 — Vulnerable dependency detected: axios
 
@@ -435,9 +435,9 @@ Denial of Service in axios Package: axios, Version: 0.18.0, Ecosystem: npm, Vuln
 Review GHSA-42xw-2xvc-qx8m in OSV.dev and upgrade the affected dependency to a patched or currently supported version.
 
 **Traceability:**  
-- Requirement ID: 
-- API: 
-- Module: 
+- Requirement ID: NFR-002
+- API: N/A
+- Module: dependency_management
 
 ### SEC-020 — Vulnerable dependency detected: axios
 
@@ -454,9 +454,9 @@ Axios is Vulnerable to Denial of Service via __proto__ Key in mergeConfig Packag
 Review GHSA-43fc-jf86-j433 in OSV.dev and upgrade the affected dependency to a patched or currently supported version.
 
 **Traceability:**  
-- Requirement ID: 
-- API: 
-- Module: 
+- Requirement ID: NFR-002
+- API: N/A
+- Module: dependency_management
 
 ### SEC-021 — Vulnerable dependency detected: axios
 
@@ -473,9 +473,9 @@ axios Requests Vulnerable To Possible SSRF and Credential Leakage via Absolute U
 Review GHSA-jr5f-v2jv-69x6 in OSV.dev and upgrade the affected dependency to a patched or currently supported version.
 
 **Traceability:**  
-- Requirement ID: 
-- API: 
-- Module: 
+- Requirement ID: FR-005
+- API: /auth
+- Module: authentication
 
 ### SEC-022 — Vulnerable dependency detected: axios
 
@@ -492,9 +492,9 @@ Axios has a NO_PROXY Hostname Normalization Bypass that Leads to SSRF Package: a
 Review GHSA-3p68-rc4w-qgx5 in OSV.dev and upgrade the affected dependency to a patched or currently supported version.
 
 **Traceability:**  
-- Requirement ID: 
-- API: 
-- Module: 
+- Requirement ID: NFR-002
+- API: N/A
+- Module: dependency_management
 
 ### SEC-023 — Vulnerable dependency detected: express
 
@@ -511,9 +511,9 @@ Express.js Open Redirect in malformed URLs Package: express, Version: 4.16.0, Ec
 Review GHSA-rv95-896h-c2vc in OSV.dev and upgrade the affected dependency to a patched or currently supported version.
 
 **Traceability:**  
-- Requirement ID: 
-- API: 
-- Module: 
+- Requirement ID: NFR-002
+- API: N/A
+- Module: dependency_management
 
 ### SEC-024 — Vulnerable dependency detected: express
 
@@ -530,9 +530,9 @@ express vulnerable to XSS via response.redirect() Package: express, Version: 4.1
 Review GHSA-qw6h-vgh9-j6wx in OSV.dev and upgrade the affected dependency to a patched or currently supported version.
 
 **Traceability:**  
-- Requirement ID: 
-- API: 
-- Module: 
+- Requirement ID: NFR-002
+- API: N/A
+- Module: dependency_management
 
 ### SEC-025 — Vulnerable dependency detected: django
 
@@ -549,9 +549,9 @@ Django Allows Redirect via Data URL Package: django, Version: 1.2, Ecosystem: Py
 Review GHSA-78vx-ggch-wghm in OSV.dev and upgrade the affected dependency to a patched or currently supported version.
 
 **Traceability:**  
-- Requirement ID: 
-- API: 
-- Module: 
+- Requirement ID: NFR-002
+- API: N/A
+- Module: dependency_management
 
 ### SEC-026 — Vulnerable dependency detected: django
 
@@ -568,9 +568,9 @@ Directory traversal in Django Package: django, Version: 1.2, Ecosystem: PyPI, Vu
 Review GHSA-7g9h-c88w-r7h2 in OSV.dev and upgrade the affected dependency to a patched or currently supported version.
 
 **Traceability:**  
-- Requirement ID: 
-- API: 
-- Module: 
+- Requirement ID: NFR-002
+- API: N/A
+- Module: dependency_management
 
 ### SEC-027 — Vulnerable dependency detected: django
 
@@ -587,9 +587,9 @@ Django vulnerable to SQL injection via _connector keyword argument in QuerySet a
 Review GHSA-frmv-pr5f-9mcr in OSV.dev and upgrade the affected dependency to a patched or currently supported version.
 
 **Traceability:**  
-- Requirement ID: 
-- API: 
-- Module: 
+- Requirement ID: NFR-002
+- API: N/A
+- Module: dependency_management
 
 ### SEC-028 — Vulnerable dependency detected: django
 
@@ -606,9 +606,9 @@ Code Injection in Django Package: django, Version: 1.2, Ecosystem: PyPI, Vulnera
 Review GHSA-rvq6-mrpv-m6rm in OSV.dev and upgrade the affected dependency to a patched or currently supported version.
 
 **Traceability:**  
-- Requirement ID: 
-- API: 
-- Module: 
+- Requirement ID: NFR-002
+- API: N/A
+- Module: dependency_management
 
 ### SEC-029 — Vulnerable dependency detected: flask
 
@@ -625,9 +625,9 @@ Flask is vulnerable to Denial of Service via incorrect encoding of JSON data Pac
 Review GHSA-562c-5r94-xh97 in OSV.dev and upgrade the affected dependency to a patched or currently supported version.
 
 **Traceability:**  
-- Requirement ID: 
-- API: 
-- Module: 
+- Requirement ID: NFR-002
+- API: N/A
+- Module: dependency_management
 
 ### SEC-030 — Vulnerable dependency detected: flask
 
@@ -644,9 +644,9 @@ Pallets Project Flask is vulnerable to Denial of Service via Unexpected memory u
 Review GHSA-5wv5-4vpf-pj6m in OSV.dev and upgrade the affected dependency to a patched or currently supported version.
 
 **Traceability:**  
-- Requirement ID: 
-- API: 
-- Module: 
+- Requirement ID: NFR-002
+- API: N/A
+- Module: dependency_management
 
 ### SEC-031 — Vulnerable dependency detected: flask
 
@@ -663,9 +663,9 @@ Flask vulnerable to possible disclosure of permanent session cookie due to missi
 Review GHSA-m2qf-hxjv-5gpq in OSV.dev and upgrade the affected dependency to a patched or currently supported version.
 
 **Traceability:**  
-- Requirement ID: 
-- API: 
-- Module: 
+- Requirement ID: FR-005
+- API: /auth
+- Module: authentication
 
 ### SEC-032 — Vulnerable dependency detected: flask
 
@@ -682,9 +682,9 @@ The Pallets Project flask version Before 0.12.3 contains a CWE-20: Improper Inpu
 Review PYSEC-2018-66 in OSV.dev and upgrade the affected dependency to a patched or currently supported version.
 
 **Traceability:**  
-- Requirement ID: 
-- API: 
-- Module: 
+- Requirement ID: NFR-002
+- API: N/A
+- Module: dependency_management
 
 ### SEC-033 — Vulnerable dependency detected: requests
 
@@ -701,9 +701,9 @@ Insufficiently Protected Credentials in Requests Package: requests, Version: 2.1
 Review GHSA-x84v-xcm2-53pg in OSV.dev and upgrade the affected dependency to a patched or currently supported version.
 
 **Traceability:**  
-- Requirement ID: 
-- API: 
-- Module: 
+- Requirement ID: FR-005
+- API: /auth
+- Module: authentication
 
 ### SEC-034 — Vulnerable dependency detected: requests
 
@@ -720,9 +720,9 @@ Unintended leak of Proxy-Authorization header in requests Package: requests, Ver
 Review GHSA-j8r2-6x86-q33q in OSV.dev and upgrade the affected dependency to a patched or currently supported version.
 
 **Traceability:**  
-- Requirement ID: 
-- API: 
-- Module: 
+- Requirement ID: FR-005
+- API: /auth
+- Module: authentication
 
 
 ---
@@ -1119,102 +1119,86 @@ Review PYSEC-2023-74 in OSV.dev and upgrade the affected dependency to a patched
 
 | Title | Severity | File | Line | CWE | Confidence |
 |---|---|---|---:|---|---:|
-| Insecure Use of Eval | High | sample_ecommerce_app\app.py | 0 | CWE-94 | 1.0 |
-| Unvalidated User Input in Search Endpoint | Medium | sample_ecommerce_app\app.py | 16 | CWE-89 | 1.0 |
-| Weak Hashing Function Used in 'hash' Endpoint | Low | sample_ecommerce_app\app.py | 23 | CWE-327 | 1.0 |
-| Unvalidated Shell Command in 'run' Endpoint | Critical | sample_ecommerce_app\app.py | 31 | CWE-78 | 1.0 |
-| Insecure Token Storage | High | sample_ecommerce_app\frontend.js | 0 | CWE-356 | 1.0 |
-| Code Injection Risk (eval()) | Critical | sample_ecommerce_app\frontend.js | 11 | CWE-94 | 1.0 |
+| Insecure Secret Storage | High | sample_ecommerce_app\app.py | 0 | CWE-312 | 1.0 |
+| /danger Endpoint Vulnerable to Code Injection | Critical | sample_ecommerce_app\app.py | 24 | CWE-94 | 1.0 |
+| /run Endpoint Vulnerable to Command Injection | Critical | sample_ecommerce_app\app.py | 34 | CWE-78 | 1.0 |
+| Insecure Token Storage | Medium | sample_ecommerce_app\frontend.js | 0 | CWE-749 | 1.0 |
+| Arbitrary Code Execution | Critical | sample_ecommerce_app\frontend.js | 13 | CWE-94 | 1.0 |
 
-### Insecure Use of Eval
+### Insecure Secret Storage
 
 **Severity:** High  
 **File:** sample_ecommerce_app\app.py  
 **Line:** 0  
+**CWE:** CWE-312  
+**Confidence:** 1.0  
+**Source:** ollama
+
+**Description:**  
+The SECRET_KEY is hardcoded and easily accessible.
+
+**Recommendation:**  
+Store the secret key securely using a secrets management system or environment variables.
+
+### /danger Endpoint Vulnerable to Code Injection
+
+**Severity:** Critical  
+**File:** sample_ecommerce_app\app.py  
+**Line:** 24  
 **CWE:** CWE-94  
 **Confidence:** 1.0  
 **Source:** ollama
 
 **Description:**  
-The 'dangerous_code' endpoint uses eval() to execute user-provided code. This allows an attacker to inject arbitrary Python code, potentially leading to remote code execution.
+The /danger endpoint uses eval() function which can lead to code injection attacks.
 
 **Recommendation:**  
-Replace eval() with a safer alternative like AST-based parsing or whitelist-approved functions.
+Replace eval() with a safe evaluation method or disable the endpoint altogether.
 
-### Unvalidated User Input in Search Endpoint
-
-**Severity:** Medium  
-**File:** sample_ecommerce_app\app.py  
-**Line:** 16  
-**CWE:** CWE-89  
-**Confidence:** 1.0  
-**Source:** ollama
-
-**Description:**  
-The 'search_product' endpoint constructs an SQL query by concatenating user-provided input without proper validation. This allows an attacker to inject arbitrary SQL code, potentially leading to SQL injection.
-
-**Recommendation:**  
-Use parameterized queries or ORMs to prevent SQL injection attacks.
-
-### Weak Hashing Function Used in 'hash' Endpoint
-
-**Severity:** Low  
-**File:** sample_ecommerce_app\app.py  
-**Line:** 23  
-**CWE:** CWE-327  
-**Confidence:** 1.0  
-**Source:** ollama
-
-**Description:**  
-The 'weak_hash' endpoint uses the MD5 algorithm for hashing, which is considered insecure due to its fast computation and potential collisions.
-
-**Recommendation:**  
-Use a more secure hashing function like bcrypt or Argon2.
-
-### Unvalidated Shell Command in 'run' Endpoint
+### /run Endpoint Vulnerable to Command Injection
 
 **Severity:** Critical  
 **File:** sample_ecommerce_app\app.py  
-**Line:** 31  
+**Line:** 34  
 **CWE:** CWE-78  
 **Confidence:** 1.0  
 **Source:** ollama
 
 **Description:**  
-The 'run_command' endpoint executes shell commands without proper validation, allowing an attacker to execute arbitrary system commands.
+The /run endpoint uses subprocess.run() function which can lead to command injection attacks.
 
 **Recommendation:**  
-Do not allow users to execute arbitrary system commands. Instead, use a whitelist of approved commands or implement strict input validation.
+Disable the /run endpoint or use a safe method for executing shell commands, such as using os.system() with whitelisted commands.
 
 ### Insecure Token Storage
 
-**Severity:** High  
+**Severity:** Medium  
 **File:** sample_ecommerce_app\frontend.js  
 **Line:** 0  
-**CWE:** CWE-356  
+**CWE:** CWE-749  
 **Confidence:** 1.0  
 **Source:** ollama
 
 **Description:**  
-The token is stored in local storage with the key 'auth_token' which can be easily accessed by an attacker. Storing sensitive data like tokens should be done securely.
+Storing sensitive data like auth tokens in local storage is not secure.
 
 **Recommendation:**  
-Use a secure token storage mechanism, such as the browser's secure storage or a secure library
+Use a more secure method to store and manage authentication tokens, such as using a secure token service or encrypting the data.
 
-### Code Injection Risk (eval())
+### Arbitrary Code Execution
 
 **Severity:** Critical  
 **File:** sample_ecommerce_app\frontend.js  
-**Line:** 11  
+**Line:** 13  
 **CWE:** CWE-94  
 **Confidence:** 1.0  
 **Source:** ollama
 
 **Description:**  
-The 'runDangerous' function uses eval() to execute code, which can lead to code injection attacks. This function should be avoided or replaced with a safer alternative.
+The `runDangerous` function uses eval() to execute arbitrary code, which can lead to code injection attacks and arbitrary code execution.
 
 **Recommendation:**  
-Remove the 'runDangerous' function or replace it with a safer alternative, such as JSON.parse() or a safe eval implementation
+Do not use eval() or any other method that allows executing arbitrary code. Instead, consider using a safer evaluation function or parsing the input in a safe way.
 
 
 ---
