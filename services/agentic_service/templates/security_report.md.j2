@@ -61,17 +61,18 @@ No security findings were detected.
 ## 4. Dependency Vulnerabilities
 
 {% if report.dependency_vulnerabilities %}
-| Package | Version | Ecosystem | Severity | Source |
-|---|---|---|---|---|
+| Vulnerability ID | Package | Version | Ecosystem | Severity | CWE | Source |
+|---|---|---|---|---|---|---|
 {% for vuln in report.dependency_vulnerabilities %}
-| {{ vuln.package }} | {{ vuln.version }} | {{ vuln.ecosystem }} | {{ vuln.severity }} | {{ vuln.source }} |
+| {{ vuln.id }} | {{ vuln.package }} | {{ vuln.version }} | {{ vuln.ecosystem }} | {{ vuln.severity }} | {{ vuln.cwe }} | {{ vuln.source }} |
 {% endfor %}
 
 {% for vuln in report.dependency_vulnerabilities %}
-### {{ vuln.package }} {{ vuln.version }}
+### {{ vuln.id }} — {{ vuln.package }} {{ vuln.version }}
 
 **Ecosystem:** {{ vuln.ecosystem }}  
 **Severity:** {{ vuln.severity }}  
+**CWE:** {{ vuln.cwe }}  
 **Source:** {{ vuln.source }}
 
 **Description:**  

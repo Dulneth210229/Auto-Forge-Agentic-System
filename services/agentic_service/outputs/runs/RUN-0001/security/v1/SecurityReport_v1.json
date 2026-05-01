@@ -3,11 +3,11 @@
   "stage": "security",
   "version": "v1",
   "summary": {
-    "total_findings": 27,
-    "critical": 2,
-    "high": 14,
-    "medium": 11,
-    "low": 0
+    "total_findings": 48,
+    "critical": 7,
+    "high": 22,
+    "medium": 18,
+    "low": 1
   },
   "findings": [
     {
@@ -349,13 +349,13 @@
     {
       "finding_id": "SEC-022",
       "title": "Vulnerable dependency detected: lodash",
-      "description": "Known vulnerable lodash version detected. Package: lodash, Version: 4.17.15, Ecosystem: npm.",
+      "description": "Command Injection in lodash Package: lodash, Version: 4.17.15, Ecosystem: npm, Vulnerability ID: GHSA-35jh-r3h4-6jhm.",
       "severity": "High",
       "file": "sample_ecommerce_app\\package.json",
       "line": 0,
       "detection_method": "Dependency",
-      "cwe": "CWE-400",
-      "recommendation": "Upgrade lodash to version 4.17.21 or later.",
+      "cwe": "CWE-77",
+      "recommendation": "Review GHSA-35jh-r3h4-6jhm in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
       "traceability": {
         "requirement_id": "",
         "api": "",
@@ -364,14 +364,14 @@
     },
     {
       "finding_id": "SEC-023",
-      "title": "Vulnerable dependency detected: axios",
-      "description": "Known vulnerable axios version detected. Package: axios, Version: 0.18.0, Ecosystem: npm.",
+      "title": "Vulnerable dependency detected: lodash",
+      "description": "Prototype Pollution in lodash Package: lodash, Version: 4.17.15, Ecosystem: npm, Vulnerability ID: GHSA-p6mc-m468-83gw.",
       "severity": "High",
       "file": "sample_ecommerce_app\\package.json",
       "line": 0,
       "detection_method": "Dependency",
-      "cwe": "CWE-918",
-      "recommendation": "Upgrade axios to a newer secure version.",
+      "cwe": "CWE-1321",
+      "recommendation": "Review GHSA-p6mc-m468-83gw in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
       "traceability": {
         "requirement_id": "",
         "api": "",
@@ -380,14 +380,14 @@
     },
     {
       "finding_id": "SEC-024",
-      "title": "Vulnerable dependency detected: express",
-      "description": "Outdated Express version detected. Package: express, Version: 4.16.0, Ecosystem: npm.",
-      "severity": "Medium",
+      "title": "Vulnerable dependency detected: lodash",
+      "description": "lodash vulnerable to Code Injection via `_.template` imports key names Package: lodash, Version: 4.17.15, Ecosystem: npm, Vulnerability ID: GHSA-r5fr-rjxr-66jc.",
+      "severity": "High",
       "file": "sample_ecommerce_app\\package.json",
       "line": 0,
       "detection_method": "Dependency",
-      "cwe": "CWE-937",
-      "recommendation": "Upgrade Express to a newer secure version.",
+      "cwe": "CWE-94",
+      "recommendation": "Review GHSA-r5fr-rjxr-66jc in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
       "traceability": {
         "requirement_id": "",
         "api": "",
@@ -396,14 +396,14 @@
     },
     {
       "finding_id": "SEC-025",
-      "title": "Vulnerable dependency detected: django",
-      "description": "Known vulnerable Django version detected. Package: django, Version: 1.2, Ecosystem: PyPI.",
-      "severity": "High",
-      "file": "sample_ecommerce_app\\requirements.txt",
-      "line": 1,
+      "title": "Vulnerable dependency detected: lodash",
+      "description": "Regular Expression Denial of Service (ReDoS) in lodash Package: lodash, Version: 4.17.15, Ecosystem: npm, Vulnerability ID: GHSA-29mw-wpgm-hmr9.",
+      "severity": "Medium",
+      "file": "sample_ecommerce_app\\package.json",
+      "line": 0,
       "detection_method": "Dependency",
-      "cwe": "CWE-937",
-      "recommendation": "Upgrade Django to a currently supported secure version.",
+      "cwe": "CWE-1333",
+      "recommendation": "Review GHSA-29mw-wpgm-hmr9 in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
       "traceability": {
         "requirement_id": "",
         "api": "",
@@ -412,14 +412,14 @@
     },
     {
       "finding_id": "SEC-026",
-      "title": "Vulnerable dependency detected: flask",
-      "description": "Outdated Flask version detected. Package: flask, Version: 0.12, Ecosystem: PyPI.",
+      "title": "Vulnerable dependency detected: lodash",
+      "description": "lodash vulnerable to Prototype Pollution via array path bypass in `_.unset` and `_.omit` Package: lodash, Version: 4.17.15, Ecosystem: npm, Vulnerability ID: GHSA-f23m-r3pf-42rh.",
       "severity": "Medium",
-      "file": "sample_ecommerce_app\\requirements.txt",
-      "line": 2,
+      "file": "sample_ecommerce_app\\package.json",
+      "line": 0,
       "detection_method": "Dependency",
-      "cwe": "CWE-937",
-      "recommendation": "Upgrade Flask to the latest stable version.",
+      "cwe": "CWE-1321",
+      "recommendation": "Review GHSA-f23m-r3pf-42rh in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
       "traceability": {
         "requirement_id": "",
         "api": "",
@@ -428,14 +428,350 @@
     },
     {
       "finding_id": "SEC-027",
+      "title": "Vulnerable dependency detected: axios",
+      "description": "Denial of Service in axios Package: axios, Version: 0.18.0, Ecosystem: npm, Vulnerability ID: GHSA-42xw-2xvc-qx8m.",
+      "severity": "High",
+      "file": "sample_ecommerce_app\\package.json",
+      "line": 0,
+      "detection_method": "Dependency",
+      "cwe": "CWE-20",
+      "recommendation": "Review GHSA-42xw-2xvc-qx8m in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
+      "traceability": {
+        "requirement_id": "",
+        "api": "",
+        "module": ""
+      }
+    },
+    {
+      "finding_id": "SEC-028",
+      "title": "Vulnerable dependency detected: axios",
+      "description": "Axios is Vulnerable to Denial of Service via __proto__ Key in mergeConfig Package: axios, Version: 0.18.0, Ecosystem: npm, Vulnerability ID: GHSA-43fc-jf86-j433.",
+      "severity": "High",
+      "file": "sample_ecommerce_app\\package.json",
+      "line": 0,
+      "detection_method": "Dependency",
+      "cwe": "CWE-754",
+      "recommendation": "Review GHSA-43fc-jf86-j433 in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
+      "traceability": {
+        "requirement_id": "",
+        "api": "",
+        "module": ""
+      }
+    },
+    {
+      "finding_id": "SEC-029",
+      "title": "Vulnerable dependency detected: axios",
+      "description": "axios Inefficient Regular Expression Complexity vulnerability Package: axios, Version: 0.18.0, Ecosystem: npm, Vulnerability ID: GHSA-cph5-m8f7-6c5x.",
+      "severity": "High",
+      "file": "sample_ecommerce_app\\package.json",
+      "line": 0,
+      "detection_method": "Dependency",
+      "cwe": "CWE-1333",
+      "recommendation": "Review GHSA-cph5-m8f7-6c5x in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
+      "traceability": {
+        "requirement_id": "",
+        "api": "",
+        "module": ""
+      }
+    },
+    {
+      "finding_id": "SEC-030",
+      "title": "Vulnerable dependency detected: axios",
+      "description": "axios Requests Vulnerable To Possible SSRF and Credential Leakage via Absolute URL Package: axios, Version: 0.18.0, Ecosystem: npm, Vulnerability ID: GHSA-jr5f-v2jv-69x6.",
+      "severity": "High",
+      "file": "sample_ecommerce_app\\package.json",
+      "line": 0,
+      "detection_method": "Dependency",
+      "cwe": "CWE-918",
+      "recommendation": "Review GHSA-jr5f-v2jv-69x6 in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
+      "traceability": {
+        "requirement_id": "",
+        "api": "",
+        "module": ""
+      }
+    },
+    {
+      "finding_id": "SEC-031",
+      "title": "Vulnerable dependency detected: axios",
+      "description": "Axios has a NO_PROXY Hostname Normalization Bypass that Leads to SSRF Package: axios, Version: 0.18.0, Ecosystem: npm, Vulnerability ID: GHSA-3p68-rc4w-qgx5.",
+      "severity": "Medium",
+      "file": "sample_ecommerce_app\\package.json",
+      "line": 0,
+      "detection_method": "Dependency",
+      "cwe": "CWE-441",
+      "recommendation": "Review GHSA-3p68-rc4w-qgx5 in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
+      "traceability": {
+        "requirement_id": "",
+        "api": "",
+        "module": ""
+      }
+    },
+    {
+      "finding_id": "SEC-032",
+      "title": "Vulnerable dependency detected: express",
+      "description": "Express.js Open Redirect in malformed URLs Package: express, Version: 4.16.0, Ecosystem: npm, Vulnerability ID: GHSA-rv95-896h-c2vc.",
+      "severity": "Medium",
+      "file": "sample_ecommerce_app\\package.json",
+      "line": 0,
+      "detection_method": "Dependency",
+      "cwe": "CWE-1286",
+      "recommendation": "Review GHSA-rv95-896h-c2vc in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
+      "traceability": {
+        "requirement_id": "",
+        "api": "",
+        "module": ""
+      }
+    },
+    {
+      "finding_id": "SEC-033",
+      "title": "Vulnerable dependency detected: express",
+      "description": "express vulnerable to XSS via response.redirect() Package: express, Version: 4.16.0, Ecosystem: npm, Vulnerability ID: GHSA-qw6h-vgh9-j6wx.",
+      "severity": "Low",
+      "file": "sample_ecommerce_app\\package.json",
+      "line": 0,
+      "detection_method": "Dependency",
+      "cwe": "CWE-79",
+      "recommendation": "Review GHSA-qw6h-vgh9-j6wx in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
+      "traceability": {
+        "requirement_id": "",
+        "api": "",
+        "module": ""
+      }
+    },
+    {
+      "finding_id": "SEC-034",
+      "title": "Vulnerable dependency detected: django",
+      "description": "Django Allows Redirect via Data URL Package: django, Version: 1.2, Ecosystem: PyPI, Vulnerability ID: GHSA-78vx-ggch-wghm.",
+      "severity": "Critical",
+      "file": "sample_ecommerce_app\\requirements.txt",
+      "line": 1,
+      "detection_method": "Dependency",
+      "cwe": "CWE-79",
+      "recommendation": "Review GHSA-78vx-ggch-wghm in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
+      "traceability": {
+        "requirement_id": "",
+        "api": "",
+        "module": ""
+      }
+    },
+    {
+      "finding_id": "SEC-035",
+      "title": "Vulnerable dependency detected: django",
+      "description": "Directory traversal in Django Package: django, Version: 1.2, Ecosystem: PyPI, Vulnerability ID: GHSA-7g9h-c88w-r7h2.",
+      "severity": "Critical",
+      "file": "sample_ecommerce_app\\requirements.txt",
+      "line": 1,
+      "detection_method": "Dependency",
+      "cwe": "CWE-22",
+      "recommendation": "Review GHSA-7g9h-c88w-r7h2 in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
+      "traceability": {
+        "requirement_id": "",
+        "api": "",
+        "module": ""
+      }
+    },
+    {
+      "finding_id": "SEC-036",
+      "title": "Vulnerable dependency detected: django",
+      "description": "Django vulnerable to SQL injection via _connector keyword argument in QuerySet and Q objects. Package: django, Version: 1.2, Ecosystem: PyPI, Vulnerability ID: GHSA-frmv-pr5f-9mcr.",
+      "severity": "Critical",
+      "file": "sample_ecommerce_app\\requirements.txt",
+      "line": 1,
+      "detection_method": "Dependency",
+      "cwe": "CWE-89",
+      "recommendation": "Review GHSA-frmv-pr5f-9mcr in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
+      "traceability": {
+        "requirement_id": "",
+        "api": "",
+        "module": ""
+      }
+    },
+    {
+      "finding_id": "SEC-037",
+      "title": "Vulnerable dependency detected: django",
+      "description": "SQL injection in Django Package: django, Version: 1.2, Ecosystem: PyPI, Vulnerability ID: GHSA-hmr4-m2h5-33qx.",
+      "severity": "Critical",
+      "file": "sample_ecommerce_app\\requirements.txt",
+      "line": 1,
+      "detection_method": "Dependency",
+      "cwe": "CWE-89",
+      "recommendation": "Review GHSA-hmr4-m2h5-33qx in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
+      "traceability": {
+        "requirement_id": "",
+        "api": "",
+        "module": ""
+      }
+    },
+    {
+      "finding_id": "SEC-038",
+      "title": "Vulnerable dependency detected: django",
+      "description": "Code Injection in Django Package: django, Version: 1.2, Ecosystem: PyPI, Vulnerability ID: GHSA-rvq6-mrpv-m6rm.",
+      "severity": "Critical",
+      "file": "sample_ecommerce_app\\requirements.txt",
+      "line": 1,
+      "detection_method": "Dependency",
+      "cwe": "CWE-94",
+      "recommendation": "Review GHSA-rvq6-mrpv-m6rm in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
+      "traceability": {
+        "requirement_id": "",
+        "api": "",
+        "module": ""
+      }
+    },
+    {
+      "finding_id": "SEC-039",
+      "title": "Vulnerable dependency detected: flask",
+      "description": "Flask is vulnerable to Denial of Service via incorrect encoding of JSON data Package: flask, Version: 0.12, Ecosystem: PyPI, Vulnerability ID: GHSA-562c-5r94-xh97.",
+      "severity": "High",
+      "file": "sample_ecommerce_app\\requirements.txt",
+      "line": 2,
+      "detection_method": "Dependency",
+      "cwe": "CWE-20",
+      "recommendation": "Review GHSA-562c-5r94-xh97 in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
+      "traceability": {
+        "requirement_id": "",
+        "api": "",
+        "module": ""
+      }
+    },
+    {
+      "finding_id": "SEC-040",
+      "title": "Vulnerable dependency detected: flask",
+      "description": "Pallets Project Flask is vulnerable to Denial of Service via Unexpected memory usage Package: flask, Version: 0.12, Ecosystem: PyPI, Vulnerability ID: GHSA-5wv5-4vpf-pj6m.",
+      "severity": "High",
+      "file": "sample_ecommerce_app\\requirements.txt",
+      "line": 2,
+      "detection_method": "Dependency",
+      "cwe": "CWE-400",
+      "recommendation": "Review GHSA-5wv5-4vpf-pj6m in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
+      "traceability": {
+        "requirement_id": "",
+        "api": "",
+        "module": ""
+      }
+    },
+    {
+      "finding_id": "SEC-041",
+      "title": "Vulnerable dependency detected: flask",
+      "description": "Flask vulnerable to possible disclosure of permanent session cookie due to missing Vary: Cookie header Package: flask, Version: 0.12, Ecosystem: PyPI, Vulnerability ID: GHSA-m2qf-hxjv-5gpq.",
+      "severity": "High",
+      "file": "sample_ecommerce_app\\requirements.txt",
+      "line": 2,
+      "detection_method": "Dependency",
+      "cwe": "CWE-539",
+      "recommendation": "Review GHSA-m2qf-hxjv-5gpq in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
+      "traceability": {
+        "requirement_id": "",
+        "api": "",
+        "module": ""
+      }
+    },
+    {
+      "finding_id": "SEC-042",
+      "title": "Vulnerable dependency detected: flask",
+      "description": "The Pallets Project flask version Before 0.12.3 contains a CWE-20: Improper Input Validation vulnerability in flask that can result in Large amount of memory usage possibly leading to denial of service. This attack appear to be exploitable via Attacker provides JSON data in incorrect encoding. This vulnerability appears to have been fixed in 0.12.3. NOTE: this may overlap CVE-2019-1010083. Package: flask, Version: 0.12, Ecosystem: PyPI, Vulnerability ID: PYSEC-2018-66.",
+      "severity": "Medium",
+      "file": "sample_ecommerce_app\\requirements.txt",
+      "line": 2,
+      "detection_method": "Dependency",
+      "cwe": "CWE-937",
+      "recommendation": "Review PYSEC-2018-66 in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
+      "traceability": {
+        "requirement_id": "",
+        "api": "",
+        "module": ""
+      }
+    },
+    {
+      "finding_id": "SEC-043",
+      "title": "Vulnerable dependency detected: flask",
+      "description": "The Pallets Project Flask before 1.0 is affected by: unexpected memory usage. The impact is: denial of service. The attack vector is: crafted encoded JSON data. The fixed version is: 1. NOTE: this may overlap CVE-2018-1000656. Package: flask, Version: 0.12, Ecosystem: PyPI, Vulnerability ID: PYSEC-2019-179.",
+      "severity": "Medium",
+      "file": "sample_ecommerce_app\\requirements.txt",
+      "line": 2,
+      "detection_method": "Dependency",
+      "cwe": "CWE-937",
+      "recommendation": "Review PYSEC-2019-179 in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
+      "traceability": {
+        "requirement_id": "",
+        "api": "",
+        "module": ""
+      }
+    },
+    {
+      "finding_id": "SEC-044",
       "title": "Vulnerable dependency detected: requests",
-      "description": "Outdated requests package detected. Package: requests, Version: 2.19.0, Ecosystem: PyPI.",
+      "description": "Insufficiently Protected Credentials in Requests Package: requests, Version: 2.19.0, Ecosystem: PyPI, Vulnerability ID: GHSA-x84v-xcm2-53pg.",
+      "severity": "High",
+      "file": "sample_ecommerce_app\\requirements.txt",
+      "line": 3,
+      "detection_method": "Dependency",
+      "cwe": "CWE-522",
+      "recommendation": "Review GHSA-x84v-xcm2-53pg in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
+      "traceability": {
+        "requirement_id": "",
+        "api": "",
+        "module": ""
+      }
+    },
+    {
+      "finding_id": "SEC-045",
+      "title": "Vulnerable dependency detected: requests",
+      "description": "Requests vulnerable to .netrc credentials leak via malicious URLs Package: requests, Version: 2.19.0, Ecosystem: PyPI, Vulnerability ID: GHSA-9hjg-9r4m-mvj7.",
+      "severity": "Medium",
+      "file": "sample_ecommerce_app\\requirements.txt",
+      "line": 3,
+      "detection_method": "Dependency",
+      "cwe": "CWE-522",
+      "recommendation": "Review GHSA-9hjg-9r4m-mvj7 in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
+      "traceability": {
+        "requirement_id": "",
+        "api": "",
+        "module": ""
+      }
+    },
+    {
+      "finding_id": "SEC-046",
+      "title": "Vulnerable dependency detected: requests",
+      "description": "Unintended leak of Proxy-Authorization header in requests Package: requests, Version: 2.19.0, Ecosystem: PyPI, Vulnerability ID: GHSA-j8r2-6x86-q33q.",
+      "severity": "Medium",
+      "file": "sample_ecommerce_app\\requirements.txt",
+      "line": 3,
+      "detection_method": "Dependency",
+      "cwe": "CWE-200",
+      "recommendation": "Review GHSA-j8r2-6x86-q33q in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
+      "traceability": {
+        "requirement_id": "",
+        "api": "",
+        "module": ""
+      }
+    },
+    {
+      "finding_id": "SEC-047",
+      "title": "Vulnerable dependency detected: requests",
+      "description": "The Requests package before 2.20.0 for Python sends an HTTP Authorization header to an http URI upon receiving a same-hostname https-to-http redirect, which makes it easier for remote attackers to discover credentials by sniffing the network. Package: requests, Version: 2.19.0, Ecosystem: PyPI, Vulnerability ID: PYSEC-2018-28.",
       "severity": "Medium",
       "file": "sample_ecommerce_app\\requirements.txt",
       "line": 3,
       "detection_method": "Dependency",
       "cwe": "CWE-937",
-      "recommendation": "Upgrade requests to a newer secure version.",
+      "recommendation": "Review PYSEC-2018-28 in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
+      "traceability": {
+        "requirement_id": "",
+        "api": "",
+        "module": ""
+      }
+    },
+    {
+      "finding_id": "SEC-048",
+      "title": "Vulnerable dependency detected: requests",
+      "description": "Requests is a HTTP library. Since Requests 2.3.0, Requests has been leaking Proxy-Authorization headers to destination servers when redirected to an HTTPS endpoint. This is a product of how we use `rebuild_proxies` to reattach the `Proxy-Authorization` header to requests. For HTTP connections sent through the tunnel, the proxy will identify the header in the request itself and remove it prior to forwarding to the destination server. However when sent over HTTPS, the `Proxy-Authorization` header must be sent in the CONNECT request as the proxy has no visibility into the tunneled request. This results in Requests forwarding proxy credentials to the destination server unintentionally, allowing a malicious actor to potentially exfiltrate sensitive information. This issue has been patched in version 2.31.0.\n\n Package: requests, Version: 2.19.0, Ecosystem: PyPI, Vulnerability ID: PYSEC-2023-74.",
+      "severity": "Medium",
+      "file": "sample_ecommerce_app\\requirements.txt",
+      "line": 3,
+      "detection_method": "Dependency",
+      "cwe": "CWE-937",
+      "recommendation": "Review PYSEC-2023-74 in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
       "traceability": {
         "requirement_id": "",
         "api": "",
@@ -445,58 +781,301 @@
   ],
   "dependency_vulnerabilities": [
     {
+      "id": "GHSA-35jh-r3h4-6jhm",
       "package": "lodash",
       "version": "4.17.15",
       "ecosystem": "npm",
       "severity": "High",
-      "description": "Known vulnerable lodash version detected.",
-      "recommendation": "Upgrade lodash to version 4.17.21 or later.",
-      "source": "mock"
+      "cwe": "CWE-77",
+      "description": "Command Injection in lodash",
+      "recommendation": "Review GHSA-35jh-r3h4-6jhm in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
+      "source": "osv.dev"
     },
     {
+      "id": "GHSA-p6mc-m468-83gw",
+      "package": "lodash",
+      "version": "4.17.15",
+      "ecosystem": "npm",
+      "severity": "High",
+      "cwe": "CWE-1321",
+      "description": "Prototype Pollution in lodash",
+      "recommendation": "Review GHSA-p6mc-m468-83gw in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
+      "source": "osv.dev"
+    },
+    {
+      "id": "GHSA-r5fr-rjxr-66jc",
+      "package": "lodash",
+      "version": "4.17.15",
+      "ecosystem": "npm",
+      "severity": "High",
+      "cwe": "CWE-94",
+      "description": "lodash vulnerable to Code Injection via `_.template` imports key names",
+      "recommendation": "Review GHSA-r5fr-rjxr-66jc in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
+      "source": "osv.dev"
+    },
+    {
+      "id": "GHSA-29mw-wpgm-hmr9",
+      "package": "lodash",
+      "version": "4.17.15",
+      "ecosystem": "npm",
+      "severity": "Medium",
+      "cwe": "CWE-1333",
+      "description": "Regular Expression Denial of Service (ReDoS) in lodash",
+      "recommendation": "Review GHSA-29mw-wpgm-hmr9 in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
+      "source": "osv.dev"
+    },
+    {
+      "id": "GHSA-f23m-r3pf-42rh",
+      "package": "lodash",
+      "version": "4.17.15",
+      "ecosystem": "npm",
+      "severity": "Medium",
+      "cwe": "CWE-1321",
+      "description": "lodash vulnerable to Prototype Pollution via array path bypass in `_.unset` and `_.omit`",
+      "recommendation": "Review GHSA-f23m-r3pf-42rh in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
+      "source": "osv.dev"
+    },
+    {
+      "id": "GHSA-42xw-2xvc-qx8m",
       "package": "axios",
       "version": "0.18.0",
       "ecosystem": "npm",
       "severity": "High",
-      "description": "Known vulnerable axios version detected.",
-      "recommendation": "Upgrade axios to a newer secure version.",
-      "source": "mock"
+      "cwe": "CWE-20",
+      "description": "Denial of Service in axios",
+      "recommendation": "Review GHSA-42xw-2xvc-qx8m in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
+      "source": "osv.dev"
     },
     {
+      "id": "GHSA-43fc-jf86-j433",
+      "package": "axios",
+      "version": "0.18.0",
+      "ecosystem": "npm",
+      "severity": "High",
+      "cwe": "CWE-754",
+      "description": "Axios is Vulnerable to Denial of Service via __proto__ Key in mergeConfig",
+      "recommendation": "Review GHSA-43fc-jf86-j433 in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
+      "source": "osv.dev"
+    },
+    {
+      "id": "GHSA-cph5-m8f7-6c5x",
+      "package": "axios",
+      "version": "0.18.0",
+      "ecosystem": "npm",
+      "severity": "High",
+      "cwe": "CWE-1333",
+      "description": "axios Inefficient Regular Expression Complexity vulnerability",
+      "recommendation": "Review GHSA-cph5-m8f7-6c5x in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
+      "source": "osv.dev"
+    },
+    {
+      "id": "GHSA-jr5f-v2jv-69x6",
+      "package": "axios",
+      "version": "0.18.0",
+      "ecosystem": "npm",
+      "severity": "High",
+      "cwe": "CWE-918",
+      "description": "axios Requests Vulnerable To Possible SSRF and Credential Leakage via Absolute URL",
+      "recommendation": "Review GHSA-jr5f-v2jv-69x6 in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
+      "source": "osv.dev"
+    },
+    {
+      "id": "GHSA-3p68-rc4w-qgx5",
+      "package": "axios",
+      "version": "0.18.0",
+      "ecosystem": "npm",
+      "severity": "Medium",
+      "cwe": "CWE-441",
+      "description": "Axios has a NO_PROXY Hostname Normalization Bypass that Leads to SSRF",
+      "recommendation": "Review GHSA-3p68-rc4w-qgx5 in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
+      "source": "osv.dev"
+    },
+    {
+      "id": "GHSA-rv95-896h-c2vc",
       "package": "express",
       "version": "4.16.0",
       "ecosystem": "npm",
       "severity": "Medium",
-      "description": "Outdated Express version detected.",
-      "recommendation": "Upgrade Express to a newer secure version.",
-      "source": "mock"
+      "cwe": "CWE-1286",
+      "description": "Express.js Open Redirect in malformed URLs",
+      "recommendation": "Review GHSA-rv95-896h-c2vc in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
+      "source": "osv.dev"
     },
     {
+      "id": "GHSA-qw6h-vgh9-j6wx",
+      "package": "express",
+      "version": "4.16.0",
+      "ecosystem": "npm",
+      "severity": "Low",
+      "cwe": "CWE-79",
+      "description": "express vulnerable to XSS via response.redirect()",
+      "recommendation": "Review GHSA-qw6h-vgh9-j6wx in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
+      "source": "osv.dev"
+    },
+    {
+      "id": "GHSA-78vx-ggch-wghm",
       "package": "django",
       "version": "1.2",
       "ecosystem": "PyPI",
-      "severity": "High",
-      "description": "Known vulnerable Django version detected.",
-      "recommendation": "Upgrade Django to a currently supported secure version.",
-      "source": "mock"
+      "severity": "Critical",
+      "cwe": "CWE-79",
+      "description": "Django Allows Redirect via Data URL",
+      "recommendation": "Review GHSA-78vx-ggch-wghm in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
+      "source": "osv.dev"
     },
     {
+      "id": "GHSA-7g9h-c88w-r7h2",
+      "package": "django",
+      "version": "1.2",
+      "ecosystem": "PyPI",
+      "severity": "Critical",
+      "cwe": "CWE-22",
+      "description": "Directory traversal in Django",
+      "recommendation": "Review GHSA-7g9h-c88w-r7h2 in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
+      "source": "osv.dev"
+    },
+    {
+      "id": "GHSA-frmv-pr5f-9mcr",
+      "package": "django",
+      "version": "1.2",
+      "ecosystem": "PyPI",
+      "severity": "Critical",
+      "cwe": "CWE-89",
+      "description": "Django vulnerable to SQL injection via _connector keyword argument in QuerySet and Q objects.",
+      "recommendation": "Review GHSA-frmv-pr5f-9mcr in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
+      "source": "osv.dev"
+    },
+    {
+      "id": "GHSA-hmr4-m2h5-33qx",
+      "package": "django",
+      "version": "1.2",
+      "ecosystem": "PyPI",
+      "severity": "Critical",
+      "cwe": "CWE-89",
+      "description": "SQL injection in Django",
+      "recommendation": "Review GHSA-hmr4-m2h5-33qx in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
+      "source": "osv.dev"
+    },
+    {
+      "id": "GHSA-rvq6-mrpv-m6rm",
+      "package": "django",
+      "version": "1.2",
+      "ecosystem": "PyPI",
+      "severity": "Critical",
+      "cwe": "CWE-94",
+      "description": "Code Injection in Django",
+      "recommendation": "Review GHSA-rvq6-mrpv-m6rm in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
+      "source": "osv.dev"
+    },
+    {
+      "id": "GHSA-562c-5r94-xh97",
+      "package": "flask",
+      "version": "0.12",
+      "ecosystem": "PyPI",
+      "severity": "High",
+      "cwe": "CWE-20",
+      "description": "Flask is vulnerable to Denial of Service via incorrect encoding of JSON data",
+      "recommendation": "Review GHSA-562c-5r94-xh97 in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
+      "source": "osv.dev"
+    },
+    {
+      "id": "GHSA-5wv5-4vpf-pj6m",
+      "package": "flask",
+      "version": "0.12",
+      "ecosystem": "PyPI",
+      "severity": "High",
+      "cwe": "CWE-400",
+      "description": "Pallets Project Flask is vulnerable to Denial of Service via Unexpected memory usage",
+      "recommendation": "Review GHSA-5wv5-4vpf-pj6m in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
+      "source": "osv.dev"
+    },
+    {
+      "id": "GHSA-m2qf-hxjv-5gpq",
+      "package": "flask",
+      "version": "0.12",
+      "ecosystem": "PyPI",
+      "severity": "High",
+      "cwe": "CWE-539",
+      "description": "Flask vulnerable to possible disclosure of permanent session cookie due to missing Vary: Cookie header",
+      "recommendation": "Review GHSA-m2qf-hxjv-5gpq in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
+      "source": "osv.dev"
+    },
+    {
+      "id": "PYSEC-2018-66",
       "package": "flask",
       "version": "0.12",
       "ecosystem": "PyPI",
       "severity": "Medium",
-      "description": "Outdated Flask version detected.",
-      "recommendation": "Upgrade Flask to the latest stable version.",
-      "source": "mock"
+      "cwe": "CWE-937",
+      "description": "The Pallets Project flask version Before 0.12.3 contains a CWE-20: Improper Input Validation vulnerability in flask that can result in Large amount of memory usage possibly leading to denial of service. This attack appear to be exploitable via Attacker provides JSON data in incorrect encoding. This vulnerability appears to have been fixed in 0.12.3. NOTE: this may overlap CVE-2019-1010083.",
+      "recommendation": "Review PYSEC-2018-66 in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
+      "source": "osv.dev"
     },
     {
+      "id": "PYSEC-2019-179",
+      "package": "flask",
+      "version": "0.12",
+      "ecosystem": "PyPI",
+      "severity": "Medium",
+      "cwe": "CWE-937",
+      "description": "The Pallets Project Flask before 1.0 is affected by: unexpected memory usage. The impact is: denial of service. The attack vector is: crafted encoded JSON data. The fixed version is: 1. NOTE: this may overlap CVE-2018-1000656.",
+      "recommendation": "Review PYSEC-2019-179 in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
+      "source": "osv.dev"
+    },
+    {
+      "id": "GHSA-x84v-xcm2-53pg",
+      "package": "requests",
+      "version": "2.19.0",
+      "ecosystem": "PyPI",
+      "severity": "High",
+      "cwe": "CWE-522",
+      "description": "Insufficiently Protected Credentials in Requests",
+      "recommendation": "Review GHSA-x84v-xcm2-53pg in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
+      "source": "osv.dev"
+    },
+    {
+      "id": "GHSA-9hjg-9r4m-mvj7",
       "package": "requests",
       "version": "2.19.0",
       "ecosystem": "PyPI",
       "severity": "Medium",
-      "description": "Outdated requests package detected.",
-      "recommendation": "Upgrade requests to a newer secure version.",
-      "source": "mock"
+      "cwe": "CWE-522",
+      "description": "Requests vulnerable to .netrc credentials leak via malicious URLs",
+      "recommendation": "Review GHSA-9hjg-9r4m-mvj7 in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
+      "source": "osv.dev"
+    },
+    {
+      "id": "GHSA-j8r2-6x86-q33q",
+      "package": "requests",
+      "version": "2.19.0",
+      "ecosystem": "PyPI",
+      "severity": "Medium",
+      "cwe": "CWE-200",
+      "description": "Unintended leak of Proxy-Authorization header in requests",
+      "recommendation": "Review GHSA-j8r2-6x86-q33q in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
+      "source": "osv.dev"
+    },
+    {
+      "id": "PYSEC-2018-28",
+      "package": "requests",
+      "version": "2.19.0",
+      "ecosystem": "PyPI",
+      "severity": "Medium",
+      "cwe": "CWE-937",
+      "description": "The Requests package before 2.20.0 for Python sends an HTTP Authorization header to an http URI upon receiving a same-hostname https-to-http redirect, which makes it easier for remote attackers to discover credentials by sniffing the network.",
+      "recommendation": "Review PYSEC-2018-28 in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
+      "source": "osv.dev"
+    },
+    {
+      "id": "PYSEC-2023-74",
+      "package": "requests",
+      "version": "2.19.0",
+      "ecosystem": "PyPI",
+      "severity": "Medium",
+      "cwe": "CWE-937",
+      "description": "Requests is a HTTP library. Since Requests 2.3.0, Requests has been leaking Proxy-Authorization headers to destination servers when redirected to an HTTPS endpoint. This is a product of how we use `rebuild_proxies` to reattach the `Proxy-Authorization` header to requests. For HTTP connections sent through the tunnel, the proxy will identify the header in the request itself and remove it prior to forwarding to the destination server. However when sent over HTTPS, the `Proxy-Authorization` header must be sent in the CONNECT request as the proxy has no visibility into the tunneled request. This results in Requests forwarding proxy credentials to the destination server unintentionally, allowing a malicious actor to potentially exfiltrate sensitive information. This issue has been patched in version 2.31.0.\n\n",
+      "recommendation": "Review PYSEC-2023-74 in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
+      "source": "osv.dev"
     }
   ],
   "llm_findings": [],
