@@ -91,11 +91,31 @@ No dependency vulnerabilities were detected.
 ## 5. LLM Findings
 
 {% if report.llm_findings %}
-{% for item in report.llm_findings %}
-- {{ item }}
+| Title | Severity | File | Line | CWE | Confidence |
+|---|---|---|---:|---|---:|
+{% for finding in report.llm_findings %}
+| {{ finding.title }} | {{ finding.severity }} | {{ finding.file }} | {{ finding.line }} | {{ finding.cwe }} | {{ finding.confidence }} |
+{% endfor %}
+
+{% for finding in report.llm_findings %}
+### {{ finding.title }}
+
+**Severity:** {{ finding.severity }}  
+**File:** {{ finding.file }}  
+**Line:** {{ finding.line }}  
+**CWE:** {{ finding.cwe }}  
+**Confidence:** {{ finding.confidence }}  
+**Source:** {{ finding.source }}
+
+**Description:**  
+{{ finding.description }}
+
+**Recommendation:**  
+{{ finding.recommendation }}
+
 {% endfor %}
 {% else %}
-No LLM-assisted findings were recorded in this skeleton version.
+No LLM-assisted findings were recorded.
 {% endif %}
 
 ---

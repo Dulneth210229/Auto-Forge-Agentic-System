@@ -3,10 +3,10 @@
   "stage": "security",
   "version": "v1",
   "summary": {
-    "total_findings": 48,
-    "critical": 7,
-    "high": 22,
-    "medium": 18,
+    "total_findings": 57,
+    "critical": 11,
+    "high": 26,
+    "medium": 19,
     "low": 1
   },
   "findings": [
@@ -777,6 +777,150 @@
         "api": "",
         "module": ""
       }
+    },
+    {
+      "finding_id": "SEC-049",
+      "title": "Insecure Secret Key Storage",
+      "description": "The SECRET_KEY is hardcoded in plain text. This allows an attacker to easily discover the key.",
+      "severity": "High",
+      "file": "sample_ecommerce_app\\app.py",
+      "line": 0,
+      "detection_method": "LLM",
+      "cwe": "CWE-259",
+      "recommendation": "Store secrets securely using a secrets management system or environment variables.",
+      "traceability": {
+        "requirement_id": "",
+        "api": "",
+        "module": ""
+      }
+    },
+    {
+      "finding_id": "SEC-050",
+      "title": "Insecure API Key Storage",
+      "description": "The API_KEY is hardcoded in plain text. This allows an attacker to easily discover the key.",
+      "severity": "High",
+      "file": "sample_ecommerce_app\\app.py",
+      "line": 0,
+      "detection_method": "LLM",
+      "cwe": "CWE-259",
+      "recommendation": "Store secrets securely using a secrets management system or environment variables.",
+      "traceability": {
+        "requirement_id": "",
+        "api": "",
+        "module": ""
+      }
+    },
+    {
+      "finding_id": "SEC-051",
+      "title": "Insecure Database Password Storage",
+      "description": "The DB_PASSWORD is hardcoded in plain text. This allows an attacker to easily discover the password.",
+      "severity": "High",
+      "file": "sample_ecommerce_app\\app.py",
+      "line": 0,
+      "detection_method": "LLM",
+      "cwe": "CWE-259",
+      "recommendation": "Store secrets securely using a secrets management system or environment variables.",
+      "traceability": {
+        "requirement_id": "",
+        "api": "",
+        "module": ""
+      }
+    },
+    {
+      "finding_id": "SEC-052",
+      "title": "Open Redirect",
+      "description": "The allow_origins parameter in the CORSMiddleware allows an attacker to redirect users to any website.",
+      "severity": "Medium",
+      "file": "sample_ecommerce_app\\app.py",
+      "line": 7,
+      "detection_method": "LLM",
+      "cwe": "CWE-601",
+      "recommendation": "Restrict allowed origins to trusted domains only.",
+      "traceability": {
+        "requirement_id": "",
+        "api": "",
+        "module": ""
+      }
+    },
+    {
+      "finding_id": "SEC-053",
+      "title": "SQL Injection in search_product endpoint",
+      "description": "The search_product endpoint uses a vulnerable SQL query that can be exploited by an attacker.",
+      "severity": "Critical",
+      "file": "sample_ecommerce_app\\app.py",
+      "line": 18,
+      "detection_method": "LLM",
+      "cwe": "CWE-89",
+      "recommendation": "Use parameterized queries or an ORM to prevent SQL injection attacks.",
+      "traceability": {
+        "requirement_id": "",
+        "api": "",
+        "module": ""
+      }
+    },
+    {
+      "finding_id": "SEC-054",
+      "title": "Arbitrary Code Execution in dangerous_code endpoint",
+      "description": "The dangerous_code endpoint uses eval() function which can execute arbitrary code, allowing an attacker to execute malicious code on the server.",
+      "severity": "Critical",
+      "file": "sample_ecommerce_app\\app.py",
+      "line": 24,
+      "detection_method": "LLM",
+      "cwe": "CWE-94",
+      "recommendation": "Do not use eval() or other similar functions. Instead, validate and sanitize user input before processing it.",
+      "traceability": {
+        "requirement_id": "",
+        "api": "",
+        "module": ""
+      }
+    },
+    {
+      "finding_id": "SEC-055",
+      "title": "Command Injection in run_command endpoint",
+      "description": "The run_command endpoint uses subprocess.run() function which can execute arbitrary system commands, allowing an attacker to execute malicious code on the server.",
+      "severity": "Critical",
+      "file": "sample_ecommerce_app\\app.py",
+      "line": 30,
+      "detection_method": "LLM",
+      "cwe": "CWE-78",
+      "recommendation": "Do not use subprocess.run() or other similar functions. Instead, validate and sanitize user input before processing it.",
+      "traceability": {
+        "requirement_id": "",
+        "api": "",
+        "module": ""
+      }
+    },
+    {
+      "finding_id": "SEC-056",
+      "title": "Insecure Token Storage",
+      "description": "Storing sensitive tokens in local storage is a security risk. An attacker can access the token by exploiting browser vulnerabilities or accessing the user's local storage.",
+      "severity": "High",
+      "file": "sample_ecommerce_app\\frontend.js",
+      "line": 0,
+      "detection_method": "LLM",
+      "cwe": "CWE-356",
+      "recommendation": "Use a secure token storage mechanism, such as a server-side session or an encrypted cookie.",
+      "traceability": {
+        "requirement_id": "",
+        "api": "",
+        "module": ""
+      }
+    },
+    {
+      "finding_id": "SEC-057",
+      "title": "Untrusted Eval",
+      "description": "The eval() function is vulnerable to code injection attacks. It can execute arbitrary JavaScript code, which can be used to steal sensitive data or perform malicious actions.",
+      "severity": "Critical",
+      "file": "sample_ecommerce_app\\frontend.js",
+      "line": 14,
+      "detection_method": "LLM",
+      "cwe": "CWE-95",
+      "recommendation": "Avoid using the eval() function or use a safer alternative like JSON.parse().",
+      "traceability": {
+        "requirement_id": "",
+        "api": "",
+        "module": ""
+      }
     }
   ],
   "dependency_vulnerabilities": [
@@ -1078,9 +1222,109 @@
       "source": "osv.dev"
     }
   ],
-  "llm_findings": [],
+  "llm_findings": [
+    {
+      "title": "Insecure Secret Key Storage",
+      "description": "The SECRET_KEY is hardcoded in plain text. This allows an attacker to easily discover the key.",
+      "severity": "High",
+      "file": "sample_ecommerce_app\\app.py",
+      "line": 0,
+      "cwe": "CWE-259",
+      "recommendation": "Store secrets securely using a secrets management system or environment variables.",
+      "confidence": 1.0,
+      "source": "ollama"
+    },
+    {
+      "title": "Insecure API Key Storage",
+      "description": "The API_KEY is hardcoded in plain text. This allows an attacker to easily discover the key.",
+      "severity": "High",
+      "file": "sample_ecommerce_app\\app.py",
+      "line": 0,
+      "cwe": "CWE-259",
+      "recommendation": "Store secrets securely using a secrets management system or environment variables.",
+      "confidence": 1.0,
+      "source": "ollama"
+    },
+    {
+      "title": "Insecure Database Password Storage",
+      "description": "The DB_PASSWORD is hardcoded in plain text. This allows an attacker to easily discover the password.",
+      "severity": "High",
+      "file": "sample_ecommerce_app\\app.py",
+      "line": 0,
+      "cwe": "CWE-259",
+      "recommendation": "Store secrets securely using a secrets management system or environment variables.",
+      "confidence": 1.0,
+      "source": "ollama"
+    },
+    {
+      "title": "Open Redirect",
+      "description": "The allow_origins parameter in the CORSMiddleware allows an attacker to redirect users to any website.",
+      "severity": "Medium",
+      "file": "sample_ecommerce_app\\app.py",
+      "line": 7,
+      "cwe": "CWE-601",
+      "recommendation": "Restrict allowed origins to trusted domains only.",
+      "confidence": 1.0,
+      "source": "ollama"
+    },
+    {
+      "title": "SQL Injection in search_product endpoint",
+      "description": "The search_product endpoint uses a vulnerable SQL query that can be exploited by an attacker.",
+      "severity": "Critical",
+      "file": "sample_ecommerce_app\\app.py",
+      "line": 18,
+      "cwe": "CWE-89",
+      "recommendation": "Use parameterized queries or an ORM to prevent SQL injection attacks.",
+      "confidence": 1.0,
+      "source": "ollama"
+    },
+    {
+      "title": "Arbitrary Code Execution in dangerous_code endpoint",
+      "description": "The dangerous_code endpoint uses eval() function which can execute arbitrary code, allowing an attacker to execute malicious code on the server.",
+      "severity": "Critical",
+      "file": "sample_ecommerce_app\\app.py",
+      "line": 24,
+      "cwe": "CWE-94",
+      "recommendation": "Do not use eval() or other similar functions. Instead, validate and sanitize user input before processing it.",
+      "confidence": 1.0,
+      "source": "ollama"
+    },
+    {
+      "title": "Command Injection in run_command endpoint",
+      "description": "The run_command endpoint uses subprocess.run() function which can execute arbitrary system commands, allowing an attacker to execute malicious code on the server.",
+      "severity": "Critical",
+      "file": "sample_ecommerce_app\\app.py",
+      "line": 30,
+      "cwe": "CWE-78",
+      "recommendation": "Do not use subprocess.run() or other similar functions. Instead, validate and sanitize user input before processing it.",
+      "confidence": 1.0,
+      "source": "ollama"
+    },
+    {
+      "title": "Insecure Token Storage",
+      "description": "Storing sensitive tokens in local storage is a security risk. An attacker can access the token by exploiting browser vulnerabilities or accessing the user's local storage.",
+      "severity": "High",
+      "file": "sample_ecommerce_app\\frontend.js",
+      "line": 0,
+      "cwe": "CWE-356",
+      "recommendation": "Use a secure token storage mechanism, such as a server-side session or an encrypted cookie.",
+      "confidence": 1.0,
+      "source": "ollama"
+    },
+    {
+      "title": "Untrusted Eval",
+      "description": "The eval() function is vulnerable to code injection attacks. It can execute arbitrary JavaScript code, which can be used to steal sensitive data or perform malicious actions.",
+      "severity": "Critical",
+      "file": "sample_ecommerce_app\\frontend.js",
+      "line": 14,
+      "cwe": "CWE-95",
+      "recommendation": "Avoid using the eval() function or use a safer alternative like JSON.parse().",
+      "confidence": 1.0,
+      "source": "ollama"
+    }
+  ],
   "metrics": {
     "coverage": 1.0,
-    "confidence": 0.8
+    "confidence": 0.85
   }
 }

@@ -10,6 +10,8 @@ from agents.security_agent.schemas import (
 )
 from agents.security_agent.renderer import render_security_report_markdown
 from agents.security_agent.scanners.multi_scanner import MultiSecurityScanner
+from agents.security_agent.llm_reviewer import LLMSecureCodeReviewer
+from tools.llm.provider import OllamaProvider
 
 
 class SecurityAgent:
@@ -26,7 +28,16 @@ class SecurityAgent:
     - Extended to multi-scanner architecture.
 
     Step 5:
-    - Added dependency scanning for requirements.txt and package.json.
+    - Added dependency scanning.
+
+    Step 6:
+    - Added OSV.dev lookup.
+
+    Step 6.1:
+    - Added dependency filtering and deduplication.
+
+    Step 7:
+    - Added Ollama LLM-assisted secure code review.
     """
 
     def __init__(self, output_root: str = "outputs"):
@@ -37,15 +48,32 @@ class SecurityAgent:
         self,
         run_id: str = "RUN-0001",
         version: str = "v1",
-        target_path: str | None = None
+        target_path: str | None = None,
+        enable_llm: bool = False
     ) -> dict:
         """
         Runs the Security Agent.
+
+        If enable_llm=True:
+        - Runs Ollama LLM-assisted secure code review after rule-based scanning.
         """
+
+        llm_findings_data: List[Dict[str, Any]] = []
 
         if target_path:
             findings = self.scanner.scan_directory(target_path)
             dependency_vulnerabilities = self.scanner.get_dependency_vulnerabilities()
+
+            if enable_llm:
+                llm_reviewer = LLMSecureCodeReviewer(
+                    llm_provider=OllamaProvider(),
+                    factory=self.scanner.get_factory()
+                )
+
+                llm_security_findings = llm_reviewer.review_directory(target_path)
+                findings.extend(llm_security_findings)
+                llm_findings_data = llm_reviewer.llm_findings
+
         else:
             findings = []
             dependency_vulnerabilities = []
@@ -54,7 +82,8 @@ class SecurityAgent:
             run_id=run_id,
             version=version,
             findings=findings,
-            dependency_vulnerabilities=dependency_vulnerabilities
+            dependency_vulnerabilities=dependency_vulnerabilities,
+            llm_findings=llm_findings_data
         )
 
         output_dir = self.output_root / "runs" / run_id / "security" / version
@@ -80,10 +109,12 @@ class SecurityAgent:
             "stage": "security",
             "version": version,
             "target_path": target_path,
+            "llm_enabled": enable_llm,
             "json_path": str(json_path),
             "markdown_path": str(md_path),
             "summary": report.summary.model_dump(),
-            "dependency_vulnerabilities_count": len(dependency_vulnerabilities)
+            "dependency_vulnerabilities_count": len(dependency_vulnerabilities),
+            "llm_findings_count": len(llm_findings_data)
         }
 
     def create_report(
@@ -91,17 +122,18 @@ class SecurityAgent:
         run_id: str,
         version: str,
         findings: List[SecurityFinding],
-        dependency_vulnerabilities: List[Dict[str, Any]]
+        dependency_vulnerabilities: List[Dict[str, Any]],
+        llm_findings: List[Dict[str, Any]]
     ) -> SecurityReport:
         """
-        Creates the final SecurityReport object from scanner findings.
+        Creates the final SecurityReport object from all scanner findings.
         """
 
         summary = self._build_summary(findings)
 
         metrics = SecurityMetrics(
             coverage=1.0 if findings else 0.0,
-            confidence=0.8 if findings else 0.0
+            confidence=0.85 if llm_findings else 0.8 if findings else 0.0
         )
 
         return SecurityReport(
@@ -111,7 +143,7 @@ class SecurityAgent:
             summary=summary,
             findings=findings,
             dependency_vulnerabilities=dependency_vulnerabilities,
-            llm_findings=[],
+            llm_findings=llm_findings,
             metrics=metrics
         )
 

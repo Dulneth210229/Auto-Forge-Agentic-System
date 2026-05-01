@@ -12,7 +12,7 @@ from agents.security_agent.scanners.dependency_scanner import DependencyScanner
 
 class MultiSecurityScanner:
     """
-    Runs all available security scanners on a target project folder.
+    Runs all rule-based security scanners on a target project folder.
 
     Current scanners:
     - PythonASTScanner
@@ -51,7 +51,13 @@ class MultiSecurityScanner:
     def get_dependency_vulnerabilities(self) -> List[Dict[str, Any]]:
         """
         Return normalized dependency vulnerability records.
-        These will be stored separately in SecurityReport_v1.json.
         """
 
         return self.dependency_scanner.dependency_vulnerabilities
+
+    def get_factory(self) -> FindingFactory:
+        """
+        Return the shared finding factory so LLM findings continue the same SEC ID sequence.
+        """
+
+        return self.factory
