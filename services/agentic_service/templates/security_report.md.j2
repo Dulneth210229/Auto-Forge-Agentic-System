@@ -1,0 +1,97 @@
+# Security Report
+
+**Run ID:** {{ report.run_id }}  
+**Stage:** {{ report.stage }}  
+**Version:** {{ report.version }}
+
+---
+
+## 1. Summary
+
+| Severity | Count |
+|---|---:|
+| Critical | {{ report.summary.critical }} |
+| High | {{ report.summary.high }} |
+| Medium | {{ report.summary.medium }} |
+| Low | {{ report.summary.low }} |
+| **Total** | **{{ report.summary.total_findings }}** |
+
+---
+
+## 2. Findings
+
+{% if report.findings %}
+| ID | Title | Severity | File | Line | Method | CWE |
+|---|---|---|---|---:|---|---|
+{% for finding in report.findings %}
+| {{ finding.finding_id }} | {{ finding.title }} | {{ finding.severity }} | {{ finding.file }} | {{ finding.line }} | {{ finding.detection_method }} | {{ finding.cwe }} |
+{% endfor %}
+{% else %}
+No security findings were detected.
+{% endif %}
+
+---
+
+## 3. Finding Details
+
+{% for finding in report.findings %}
+### {{ finding.finding_id }} — {{ finding.title }}
+
+**Severity:** {{ finding.severity }}  
+**Detection Method:** {{ finding.detection_method }}  
+**File:** {{ finding.file }}  
+**Line:** {{ finding.line }}  
+**CWE:** {{ finding.cwe }}
+
+**Description:**  
+{{ finding.description }}
+
+**Recommendation:**  
+{{ finding.recommendation }}
+
+**Traceability:**  
+- Requirement ID: {{ finding.traceability.requirement_id }}
+- API: {{ finding.traceability.api }}
+- Module: {{ finding.traceability.module }}
+
+{% endfor %}
+
+---
+
+## 4. Dependency Vulnerabilities
+
+{% if report.dependency_vulnerabilities %}
+{% for vuln in report.dependency_vulnerabilities %}
+- {{ vuln }}
+{% endfor %}
+{% else %}
+No dependency vulnerabilities were recorded in this skeleton version.
+{% endif %}
+
+---
+
+## 5. LLM Findings
+
+{% if report.llm_findings %}
+{% for item in report.llm_findings %}
+- {{ item }}
+{% endfor %}
+{% else %}
+No LLM-assisted findings were recorded in this skeleton version.
+{% endif %}
+
+---
+
+## 6. Metrics
+
+| Metric | Value |
+|---|---:|
+| Coverage | {{ report.metrics.coverage }} |
+| Confidence | {{ report.metrics.confidence }} |
+
+---
+
+## 7. Notes
+
+This is the initial Security Agent skeleton report.  
+Real AST scanning, dependency scanning, and LLM-assisted secure code review will be added in later steps.

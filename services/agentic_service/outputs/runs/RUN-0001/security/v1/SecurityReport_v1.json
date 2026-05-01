@@ -1,0 +1,36 @@
+{
+  "run_id": "RUN-0001",
+  "stage": "security",
+  "version": "v1",
+  "summary": {
+    "total_findings": 1,
+    "critical": 0,
+    "high": 1,
+    "medium": 0,
+    "low": 0
+  },
+  "findings": [
+    {
+      "finding_id": "SEC-001",
+      "title": "Dummy hardcoded secret finding",
+      "description": "This is dummy data. Real AST scanning will be added in the next step.",
+      "severity": "High",
+      "file": "sample_ecommerce_app/config.py",
+      "line": 10,
+      "detection_method": "AST",
+      "cwe": "CWE-798",
+      "recommendation": "Move secrets into environment variables and never commit them to source code.",
+      "traceability": {
+        "requirement_id": "FR-004",
+        "api": "/api/checkout",
+        "module": "checkout"
+      }
+    }
+  ],
+  "dependency_vulnerabilities": [],
+  "llm_findings": [],
+  "metrics": {
+    "coverage": 0.0,
+    "confidence": 0.5
+  }
+}
