@@ -10,11 +10,11 @@
 
 | Severity | Count |
 |---|---:|
-| Critical | 11 |
-| High | 26 |
-| Medium | 19 |
+| Critical | 6 |
+| High | 15 |
+| Medium | 12 |
 | Low | 1 |
-| **Total** | **57** |
+| **Total** | **34** |
 
 ---
 
@@ -23,62 +23,39 @@
 | ID | Title | Severity | File | Line | Method | CWE |
 |---|---|---|---|---:|---|---|
 | SEC-001 | Hardcoded secret detected | High | sample_ecommerce_app\app.py | 8 | AST | CWE-798 |
-| SEC-002 | Hardcoded secret detected | High | sample_ecommerce_app\app.py | 9 | AST | CWE-798 |
-| SEC-003 | Hardcoded secret detected | High | sample_ecommerce_app\app.py | 10 | AST | CWE-798 |
-| SEC-004 | Use of eval() detected | Critical | sample_ecommerce_app\app.py | 42 | AST | CWE-95 |
-| SEC-005 | Unsafe subprocess usage with shell=True | High | sample_ecommerce_app\app.py | 47 | AST | CWE-78 |
-| SEC-006 | Weak hashing algorithm detected | Medium | sample_ecommerce_app\app.py | 37 | AST | CWE-327 |
-| SEC-007 | Debug mode enabled | Medium | sample_ecommerce_app\app.py | 6 | AST | CWE-489 |
-| SEC-008 | Insecure CORS wildcard detected | Medium | sample_ecommerce_app\app.py | 14 | AST | CWE-942 |
-| SEC-009 | Possible raw SQL string formatting | High | sample_ecommerce_app\app.py | 31 | AST | CWE-89 |
-| SEC-010 | Direct innerHTML assignment detected | High | sample_ecommerce_app\frontend.js | 2 | AST | CWE-79 |
-| SEC-011 | Sensitive token stored in localStorage | Medium | sample_ecommerce_app\frontend.js | 6 | AST | CWE-922 |
-| SEC-012 | JavaScript eval() usage detected | Critical | sample_ecommerce_app\frontend.js | 10 | AST | CWE-95 |
-| SEC-013 | Sensitive data logged to console | Medium | sample_ecommerce_app\frontend.js | 13 | AST | CWE-532 |
-| SEC-014 | Possible hardcoded secret detected | High | sample_ecommerce_app\.env | 2 | AST | CWE-798 |
-| SEC-015 | Possible hardcoded secret detected | High | sample_ecommerce_app\.env | 3 | AST | CWE-798 |
-| SEC-016 | Possible hardcoded secret detected | High | sample_ecommerce_app\app.py | 8 | AST | CWE-798 |
-| SEC-017 | Possible hardcoded secret detected | High | sample_ecommerce_app\app.py | 9 | AST | CWE-798 |
-| SEC-018 | Possible hardcoded secret detected | High | sample_ecommerce_app\app.py | 10 | AST | CWE-798 |
-| SEC-019 | Debug configuration enabled | Medium | sample_ecommerce_app\.env | 1 | AST | CWE-489 |
-| SEC-020 | Wildcard CORS setting in configuration | Medium | sample_ecommerce_app\.env | 4 | AST | CWE-942 |
-| SEC-021 | Docker container runs as root | Medium | sample_ecommerce_app\Dockerfile | 7 | AST | CWE-250 |
-| SEC-022 | Vulnerable dependency detected: lodash | High | sample_ecommerce_app\package.json | 0 | Dependency | CWE-77 |
-| SEC-023 | Vulnerable dependency detected: lodash | High | sample_ecommerce_app\package.json | 0 | Dependency | CWE-1321 |
-| SEC-024 | Vulnerable dependency detected: lodash | High | sample_ecommerce_app\package.json | 0 | Dependency | CWE-94 |
-| SEC-025 | Vulnerable dependency detected: lodash | Medium | sample_ecommerce_app\package.json | 0 | Dependency | CWE-1333 |
-| SEC-026 | Vulnerable dependency detected: lodash | Medium | sample_ecommerce_app\package.json | 0 | Dependency | CWE-1321 |
-| SEC-027 | Vulnerable dependency detected: axios | High | sample_ecommerce_app\package.json | 0 | Dependency | CWE-20 |
-| SEC-028 | Vulnerable dependency detected: axios | High | sample_ecommerce_app\package.json | 0 | Dependency | CWE-754 |
-| SEC-029 | Vulnerable dependency detected: axios | High | sample_ecommerce_app\package.json | 0 | Dependency | CWE-1333 |
-| SEC-030 | Vulnerable dependency detected: axios | High | sample_ecommerce_app\package.json | 0 | Dependency | CWE-918 |
-| SEC-031 | Vulnerable dependency detected: axios | Medium | sample_ecommerce_app\package.json | 0 | Dependency | CWE-441 |
-| SEC-032 | Vulnerable dependency detected: express | Medium | sample_ecommerce_app\package.json | 0 | Dependency | CWE-1286 |
-| SEC-033 | Vulnerable dependency detected: express | Low | sample_ecommerce_app\package.json | 0 | Dependency | CWE-79 |
-| SEC-034 | Vulnerable dependency detected: django | Critical | sample_ecommerce_app\requirements.txt | 1 | Dependency | CWE-79 |
-| SEC-035 | Vulnerable dependency detected: django | Critical | sample_ecommerce_app\requirements.txt | 1 | Dependency | CWE-22 |
-| SEC-036 | Vulnerable dependency detected: django | Critical | sample_ecommerce_app\requirements.txt | 1 | Dependency | CWE-89 |
-| SEC-037 | Vulnerable dependency detected: django | Critical | sample_ecommerce_app\requirements.txt | 1 | Dependency | CWE-89 |
-| SEC-038 | Vulnerable dependency detected: django | Critical | sample_ecommerce_app\requirements.txt | 1 | Dependency | CWE-94 |
-| SEC-039 | Vulnerable dependency detected: flask | High | sample_ecommerce_app\requirements.txt | 2 | Dependency | CWE-20 |
-| SEC-040 | Vulnerable dependency detected: flask | High | sample_ecommerce_app\requirements.txt | 2 | Dependency | CWE-400 |
-| SEC-041 | Vulnerable dependency detected: flask | High | sample_ecommerce_app\requirements.txt | 2 | Dependency | CWE-539 |
-| SEC-042 | Vulnerable dependency detected: flask | Medium | sample_ecommerce_app\requirements.txt | 2 | Dependency | CWE-937 |
-| SEC-043 | Vulnerable dependency detected: flask | Medium | sample_ecommerce_app\requirements.txt | 2 | Dependency | CWE-937 |
-| SEC-044 | Vulnerable dependency detected: requests | High | sample_ecommerce_app\requirements.txt | 3 | Dependency | CWE-522 |
-| SEC-045 | Vulnerable dependency detected: requests | Medium | sample_ecommerce_app\requirements.txt | 3 | Dependency | CWE-522 |
-| SEC-046 | Vulnerable dependency detected: requests | Medium | sample_ecommerce_app\requirements.txt | 3 | Dependency | CWE-200 |
-| SEC-047 | Vulnerable dependency detected: requests | Medium | sample_ecommerce_app\requirements.txt | 3 | Dependency | CWE-937 |
-| SEC-048 | Vulnerable dependency detected: requests | Medium | sample_ecommerce_app\requirements.txt | 3 | Dependency | CWE-937 |
-| SEC-049 | Insecure Secret Key Storage | High | sample_ecommerce_app\app.py | 0 | LLM | CWE-259 |
-| SEC-050 | Insecure API Key Storage | High | sample_ecommerce_app\app.py | 0 | LLM | CWE-259 |
-| SEC-051 | Insecure Database Password Storage | High | sample_ecommerce_app\app.py | 0 | LLM | CWE-259 |
-| SEC-052 | Open Redirect | Medium | sample_ecommerce_app\app.py | 7 | LLM | CWE-601 |
-| SEC-053 | SQL Injection in search_product endpoint | Critical | sample_ecommerce_app\app.py | 18 | LLM | CWE-89 |
-| SEC-054 | Arbitrary Code Execution in dangerous_code endpoint | Critical | sample_ecommerce_app\app.py | 24 | LLM | CWE-94 |
-| SEC-055 | Command Injection in run_command endpoint | Critical | sample_ecommerce_app\app.py | 30 | LLM | CWE-78 |
-| SEC-056 | Insecure Token Storage | High | sample_ecommerce_app\frontend.js | 0 | LLM | CWE-356 |
-| SEC-057 | Untrusted Eval | Critical | sample_ecommerce_app\frontend.js | 14 | LLM | CWE-95 |
+| SEC-002 | Use of eval() detected | Critical | sample_ecommerce_app\app.py | 42 | AST | CWE-95 |
+| SEC-003 | Unsafe subprocess usage with shell=True | High | sample_ecommerce_app\app.py | 47 | AST | CWE-78 |
+| SEC-004 | Weak hashing algorithm detected | Medium | sample_ecommerce_app\app.py | 37 | AST | CWE-327 |
+| SEC-005 | Debug mode enabled | Medium | sample_ecommerce_app\app.py | 6 | AST | CWE-489 |
+| SEC-006 | Insecure CORS wildcard detected | Medium | sample_ecommerce_app\app.py | 14 | AST | CWE-942 |
+| SEC-007 | Possible raw SQL string formatting | High | sample_ecommerce_app\app.py | 31 | AST | CWE-89 |
+| SEC-008 | Direct innerHTML assignment detected | High | sample_ecommerce_app\frontend.js | 2 | AST | CWE-79 |
+| SEC-009 | Sensitive token stored in localStorage | Medium | sample_ecommerce_app\frontend.js | 6 | AST | CWE-922 |
+| SEC-010 | JavaScript eval() usage detected | Critical | sample_ecommerce_app\frontend.js | 10 | AST | CWE-95 |
+| SEC-011 | Possible hardcoded secret detected | High | sample_ecommerce_app\.env | 2 | AST | CWE-798 |
+| SEC-012 | Debug configuration enabled | Medium | sample_ecommerce_app\.env | 1 | AST | CWE-489 |
+| SEC-013 | Wildcard CORS setting in configuration | Medium | sample_ecommerce_app\.env | 4 | AST | CWE-942 |
+| SEC-014 | Docker container runs as root | Medium | sample_ecommerce_app\Dockerfile | 7 | AST | CWE-250 |
+| SEC-015 | Vulnerable dependency detected: lodash | High | sample_ecommerce_app\package.json | 0 | Dependency | CWE-77 |
+| SEC-016 | Vulnerable dependency detected: lodash | High | sample_ecommerce_app\package.json | 0 | Dependency | CWE-1321 |
+| SEC-017 | Vulnerable dependency detected: lodash | High | sample_ecommerce_app\package.json | 0 | Dependency | CWE-94 |
+| SEC-018 | Vulnerable dependency detected: lodash | Medium | sample_ecommerce_app\package.json | 0 | Dependency | CWE-1333 |
+| SEC-019 | Vulnerable dependency detected: axios | High | sample_ecommerce_app\package.json | 0 | Dependency | CWE-20 |
+| SEC-020 | Vulnerable dependency detected: axios | High | sample_ecommerce_app\package.json | 0 | Dependency | CWE-754 |
+| SEC-021 | Vulnerable dependency detected: axios | High | sample_ecommerce_app\package.json | 0 | Dependency | CWE-918 |
+| SEC-022 | Vulnerable dependency detected: axios | Medium | sample_ecommerce_app\package.json | 0 | Dependency | CWE-441 |
+| SEC-023 | Vulnerable dependency detected: express | Medium | sample_ecommerce_app\package.json | 0 | Dependency | CWE-1286 |
+| SEC-024 | Vulnerable dependency detected: express | Low | sample_ecommerce_app\package.json | 0 | Dependency | CWE-79 |
+| SEC-025 | Vulnerable dependency detected: django | Critical | sample_ecommerce_app\requirements.txt | 1 | Dependency | CWE-79 |
+| SEC-026 | Vulnerable dependency detected: django | Critical | sample_ecommerce_app\requirements.txt | 1 | Dependency | CWE-22 |
+| SEC-027 | Vulnerable dependency detected: django | Critical | sample_ecommerce_app\requirements.txt | 1 | Dependency | CWE-89 |
+| SEC-028 | Vulnerable dependency detected: django | Critical | sample_ecommerce_app\requirements.txt | 1 | Dependency | CWE-94 |
+| SEC-029 | Vulnerable dependency detected: flask | High | sample_ecommerce_app\requirements.txt | 2 | Dependency | CWE-20 |
+| SEC-030 | Vulnerable dependency detected: flask | High | sample_ecommerce_app\requirements.txt | 2 | Dependency | CWE-400 |
+| SEC-031 | Vulnerable dependency detected: flask | High | sample_ecommerce_app\requirements.txt | 2 | Dependency | CWE-539 |
+| SEC-032 | Vulnerable dependency detected: flask | Medium | sample_ecommerce_app\requirements.txt | 2 | Dependency | CWE-937 |
+| SEC-033 | Vulnerable dependency detected: requests | High | sample_ecommerce_app\requirements.txt | 3 | Dependency | CWE-522 |
+| SEC-034 | Vulnerable dependency detected: requests | Medium | sample_ecommerce_app\requirements.txt | 3 | Dependency | CWE-200 |
 
 ---
 
@@ -103,45 +80,7 @@ Move secrets to environment variables or a secure secret manager.
 - API: 
 - Module: 
 
-### SEC-002 — Hardcoded secret detected
-
-**Severity:** High  
-**Detection Method:** AST  
-**File:** sample_ecommerce_app\app.py  
-**Line:** 9  
-**CWE:** CWE-798
-
-**Description:**  
-The variable 'API_KEY' appears to contain a hardcoded secret.
-
-**Recommendation:**  
-Move secrets to environment variables or a secure secret manager.
-
-**Traceability:**  
-- Requirement ID: 
-- API: 
-- Module: 
-
-### SEC-003 — Hardcoded secret detected
-
-**Severity:** High  
-**Detection Method:** AST  
-**File:** sample_ecommerce_app\app.py  
-**Line:** 10  
-**CWE:** CWE-798
-
-**Description:**  
-The variable 'DB_PASSWORD' appears to contain a hardcoded secret.
-
-**Recommendation:**  
-Move secrets to environment variables or a secure secret manager.
-
-**Traceability:**  
-- Requirement ID: 
-- API: 
-- Module: 
-
-### SEC-004 — Use of eval() detected
+### SEC-002 — Use of eval() detected
 
 **Severity:** Critical  
 **Detection Method:** AST  
@@ -160,7 +99,7 @@ Avoid eval(). Use safe parsing or explicit logic instead.
 - API: 
 - Module: 
 
-### SEC-005 — Unsafe subprocess usage with shell=True
+### SEC-003 — Unsafe subprocess usage with shell=True
 
 **Severity:** High  
 **Detection Method:** AST  
@@ -179,7 +118,7 @@ Use shell=False and pass command arguments as a list.
 - API: 
 - Module: 
 
-### SEC-006 — Weak hashing algorithm detected
+### SEC-004 — Weak hashing algorithm detected
 
 **Severity:** Medium  
 **Detection Method:** AST  
@@ -198,7 +137,7 @@ Use SHA-256, bcrypt, Argon2, or another secure hashing approach.
 - API: 
 - Module: 
 
-### SEC-007 — Debug mode enabled
+### SEC-005 — Debug mode enabled
 
 **Severity:** Medium  
 **Detection Method:** AST  
@@ -217,7 +156,7 @@ Disable debug mode in production environments.
 - API: 
 - Module: 
 
-### SEC-008 — Insecure CORS wildcard detected
+### SEC-006 — Insecure CORS wildcard detected
 
 **Severity:** Medium  
 **Detection Method:** AST  
@@ -236,7 +175,7 @@ Restrict CORS origins to trusted frontend domains.
 - API: 
 - Module: 
 
-### SEC-009 — Possible raw SQL string formatting
+### SEC-007 — Possible raw SQL string formatting
 
 **Severity:** High  
 **Detection Method:** AST  
@@ -255,7 +194,7 @@ Use parameterized queries or an ORM query builder.
 - API: 
 - Module: 
 
-### SEC-010 — Direct innerHTML assignment detected
+### SEC-008 — Direct innerHTML assignment detected
 
 **Severity:** High  
 **Detection Method:** AST  
@@ -274,7 +213,7 @@ Use textContent or sanitize HTML before assigning it to the DOM.
 - API: 
 - Module: 
 
-### SEC-011 — Sensitive token stored in localStorage
+### SEC-009 — Sensitive token stored in localStorage
 
 **Severity:** Medium  
 **Detection Method:** AST  
@@ -293,7 +232,7 @@ Prefer secure, HttpOnly cookies for sensitive session tokens.
 - API: 
 - Module: 
 
-### SEC-012 — JavaScript eval() usage detected
+### SEC-010 — JavaScript eval() usage detected
 
 **Severity:** Critical  
 **Detection Method:** AST  
@@ -312,26 +251,7 @@ Avoid eval(). Use safe parsing or explicit logic instead.
 - API: 
 - Module: 
 
-### SEC-013 — Sensitive data logged to console
-
-**Severity:** Medium  
-**Detection Method:** AST  
-**File:** sample_ecommerce_app\frontend.js  
-**Line:** 13  
-**CWE:** CWE-532
-
-**Description:**  
-Logging secrets or tokens can expose sensitive information in logs.
-
-**Recommendation:**  
-Remove sensitive data from logs.
-
-**Traceability:**  
-- Requirement ID: 
-- API: 
-- Module: 
-
-### SEC-014 — Possible hardcoded secret detected
+### SEC-011 — Possible hardcoded secret detected
 
 **Severity:** High  
 **Detection Method:** AST  
@@ -350,83 +270,7 @@ Move secrets to environment variables or a dedicated secret manager.
 - API: 
 - Module: 
 
-### SEC-015 — Possible hardcoded secret detected
-
-**Severity:** High  
-**Detection Method:** AST  
-**File:** sample_ecommerce_app\.env  
-**Line:** 3  
-**CWE:** CWE-798
-
-**Description:**  
-A possible hardcoded secret, password, token, or API key was found in a text-based file.
-
-**Recommendation:**  
-Move secrets to environment variables or a dedicated secret manager.
-
-**Traceability:**  
-- Requirement ID: 
-- API: 
-- Module: 
-
-### SEC-016 — Possible hardcoded secret detected
-
-**Severity:** High  
-**Detection Method:** AST  
-**File:** sample_ecommerce_app\app.py  
-**Line:** 8  
-**CWE:** CWE-798
-
-**Description:**  
-A possible hardcoded secret, password, token, or API key was found in a text-based file.
-
-**Recommendation:**  
-Move secrets to environment variables or a dedicated secret manager.
-
-**Traceability:**  
-- Requirement ID: 
-- API: 
-- Module: 
-
-### SEC-017 — Possible hardcoded secret detected
-
-**Severity:** High  
-**Detection Method:** AST  
-**File:** sample_ecommerce_app\app.py  
-**Line:** 9  
-**CWE:** CWE-798
-
-**Description:**  
-A possible hardcoded secret, password, token, or API key was found in a text-based file.
-
-**Recommendation:**  
-Move secrets to environment variables or a dedicated secret manager.
-
-**Traceability:**  
-- Requirement ID: 
-- API: 
-- Module: 
-
-### SEC-018 — Possible hardcoded secret detected
-
-**Severity:** High  
-**Detection Method:** AST  
-**File:** sample_ecommerce_app\app.py  
-**Line:** 10  
-**CWE:** CWE-798
-
-**Description:**  
-A possible hardcoded secret, password, token, or API key was found in a text-based file.
-
-**Recommendation:**  
-Move secrets to environment variables or a dedicated secret manager.
-
-**Traceability:**  
-- Requirement ID: 
-- API: 
-- Module: 
-
-### SEC-019 — Debug configuration enabled
+### SEC-012 — Debug configuration enabled
 
 **Severity:** Medium  
 **Detection Method:** AST  
@@ -445,7 +289,7 @@ Disable debug mode in production configurations.
 - API: 
 - Module: 
 
-### SEC-020 — Wildcard CORS setting in configuration
+### SEC-013 — Wildcard CORS setting in configuration
 
 **Severity:** Medium  
 **Detection Method:** AST  
@@ -464,7 +308,7 @@ Restrict CORS settings to trusted frontend origins.
 - API: 
 - Module: 
 
-### SEC-021 — Docker container runs as root
+### SEC-014 — Docker container runs as root
 
 **Severity:** Medium  
 **Detection Method:** AST  
@@ -483,7 +327,7 @@ Create and use a non-root user inside the Docker image.
 - API: 
 - Module: 
 
-### SEC-022 — Vulnerable dependency detected: lodash
+### SEC-015 — Vulnerable dependency detected: lodash
 
 **Severity:** High  
 **Detection Method:** Dependency  
@@ -502,7 +346,7 @@ Review GHSA-35jh-r3h4-6jhm in OSV.dev and upgrade the affected dependency to a p
 - API: 
 - Module: 
 
-### SEC-023 — Vulnerable dependency detected: lodash
+### SEC-016 — Vulnerable dependency detected: lodash
 
 **Severity:** High  
 **Detection Method:** Dependency  
@@ -521,7 +365,7 @@ Review GHSA-p6mc-m468-83gw in OSV.dev and upgrade the affected dependency to a p
 - API: 
 - Module: 
 
-### SEC-024 — Vulnerable dependency detected: lodash
+### SEC-017 — Vulnerable dependency detected: lodash
 
 **Severity:** High  
 **Detection Method:** Dependency  
@@ -540,7 +384,7 @@ Review GHSA-r5fr-rjxr-66jc in OSV.dev and upgrade the affected dependency to a p
 - API: 
 - Module: 
 
-### SEC-025 — Vulnerable dependency detected: lodash
+### SEC-018 — Vulnerable dependency detected: lodash
 
 **Severity:** Medium  
 **Detection Method:** Dependency  
@@ -559,26 +403,7 @@ Review GHSA-29mw-wpgm-hmr9 in OSV.dev and upgrade the affected dependency to a p
 - API: 
 - Module: 
 
-### SEC-026 — Vulnerable dependency detected: lodash
-
-**Severity:** Medium  
-**Detection Method:** Dependency  
-**File:** sample_ecommerce_app\package.json  
-**Line:** 0  
-**CWE:** CWE-1321
-
-**Description:**  
-lodash vulnerable to Prototype Pollution via array path bypass in `_.unset` and `_.omit` Package: lodash, Version: 4.17.15, Ecosystem: npm, Vulnerability ID: GHSA-f23m-r3pf-42rh.
-
-**Recommendation:**  
-Review GHSA-f23m-r3pf-42rh in OSV.dev and upgrade the affected dependency to a patched or currently supported version.
-
-**Traceability:**  
-- Requirement ID: 
-- API: 
-- Module: 
-
-### SEC-027 — Vulnerable dependency detected: axios
+### SEC-019 — Vulnerable dependency detected: axios
 
 **Severity:** High  
 **Detection Method:** Dependency  
@@ -597,7 +422,7 @@ Review GHSA-42xw-2xvc-qx8m in OSV.dev and upgrade the affected dependency to a p
 - API: 
 - Module: 
 
-### SEC-028 — Vulnerable dependency detected: axios
+### SEC-020 — Vulnerable dependency detected: axios
 
 **Severity:** High  
 **Detection Method:** Dependency  
@@ -616,26 +441,7 @@ Review GHSA-43fc-jf86-j433 in OSV.dev and upgrade the affected dependency to a p
 - API: 
 - Module: 
 
-### SEC-029 — Vulnerable dependency detected: axios
-
-**Severity:** High  
-**Detection Method:** Dependency  
-**File:** sample_ecommerce_app\package.json  
-**Line:** 0  
-**CWE:** CWE-1333
-
-**Description:**  
-axios Inefficient Regular Expression Complexity vulnerability Package: axios, Version: 0.18.0, Ecosystem: npm, Vulnerability ID: GHSA-cph5-m8f7-6c5x.
-
-**Recommendation:**  
-Review GHSA-cph5-m8f7-6c5x in OSV.dev and upgrade the affected dependency to a patched or currently supported version.
-
-**Traceability:**  
-- Requirement ID: 
-- API: 
-- Module: 
-
-### SEC-030 — Vulnerable dependency detected: axios
+### SEC-021 — Vulnerable dependency detected: axios
 
 **Severity:** High  
 **Detection Method:** Dependency  
@@ -654,7 +460,7 @@ Review GHSA-jr5f-v2jv-69x6 in OSV.dev and upgrade the affected dependency to a p
 - API: 
 - Module: 
 
-### SEC-031 — Vulnerable dependency detected: axios
+### SEC-022 — Vulnerable dependency detected: axios
 
 **Severity:** Medium  
 **Detection Method:** Dependency  
@@ -673,7 +479,7 @@ Review GHSA-3p68-rc4w-qgx5 in OSV.dev and upgrade the affected dependency to a p
 - API: 
 - Module: 
 
-### SEC-032 — Vulnerable dependency detected: express
+### SEC-023 — Vulnerable dependency detected: express
 
 **Severity:** Medium  
 **Detection Method:** Dependency  
@@ -692,7 +498,7 @@ Review GHSA-rv95-896h-c2vc in OSV.dev and upgrade the affected dependency to a p
 - API: 
 - Module: 
 
-### SEC-033 — Vulnerable dependency detected: express
+### SEC-024 — Vulnerable dependency detected: express
 
 **Severity:** Low  
 **Detection Method:** Dependency  
@@ -711,7 +517,7 @@ Review GHSA-qw6h-vgh9-j6wx in OSV.dev and upgrade the affected dependency to a p
 - API: 
 - Module: 
 
-### SEC-034 — Vulnerable dependency detected: django
+### SEC-025 — Vulnerable dependency detected: django
 
 **Severity:** Critical  
 **Detection Method:** Dependency  
@@ -730,7 +536,7 @@ Review GHSA-78vx-ggch-wghm in OSV.dev and upgrade the affected dependency to a p
 - API: 
 - Module: 
 
-### SEC-035 — Vulnerable dependency detected: django
+### SEC-026 — Vulnerable dependency detected: django
 
 **Severity:** Critical  
 **Detection Method:** Dependency  
@@ -749,7 +555,7 @@ Review GHSA-7g9h-c88w-r7h2 in OSV.dev and upgrade the affected dependency to a p
 - API: 
 - Module: 
 
-### SEC-036 — Vulnerable dependency detected: django
+### SEC-027 — Vulnerable dependency detected: django
 
 **Severity:** Critical  
 **Detection Method:** Dependency  
@@ -768,26 +574,7 @@ Review GHSA-frmv-pr5f-9mcr in OSV.dev and upgrade the affected dependency to a p
 - API: 
 - Module: 
 
-### SEC-037 — Vulnerable dependency detected: django
-
-**Severity:** Critical  
-**Detection Method:** Dependency  
-**File:** sample_ecommerce_app\requirements.txt  
-**Line:** 1  
-**CWE:** CWE-89
-
-**Description:**  
-SQL injection in Django Package: django, Version: 1.2, Ecosystem: PyPI, Vulnerability ID: GHSA-hmr4-m2h5-33qx.
-
-**Recommendation:**  
-Review GHSA-hmr4-m2h5-33qx in OSV.dev and upgrade the affected dependency to a patched or currently supported version.
-
-**Traceability:**  
-- Requirement ID: 
-- API: 
-- Module: 
-
-### SEC-038 — Vulnerable dependency detected: django
+### SEC-028 — Vulnerable dependency detected: django
 
 **Severity:** Critical  
 **Detection Method:** Dependency  
@@ -806,7 +593,7 @@ Review GHSA-rvq6-mrpv-m6rm in OSV.dev and upgrade the affected dependency to a p
 - API: 
 - Module: 
 
-### SEC-039 — Vulnerable dependency detected: flask
+### SEC-029 — Vulnerable dependency detected: flask
 
 **Severity:** High  
 **Detection Method:** Dependency  
@@ -825,7 +612,7 @@ Review GHSA-562c-5r94-xh97 in OSV.dev and upgrade the affected dependency to a p
 - API: 
 - Module: 
 
-### SEC-040 — Vulnerable dependency detected: flask
+### SEC-030 — Vulnerable dependency detected: flask
 
 **Severity:** High  
 **Detection Method:** Dependency  
@@ -844,7 +631,7 @@ Review GHSA-5wv5-4vpf-pj6m in OSV.dev and upgrade the affected dependency to a p
 - API: 
 - Module: 
 
-### SEC-041 — Vulnerable dependency detected: flask
+### SEC-031 — Vulnerable dependency detected: flask
 
 **Severity:** High  
 **Detection Method:** Dependency  
@@ -863,7 +650,7 @@ Review GHSA-m2qf-hxjv-5gpq in OSV.dev and upgrade the affected dependency to a p
 - API: 
 - Module: 
 
-### SEC-042 — Vulnerable dependency detected: flask
+### SEC-032 — Vulnerable dependency detected: flask
 
 **Severity:** Medium  
 **Detection Method:** Dependency  
@@ -882,26 +669,7 @@ Review PYSEC-2018-66 in OSV.dev and upgrade the affected dependency to a patched
 - API: 
 - Module: 
 
-### SEC-043 — Vulnerable dependency detected: flask
-
-**Severity:** Medium  
-**Detection Method:** Dependency  
-**File:** sample_ecommerce_app\requirements.txt  
-**Line:** 2  
-**CWE:** CWE-937
-
-**Description:**  
-The Pallets Project Flask before 1.0 is affected by: unexpected memory usage. The impact is: denial of service. The attack vector is: crafted encoded JSON data. The fixed version is: 1. NOTE: this may overlap CVE-2018-1000656. Package: flask, Version: 0.12, Ecosystem: PyPI, Vulnerability ID: PYSEC-2019-179.
-
-**Recommendation:**  
-Review PYSEC-2019-179 in OSV.dev and upgrade the affected dependency to a patched or currently supported version.
-
-**Traceability:**  
-- Requirement ID: 
-- API: 
-- Module: 
-
-### SEC-044 — Vulnerable dependency detected: requests
+### SEC-033 — Vulnerable dependency detected: requests
 
 **Severity:** High  
 **Detection Method:** Dependency  
@@ -920,26 +688,7 @@ Review GHSA-x84v-xcm2-53pg in OSV.dev and upgrade the affected dependency to a p
 - API: 
 - Module: 
 
-### SEC-045 — Vulnerable dependency detected: requests
-
-**Severity:** Medium  
-**Detection Method:** Dependency  
-**File:** sample_ecommerce_app\requirements.txt  
-**Line:** 3  
-**CWE:** CWE-522
-
-**Description:**  
-Requests vulnerable to .netrc credentials leak via malicious URLs Package: requests, Version: 2.19.0, Ecosystem: PyPI, Vulnerability ID: GHSA-9hjg-9r4m-mvj7.
-
-**Recommendation:**  
-Review GHSA-9hjg-9r4m-mvj7 in OSV.dev and upgrade the affected dependency to a patched or currently supported version.
-
-**Traceability:**  
-- Requirement ID: 
-- API: 
-- Module: 
-
-### SEC-046 — Vulnerable dependency detected: requests
+### SEC-034 — Vulnerable dependency detected: requests
 
 **Severity:** Medium  
 **Detection Method:** Dependency  
@@ -952,217 +701,6 @@ Unintended leak of Proxy-Authorization header in requests Package: requests, Ver
 
 **Recommendation:**  
 Review GHSA-j8r2-6x86-q33q in OSV.dev and upgrade the affected dependency to a patched or currently supported version.
-
-**Traceability:**  
-- Requirement ID: 
-- API: 
-- Module: 
-
-### SEC-047 — Vulnerable dependency detected: requests
-
-**Severity:** Medium  
-**Detection Method:** Dependency  
-**File:** sample_ecommerce_app\requirements.txt  
-**Line:** 3  
-**CWE:** CWE-937
-
-**Description:**  
-The Requests package before 2.20.0 for Python sends an HTTP Authorization header to an http URI upon receiving a same-hostname https-to-http redirect, which makes it easier for remote attackers to discover credentials by sniffing the network. Package: requests, Version: 2.19.0, Ecosystem: PyPI, Vulnerability ID: PYSEC-2018-28.
-
-**Recommendation:**  
-Review PYSEC-2018-28 in OSV.dev and upgrade the affected dependency to a patched or currently supported version.
-
-**Traceability:**  
-- Requirement ID: 
-- API: 
-- Module: 
-
-### SEC-048 — Vulnerable dependency detected: requests
-
-**Severity:** Medium  
-**Detection Method:** Dependency  
-**File:** sample_ecommerce_app\requirements.txt  
-**Line:** 3  
-**CWE:** CWE-937
-
-**Description:**  
-Requests is a HTTP library. Since Requests 2.3.0, Requests has been leaking Proxy-Authorization headers to destination servers when redirected to an HTTPS endpoint. This is a product of how we use `rebuild_proxies` to reattach the `Proxy-Authorization` header to requests. For HTTP connections sent through the tunnel, the proxy will identify the header in the request itself and remove it prior to forwarding to the destination server. However when sent over HTTPS, the `Proxy-Authorization` header must be sent in the CONNECT request as the proxy has no visibility into the tunneled request. This results in Requests forwarding proxy credentials to the destination server unintentionally, allowing a malicious actor to potentially exfiltrate sensitive information. This issue has been patched in version 2.31.0.
-
- Package: requests, Version: 2.19.0, Ecosystem: PyPI, Vulnerability ID: PYSEC-2023-74.
-
-**Recommendation:**  
-Review PYSEC-2023-74 in OSV.dev and upgrade the affected dependency to a patched or currently supported version.
-
-**Traceability:**  
-- Requirement ID: 
-- API: 
-- Module: 
-
-### SEC-049 — Insecure Secret Key Storage
-
-**Severity:** High  
-**Detection Method:** LLM  
-**File:** sample_ecommerce_app\app.py  
-**Line:** 0  
-**CWE:** CWE-259
-
-**Description:**  
-The SECRET_KEY is hardcoded in plain text. This allows an attacker to easily discover the key.
-
-**Recommendation:**  
-Store secrets securely using a secrets management system or environment variables.
-
-**Traceability:**  
-- Requirement ID: 
-- API: 
-- Module: 
-
-### SEC-050 — Insecure API Key Storage
-
-**Severity:** High  
-**Detection Method:** LLM  
-**File:** sample_ecommerce_app\app.py  
-**Line:** 0  
-**CWE:** CWE-259
-
-**Description:**  
-The API_KEY is hardcoded in plain text. This allows an attacker to easily discover the key.
-
-**Recommendation:**  
-Store secrets securely using a secrets management system or environment variables.
-
-**Traceability:**  
-- Requirement ID: 
-- API: 
-- Module: 
-
-### SEC-051 — Insecure Database Password Storage
-
-**Severity:** High  
-**Detection Method:** LLM  
-**File:** sample_ecommerce_app\app.py  
-**Line:** 0  
-**CWE:** CWE-259
-
-**Description:**  
-The DB_PASSWORD is hardcoded in plain text. This allows an attacker to easily discover the password.
-
-**Recommendation:**  
-Store secrets securely using a secrets management system or environment variables.
-
-**Traceability:**  
-- Requirement ID: 
-- API: 
-- Module: 
-
-### SEC-052 — Open Redirect
-
-**Severity:** Medium  
-**Detection Method:** LLM  
-**File:** sample_ecommerce_app\app.py  
-**Line:** 7  
-**CWE:** CWE-601
-
-**Description:**  
-The allow_origins parameter in the CORSMiddleware allows an attacker to redirect users to any website.
-
-**Recommendation:**  
-Restrict allowed origins to trusted domains only.
-
-**Traceability:**  
-- Requirement ID: 
-- API: 
-- Module: 
-
-### SEC-053 — SQL Injection in search_product endpoint
-
-**Severity:** Critical  
-**Detection Method:** LLM  
-**File:** sample_ecommerce_app\app.py  
-**Line:** 18  
-**CWE:** CWE-89
-
-**Description:**  
-The search_product endpoint uses a vulnerable SQL query that can be exploited by an attacker.
-
-**Recommendation:**  
-Use parameterized queries or an ORM to prevent SQL injection attacks.
-
-**Traceability:**  
-- Requirement ID: 
-- API: 
-- Module: 
-
-### SEC-054 — Arbitrary Code Execution in dangerous_code endpoint
-
-**Severity:** Critical  
-**Detection Method:** LLM  
-**File:** sample_ecommerce_app\app.py  
-**Line:** 24  
-**CWE:** CWE-94
-
-**Description:**  
-The dangerous_code endpoint uses eval() function which can execute arbitrary code, allowing an attacker to execute malicious code on the server.
-
-**Recommendation:**  
-Do not use eval() or other similar functions. Instead, validate and sanitize user input before processing it.
-
-**Traceability:**  
-- Requirement ID: 
-- API: 
-- Module: 
-
-### SEC-055 — Command Injection in run_command endpoint
-
-**Severity:** Critical  
-**Detection Method:** LLM  
-**File:** sample_ecommerce_app\app.py  
-**Line:** 30  
-**CWE:** CWE-78
-
-**Description:**  
-The run_command endpoint uses subprocess.run() function which can execute arbitrary system commands, allowing an attacker to execute malicious code on the server.
-
-**Recommendation:**  
-Do not use subprocess.run() or other similar functions. Instead, validate and sanitize user input before processing it.
-
-**Traceability:**  
-- Requirement ID: 
-- API: 
-- Module: 
-
-### SEC-056 — Insecure Token Storage
-
-**Severity:** High  
-**Detection Method:** LLM  
-**File:** sample_ecommerce_app\frontend.js  
-**Line:** 0  
-**CWE:** CWE-356
-
-**Description:**  
-Storing sensitive tokens in local storage is a security risk. An attacker can access the token by exploiting browser vulnerabilities or accessing the user's local storage.
-
-**Recommendation:**  
-Use a secure token storage mechanism, such as a server-side session or an encrypted cookie.
-
-**Traceability:**  
-- Requirement ID: 
-- API: 
-- Module: 
-
-### SEC-057 — Untrusted Eval
-
-**Severity:** Critical  
-**Detection Method:** LLM  
-**File:** sample_ecommerce_app\frontend.js  
-**Line:** 14  
-**CWE:** CWE-95
-
-**Description:**  
-The eval() function is vulnerable to code injection attacks. It can execute arbitrary JavaScript code, which can be used to steal sensitive data or perform malicious actions.
-
-**Recommendation:**  
-Avoid using the eval() function or use a safer alternative like JSON.parse().
 
 **Traceability:**  
 - Requirement ID: 
@@ -1564,150 +1102,86 @@ Review PYSEC-2023-74 in OSV.dev and upgrade the affected dependency to a patched
 
 | Title | Severity | File | Line | CWE | Confidence |
 |---|---|---|---:|---|---:|
-| Insecure Secret Key Storage | High | sample_ecommerce_app\app.py | 0 | CWE-259 | 1.0 |
-| Insecure API Key Storage | High | sample_ecommerce_app\app.py | 0 | CWE-259 | 1.0 |
-| Insecure Database Password Storage | High | sample_ecommerce_app\app.py | 0 | CWE-259 | 1.0 |
-| Open Redirect | Medium | sample_ecommerce_app\app.py | 7 | CWE-601 | 1.0 |
-| SQL Injection in search_product endpoint | Critical | sample_ecommerce_app\app.py | 18 | CWE-89 | 1.0 |
-| Arbitrary Code Execution in dangerous_code endpoint | Critical | sample_ecommerce_app\app.py | 24 | CWE-94 | 1.0 |
-| Command Injection in run_command endpoint | Critical | sample_ecommerce_app\app.py | 30 | CWE-78 | 1.0 |
-| Insecure Token Storage | High | sample_ecommerce_app\frontend.js | 0 | CWE-356 | 1.0 |
-| Untrusted Eval | Critical | sample_ecommerce_app\frontend.js | 14 | CWE-95 | 1.0 |
+| Weak Hash Generation | Medium | sample_ecommerce_app\app.py | 0 | CWE327 | 1.0 |
+| Arbitrary Code Execution via eval() | Critical | sample_ecommerce_app\app.py | 0 | CWE94 | 1.0 |
+| Unrestricted File Execution via subprocess | High | sample_ecommerce_app\app.py | 0 | CWE78 | 1.0 |
+| Insecure Storage of Auth Token | High | sample_ecommerce_app\frontend.js | 0 | CWE-522: Inadequate Encryption of Sensitive Data | 1.0 |
+| Untrusted Code Execution via Eval | Critical | sample_ecommerce_app\frontend.js | 9 | CWE-94: Use of Untrusted Data in Security Decision | 1.0 |
 
-### Insecure Secret Key Storage
-
-**Severity:** High  
-**File:** sample_ecommerce_app\app.py  
-**Line:** 0  
-**CWE:** CWE-259  
-**Confidence:** 1.0  
-**Source:** ollama
-
-**Description:**  
-The SECRET_KEY is hardcoded in plain text. This allows an attacker to easily discover the key.
-
-**Recommendation:**  
-Store secrets securely using a secrets management system or environment variables.
-
-### Insecure API Key Storage
-
-**Severity:** High  
-**File:** sample_ecommerce_app\app.py  
-**Line:** 0  
-**CWE:** CWE-259  
-**Confidence:** 1.0  
-**Source:** ollama
-
-**Description:**  
-The API_KEY is hardcoded in plain text. This allows an attacker to easily discover the key.
-
-**Recommendation:**  
-Store secrets securely using a secrets management system or environment variables.
-
-### Insecure Database Password Storage
-
-**Severity:** High  
-**File:** sample_ecommerce_app\app.py  
-**Line:** 0  
-**CWE:** CWE-259  
-**Confidence:** 1.0  
-**Source:** ollama
-
-**Description:**  
-The DB_PASSWORD is hardcoded in plain text. This allows an attacker to easily discover the password.
-
-**Recommendation:**  
-Store secrets securely using a secrets management system or environment variables.
-
-### Open Redirect
+### Weak Hash Generation
 
 **Severity:** Medium  
 **File:** sample_ecommerce_app\app.py  
-**Line:** 7  
-**CWE:** CWE-601  
+**Line:** 0  
+**CWE:** CWE327  
 **Confidence:** 1.0  
 **Source:** ollama
 
 **Description:**  
-The allow_origins parameter in the CORSMiddleware allows an attacker to redirect users to any website.
+The weak_hash endpoint uses MD5 for hashing, which is considered insecure. It's recommended to use a more secure hashing algorithm such as bcrypt or Argon2.
 
 **Recommendation:**  
-Restrict allowed origins to trusted domains only.
+Replace MD5 with a more secure hashing algorithm
 
-### SQL Injection in search_product endpoint
+### Arbitrary Code Execution via eval()
 
 **Severity:** Critical  
 **File:** sample_ecommerce_app\app.py  
-**Line:** 18  
-**CWE:** CWE-89  
+**Line:** 0  
+**CWE:** CWE94  
 **Confidence:** 1.0  
 **Source:** ollama
 
 **Description:**  
-The search_product endpoint uses a vulnerable SQL query that can be exploited by an attacker.
+The dangerous_code endpoint uses eval() to execute user-inputted code, which allows for arbitrary code execution and poses a significant security risk.
 
 **Recommendation:**  
-Use parameterized queries or an ORM to prevent SQL injection attacks.
+Do not use eval() or other similar functions that allow executing untrusted input. Instead, consider using a safer alternative like ast.literal_eval() for safe evaluation of literals.
 
-### Arbitrary Code Execution in dangerous_code endpoint
+### Unrestricted File Execution via subprocess
 
-**Severity:** Critical  
+**Severity:** High  
 **File:** sample_ecommerce_app\app.py  
-**Line:** 24  
-**CWE:** CWE-94  
+**Line:** 0  
+**CWE:** CWE78  
 **Confidence:** 1.0  
 **Source:** ollama
 
 **Description:**  
-The dangerous_code endpoint uses eval() function which can execute arbitrary code, allowing an attacker to execute malicious code on the server.
+The run_command endpoint uses subprocess to execute commands from user-inputted strings. This allows an attacker to execute arbitrary system commands, which can lead to privilege escalation or file manipulation.
 
 **Recommendation:**  
-Do not use eval() or other similar functions. Instead, validate and sanitize user input before processing it.
+Validate the input command string and prevent any malicious execution by whitelisting allowed commands, using a secure shell, or avoiding direct system calls altogether.
 
-### Command Injection in run_command endpoint
-
-**Severity:** Critical  
-**File:** sample_ecommerce_app\app.py  
-**Line:** 30  
-**CWE:** CWE-78  
-**Confidence:** 1.0  
-**Source:** ollama
-
-**Description:**  
-The run_command endpoint uses subprocess.run() function which can execute arbitrary system commands, allowing an attacker to execute malicious code on the server.
-
-**Recommendation:**  
-Do not use subprocess.run() or other similar functions. Instead, validate and sanitize user input before processing it.
-
-### Insecure Token Storage
+### Insecure Storage of Auth Token
 
 **Severity:** High  
 **File:** sample_ecommerce_app\frontend.js  
 **Line:** 0  
-**CWE:** CWE-356  
+**CWE:** CWE-522: Inadequate Encryption of Sensitive Data  
 **Confidence:** 1.0  
 **Source:** ollama
 
 **Description:**  
-Storing sensitive tokens in local storage is a security risk. An attacker can access the token by exploiting browser vulnerabilities or accessing the user's local storage.
+Auth token is stored in local storage without proper encryption, allowing unauthorized access to the token.
 
 **Recommendation:**  
-Use a secure token storage mechanism, such as a server-side session or an encrypted cookie.
+Use a secure storage mechanism such as encrypted local storage or a secure session cookie.
 
-### Untrusted Eval
+### Untrusted Code Execution via Eval
 
 **Severity:** Critical  
 **File:** sample_ecommerce_app\frontend.js  
-**Line:** 14  
-**CWE:** CWE-95  
+**Line:** 9  
+**CWE:** CWE-94: Use of Untrusted Data in Security Decision  
 **Confidence:** 1.0  
 **Source:** ollama
 
 **Description:**  
-The eval() function is vulnerable to code injection attacks. It can execute arbitrary JavaScript code, which can be used to steal sensitive data or perform malicious actions.
+The 'runDangerous' function uses eval to execute untrusted input, allowing arbitrary code execution and potential remote code injection attacks.
 
 **Recommendation:**  
-Avoid using the eval() function or use a safer alternative like JSON.parse().
+Avoid using eval or similar functions that execute untrusted code. Instead, use a safer parsing mechanism or sandboxed execution environment.
 
 
 ---

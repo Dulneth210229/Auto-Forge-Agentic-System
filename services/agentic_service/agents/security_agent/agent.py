@@ -11,6 +11,7 @@ from agents.security_agent.schemas import (
 from agents.security_agent.renderer import render_security_report_markdown
 from agents.security_agent.scanners.multi_scanner import MultiSecurityScanner
 from agents.security_agent.llm_reviewer import LLMSecureCodeReviewer
+from agents.security_agent.deduplicator import FindingDeduplicator
 from tools.llm.provider import OllamaProvider
 
 
@@ -18,31 +19,20 @@ class SecurityAgent:
     """
     Security Agent.
 
-    Step 1:
-    - Generated dummy security reports.
-
-    Step 2:
-    - Added Python AST scanning.
-
-    Step 4:
-    - Extended to multi-scanner architecture.
-
-    Step 5:
-    - Added dependency scanning.
-
-    Step 6:
-    - Added OSV.dev lookup.
-
-    Step 6.1:
-    - Added dependency filtering and deduplication.
-
-    Step 7:
-    - Added Ollama LLM-assisted secure code review.
+    Current capabilities:
+    - Python AST scanning
+    - JavaScript/TypeScript pattern scanning
+    - Secret scanning
+    - Config scanning
+    - Dependency scanning with OSV.dev
+    - Ollama LLM-assisted secure code review
+    - Finding deduplication
     """
 
     def __init__(self, output_root: str = "outputs"):
         self.output_root = Path(output_root)
         self.scanner = MultiSecurityScanner()
+        self.deduplicator = FindingDeduplicator()
 
     def run(
         self,
@@ -56,6 +46,9 @@ class SecurityAgent:
 
         If enable_llm=True:
         - Runs Ollama LLM-assisted secure code review after rule-based scanning.
+
+        Step 9:
+        - Deduplicates overlapping AST/Dependency/LLM findings before reporting.
         """
 
         llm_findings_data: List[Dict[str, Any]] = []
@@ -77,6 +70,15 @@ class SecurityAgent:
         else:
             findings = []
             dependency_vulnerabilities = []
+
+        before_dedup_count = len(findings)
+        findings = self.deduplicator.deduplicate(findings)
+        after_dedup_count = len(findings)
+
+        deduplication_summary = self.deduplicator.summarize_deduplication(
+            before_count=before_dedup_count,
+            after_count=after_dedup_count
+        )
 
         report = self.create_report(
             run_id=run_id,
@@ -114,7 +116,8 @@ class SecurityAgent:
             "markdown_path": str(md_path),
             "summary": report.summary.model_dump(),
             "dependency_vulnerabilities_count": len(dependency_vulnerabilities),
-            "llm_findings_count": len(llm_findings_data)
+            "llm_findings_count": len(llm_findings_data),
+            "deduplication": deduplication_summary
         }
 
     def create_report(

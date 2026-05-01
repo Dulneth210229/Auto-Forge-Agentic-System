@@ -3,10 +3,10 @@
   "stage": "security",
   "version": "v1",
   "summary": {
-    "total_findings": 57,
-    "critical": 11,
-    "high": 26,
-    "medium": 19,
+    "total_findings": 34,
+    "critical": 6,
+    "high": 15,
+    "medium": 12,
     "low": 1
   },
   "findings": [
@@ -28,38 +28,6 @@
     },
     {
       "finding_id": "SEC-002",
-      "title": "Hardcoded secret detected",
-      "description": "The variable 'API_KEY' appears to contain a hardcoded secret.",
-      "severity": "High",
-      "file": "sample_ecommerce_app\\app.py",
-      "line": 9,
-      "detection_method": "AST",
-      "cwe": "CWE-798",
-      "recommendation": "Move secrets to environment variables or a secure secret manager.",
-      "traceability": {
-        "requirement_id": "",
-        "api": "",
-        "module": ""
-      }
-    },
-    {
-      "finding_id": "SEC-003",
-      "title": "Hardcoded secret detected",
-      "description": "The variable 'DB_PASSWORD' appears to contain a hardcoded secret.",
-      "severity": "High",
-      "file": "sample_ecommerce_app\\app.py",
-      "line": 10,
-      "detection_method": "AST",
-      "cwe": "CWE-798",
-      "recommendation": "Move secrets to environment variables or a secure secret manager.",
-      "traceability": {
-        "requirement_id": "",
-        "api": "",
-        "module": ""
-      }
-    },
-    {
-      "finding_id": "SEC-004",
       "title": "Use of eval() detected",
       "description": "The eval() function can execute arbitrary code and may lead to remote code execution.",
       "severity": "Critical",
@@ -75,7 +43,7 @@
       }
     },
     {
-      "finding_id": "SEC-005",
+      "finding_id": "SEC-003",
       "title": "Unsafe subprocess usage with shell=True",
       "description": "Using subprocess with shell=True may allow command injection.",
       "severity": "High",
@@ -91,7 +59,7 @@
       }
     },
     {
-      "finding_id": "SEC-006",
+      "finding_id": "SEC-004",
       "title": "Weak hashing algorithm detected",
       "description": "The code uses hashlib.md5, which is weak for security-sensitive hashing.",
       "severity": "Medium",
@@ -107,7 +75,7 @@
       }
     },
     {
-      "finding_id": "SEC-007",
+      "finding_id": "SEC-005",
       "title": "Debug mode enabled",
       "description": "Debug mode may expose sensitive stack traces and internal application information.",
       "severity": "Medium",
@@ -123,7 +91,7 @@
       }
     },
     {
-      "finding_id": "SEC-008",
+      "finding_id": "SEC-006",
       "title": "Insecure CORS wildcard detected",
       "description": "Using wildcard CORS origins may allow untrusted websites to interact with the API.",
       "severity": "Medium",
@@ -139,7 +107,7 @@
       }
     },
     {
-      "finding_id": "SEC-009",
+      "finding_id": "SEC-007",
       "title": "Possible raw SQL string formatting",
       "description": "SQL queries built using string formatting or concatenation may cause SQL injection.",
       "severity": "High",
@@ -155,7 +123,7 @@
       }
     },
     {
-      "finding_id": "SEC-010",
+      "finding_id": "SEC-008",
       "title": "Direct innerHTML assignment detected",
       "description": "Assigning content to innerHTML may introduce XSS if the content includes user input.",
       "severity": "High",
@@ -171,7 +139,7 @@
       }
     },
     {
-      "finding_id": "SEC-011",
+      "finding_id": "SEC-009",
       "title": "Sensitive token stored in localStorage",
       "description": "Storing authentication tokens in localStorage can increase exposure to XSS attacks.",
       "severity": "Medium",
@@ -187,7 +155,7 @@
       }
     },
     {
-      "finding_id": "SEC-012",
+      "finding_id": "SEC-010",
       "title": "JavaScript eval() usage detected",
       "description": "JavaScript eval() can execute arbitrary code and may lead to code injection.",
       "severity": "Critical",
@@ -203,23 +171,7 @@
       }
     },
     {
-      "finding_id": "SEC-013",
-      "title": "Sensitive data logged to console",
-      "description": "Logging secrets or tokens can expose sensitive information in logs.",
-      "severity": "Medium",
-      "file": "sample_ecommerce_app\\frontend.js",
-      "line": 13,
-      "detection_method": "AST",
-      "cwe": "CWE-532",
-      "recommendation": "Remove sensitive data from logs.",
-      "traceability": {
-        "requirement_id": "",
-        "api": "",
-        "module": ""
-      }
-    },
-    {
-      "finding_id": "SEC-014",
+      "finding_id": "SEC-011",
       "title": "Possible hardcoded secret detected",
       "description": "A possible hardcoded secret, password, token, or API key was found in a text-based file.",
       "severity": "High",
@@ -235,71 +187,7 @@
       }
     },
     {
-      "finding_id": "SEC-015",
-      "title": "Possible hardcoded secret detected",
-      "description": "A possible hardcoded secret, password, token, or API key was found in a text-based file.",
-      "severity": "High",
-      "file": "sample_ecommerce_app\\.env",
-      "line": 3,
-      "detection_method": "AST",
-      "cwe": "CWE-798",
-      "recommendation": "Move secrets to environment variables or a dedicated secret manager.",
-      "traceability": {
-        "requirement_id": "",
-        "api": "",
-        "module": ""
-      }
-    },
-    {
-      "finding_id": "SEC-016",
-      "title": "Possible hardcoded secret detected",
-      "description": "A possible hardcoded secret, password, token, or API key was found in a text-based file.",
-      "severity": "High",
-      "file": "sample_ecommerce_app\\app.py",
-      "line": 8,
-      "detection_method": "AST",
-      "cwe": "CWE-798",
-      "recommendation": "Move secrets to environment variables or a dedicated secret manager.",
-      "traceability": {
-        "requirement_id": "",
-        "api": "",
-        "module": ""
-      }
-    },
-    {
-      "finding_id": "SEC-017",
-      "title": "Possible hardcoded secret detected",
-      "description": "A possible hardcoded secret, password, token, or API key was found in a text-based file.",
-      "severity": "High",
-      "file": "sample_ecommerce_app\\app.py",
-      "line": 9,
-      "detection_method": "AST",
-      "cwe": "CWE-798",
-      "recommendation": "Move secrets to environment variables or a dedicated secret manager.",
-      "traceability": {
-        "requirement_id": "",
-        "api": "",
-        "module": ""
-      }
-    },
-    {
-      "finding_id": "SEC-018",
-      "title": "Possible hardcoded secret detected",
-      "description": "A possible hardcoded secret, password, token, or API key was found in a text-based file.",
-      "severity": "High",
-      "file": "sample_ecommerce_app\\app.py",
-      "line": 10,
-      "detection_method": "AST",
-      "cwe": "CWE-798",
-      "recommendation": "Move secrets to environment variables or a dedicated secret manager.",
-      "traceability": {
-        "requirement_id": "",
-        "api": "",
-        "module": ""
-      }
-    },
-    {
-      "finding_id": "SEC-019",
+      "finding_id": "SEC-012",
       "title": "Debug configuration enabled",
       "description": "Debug mode appears to be enabled in a configuration file.",
       "severity": "Medium",
@@ -315,7 +203,7 @@
       }
     },
     {
-      "finding_id": "SEC-020",
+      "finding_id": "SEC-013",
       "title": "Wildcard CORS setting in configuration",
       "description": "Wildcard CORS configuration may allow untrusted origins to interact with the application.",
       "severity": "Medium",
@@ -331,7 +219,7 @@
       }
     },
     {
-      "finding_id": "SEC-021",
+      "finding_id": "SEC-014",
       "title": "Docker container runs as root",
       "description": "Running containers as root increases the impact of container compromise.",
       "severity": "Medium",
@@ -347,7 +235,7 @@
       }
     },
     {
-      "finding_id": "SEC-022",
+      "finding_id": "SEC-015",
       "title": "Vulnerable dependency detected: lodash",
       "description": "Command Injection in lodash Package: lodash, Version: 4.17.15, Ecosystem: npm, Vulnerability ID: GHSA-35jh-r3h4-6jhm.",
       "severity": "High",
@@ -363,7 +251,7 @@
       }
     },
     {
-      "finding_id": "SEC-023",
+      "finding_id": "SEC-016",
       "title": "Vulnerable dependency detected: lodash",
       "description": "Prototype Pollution in lodash Package: lodash, Version: 4.17.15, Ecosystem: npm, Vulnerability ID: GHSA-p6mc-m468-83gw.",
       "severity": "High",
@@ -379,7 +267,7 @@
       }
     },
     {
-      "finding_id": "SEC-024",
+      "finding_id": "SEC-017",
       "title": "Vulnerable dependency detected: lodash",
       "description": "lodash vulnerable to Code Injection via `_.template` imports key names Package: lodash, Version: 4.17.15, Ecosystem: npm, Vulnerability ID: GHSA-r5fr-rjxr-66jc.",
       "severity": "High",
@@ -395,7 +283,7 @@
       }
     },
     {
-      "finding_id": "SEC-025",
+      "finding_id": "SEC-018",
       "title": "Vulnerable dependency detected: lodash",
       "description": "Regular Expression Denial of Service (ReDoS) in lodash Package: lodash, Version: 4.17.15, Ecosystem: npm, Vulnerability ID: GHSA-29mw-wpgm-hmr9.",
       "severity": "Medium",
@@ -411,23 +299,7 @@
       }
     },
     {
-      "finding_id": "SEC-026",
-      "title": "Vulnerable dependency detected: lodash",
-      "description": "lodash vulnerable to Prototype Pollution via array path bypass in `_.unset` and `_.omit` Package: lodash, Version: 4.17.15, Ecosystem: npm, Vulnerability ID: GHSA-f23m-r3pf-42rh.",
-      "severity": "Medium",
-      "file": "sample_ecommerce_app\\package.json",
-      "line": 0,
-      "detection_method": "Dependency",
-      "cwe": "CWE-1321",
-      "recommendation": "Review GHSA-f23m-r3pf-42rh in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
-      "traceability": {
-        "requirement_id": "",
-        "api": "",
-        "module": ""
-      }
-    },
-    {
-      "finding_id": "SEC-027",
+      "finding_id": "SEC-019",
       "title": "Vulnerable dependency detected: axios",
       "description": "Denial of Service in axios Package: axios, Version: 0.18.0, Ecosystem: npm, Vulnerability ID: GHSA-42xw-2xvc-qx8m.",
       "severity": "High",
@@ -443,7 +315,7 @@
       }
     },
     {
-      "finding_id": "SEC-028",
+      "finding_id": "SEC-020",
       "title": "Vulnerable dependency detected: axios",
       "description": "Axios is Vulnerable to Denial of Service via __proto__ Key in mergeConfig Package: axios, Version: 0.18.0, Ecosystem: npm, Vulnerability ID: GHSA-43fc-jf86-j433.",
       "severity": "High",
@@ -459,23 +331,7 @@
       }
     },
     {
-      "finding_id": "SEC-029",
-      "title": "Vulnerable dependency detected: axios",
-      "description": "axios Inefficient Regular Expression Complexity vulnerability Package: axios, Version: 0.18.0, Ecosystem: npm, Vulnerability ID: GHSA-cph5-m8f7-6c5x.",
-      "severity": "High",
-      "file": "sample_ecommerce_app\\package.json",
-      "line": 0,
-      "detection_method": "Dependency",
-      "cwe": "CWE-1333",
-      "recommendation": "Review GHSA-cph5-m8f7-6c5x in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
-      "traceability": {
-        "requirement_id": "",
-        "api": "",
-        "module": ""
-      }
-    },
-    {
-      "finding_id": "SEC-030",
+      "finding_id": "SEC-021",
       "title": "Vulnerable dependency detected: axios",
       "description": "axios Requests Vulnerable To Possible SSRF and Credential Leakage via Absolute URL Package: axios, Version: 0.18.0, Ecosystem: npm, Vulnerability ID: GHSA-jr5f-v2jv-69x6.",
       "severity": "High",
@@ -491,7 +347,7 @@
       }
     },
     {
-      "finding_id": "SEC-031",
+      "finding_id": "SEC-022",
       "title": "Vulnerable dependency detected: axios",
       "description": "Axios has a NO_PROXY Hostname Normalization Bypass that Leads to SSRF Package: axios, Version: 0.18.0, Ecosystem: npm, Vulnerability ID: GHSA-3p68-rc4w-qgx5.",
       "severity": "Medium",
@@ -507,7 +363,7 @@
       }
     },
     {
-      "finding_id": "SEC-032",
+      "finding_id": "SEC-023",
       "title": "Vulnerable dependency detected: express",
       "description": "Express.js Open Redirect in malformed URLs Package: express, Version: 4.16.0, Ecosystem: npm, Vulnerability ID: GHSA-rv95-896h-c2vc.",
       "severity": "Medium",
@@ -523,7 +379,7 @@
       }
     },
     {
-      "finding_id": "SEC-033",
+      "finding_id": "SEC-024",
       "title": "Vulnerable dependency detected: express",
       "description": "express vulnerable to XSS via response.redirect() Package: express, Version: 4.16.0, Ecosystem: npm, Vulnerability ID: GHSA-qw6h-vgh9-j6wx.",
       "severity": "Low",
@@ -539,7 +395,7 @@
       }
     },
     {
-      "finding_id": "SEC-034",
+      "finding_id": "SEC-025",
       "title": "Vulnerable dependency detected: django",
       "description": "Django Allows Redirect via Data URL Package: django, Version: 1.2, Ecosystem: PyPI, Vulnerability ID: GHSA-78vx-ggch-wghm.",
       "severity": "Critical",
@@ -555,7 +411,7 @@
       }
     },
     {
-      "finding_id": "SEC-035",
+      "finding_id": "SEC-026",
       "title": "Vulnerable dependency detected: django",
       "description": "Directory traversal in Django Package: django, Version: 1.2, Ecosystem: PyPI, Vulnerability ID: GHSA-7g9h-c88w-r7h2.",
       "severity": "Critical",
@@ -571,7 +427,7 @@
       }
     },
     {
-      "finding_id": "SEC-036",
+      "finding_id": "SEC-027",
       "title": "Vulnerable dependency detected: django",
       "description": "Django vulnerable to SQL injection via _connector keyword argument in QuerySet and Q objects. Package: django, Version: 1.2, Ecosystem: PyPI, Vulnerability ID: GHSA-frmv-pr5f-9mcr.",
       "severity": "Critical",
@@ -587,23 +443,7 @@
       }
     },
     {
-      "finding_id": "SEC-037",
-      "title": "Vulnerable dependency detected: django",
-      "description": "SQL injection in Django Package: django, Version: 1.2, Ecosystem: PyPI, Vulnerability ID: GHSA-hmr4-m2h5-33qx.",
-      "severity": "Critical",
-      "file": "sample_ecommerce_app\\requirements.txt",
-      "line": 1,
-      "detection_method": "Dependency",
-      "cwe": "CWE-89",
-      "recommendation": "Review GHSA-hmr4-m2h5-33qx in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
-      "traceability": {
-        "requirement_id": "",
-        "api": "",
-        "module": ""
-      }
-    },
-    {
-      "finding_id": "SEC-038",
+      "finding_id": "SEC-028",
       "title": "Vulnerable dependency detected: django",
       "description": "Code Injection in Django Package: django, Version: 1.2, Ecosystem: PyPI, Vulnerability ID: GHSA-rvq6-mrpv-m6rm.",
       "severity": "Critical",
@@ -619,7 +459,7 @@
       }
     },
     {
-      "finding_id": "SEC-039",
+      "finding_id": "SEC-029",
       "title": "Vulnerable dependency detected: flask",
       "description": "Flask is vulnerable to Denial of Service via incorrect encoding of JSON data Package: flask, Version: 0.12, Ecosystem: PyPI, Vulnerability ID: GHSA-562c-5r94-xh97.",
       "severity": "High",
@@ -635,7 +475,7 @@
       }
     },
     {
-      "finding_id": "SEC-040",
+      "finding_id": "SEC-030",
       "title": "Vulnerable dependency detected: flask",
       "description": "Pallets Project Flask is vulnerable to Denial of Service via Unexpected memory usage Package: flask, Version: 0.12, Ecosystem: PyPI, Vulnerability ID: GHSA-5wv5-4vpf-pj6m.",
       "severity": "High",
@@ -651,7 +491,7 @@
       }
     },
     {
-      "finding_id": "SEC-041",
+      "finding_id": "SEC-031",
       "title": "Vulnerable dependency detected: flask",
       "description": "Flask vulnerable to possible disclosure of permanent session cookie due to missing Vary: Cookie header Package: flask, Version: 0.12, Ecosystem: PyPI, Vulnerability ID: GHSA-m2qf-hxjv-5gpq.",
       "severity": "High",
@@ -667,7 +507,7 @@
       }
     },
     {
-      "finding_id": "SEC-042",
+      "finding_id": "SEC-032",
       "title": "Vulnerable dependency detected: flask",
       "description": "The Pallets Project flask version Before 0.12.3 contains a CWE-20: Improper Input Validation vulnerability in flask that can result in Large amount of memory usage possibly leading to denial of service. This attack appear to be exploitable via Attacker provides JSON data in incorrect encoding. This vulnerability appears to have been fixed in 0.12.3. NOTE: this may overlap CVE-2019-1010083. Package: flask, Version: 0.12, Ecosystem: PyPI, Vulnerability ID: PYSEC-2018-66.",
       "severity": "Medium",
@@ -683,23 +523,7 @@
       }
     },
     {
-      "finding_id": "SEC-043",
-      "title": "Vulnerable dependency detected: flask",
-      "description": "The Pallets Project Flask before 1.0 is affected by: unexpected memory usage. The impact is: denial of service. The attack vector is: crafted encoded JSON data. The fixed version is: 1. NOTE: this may overlap CVE-2018-1000656. Package: flask, Version: 0.12, Ecosystem: PyPI, Vulnerability ID: PYSEC-2019-179.",
-      "severity": "Medium",
-      "file": "sample_ecommerce_app\\requirements.txt",
-      "line": 2,
-      "detection_method": "Dependency",
-      "cwe": "CWE-937",
-      "recommendation": "Review PYSEC-2019-179 in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
-      "traceability": {
-        "requirement_id": "",
-        "api": "",
-        "module": ""
-      }
-    },
-    {
-      "finding_id": "SEC-044",
+      "finding_id": "SEC-033",
       "title": "Vulnerable dependency detected: requests",
       "description": "Insufficiently Protected Credentials in Requests Package: requests, Version: 2.19.0, Ecosystem: PyPI, Vulnerability ID: GHSA-x84v-xcm2-53pg.",
       "severity": "High",
@@ -715,23 +539,7 @@
       }
     },
     {
-      "finding_id": "SEC-045",
-      "title": "Vulnerable dependency detected: requests",
-      "description": "Requests vulnerable to .netrc credentials leak via malicious URLs Package: requests, Version: 2.19.0, Ecosystem: PyPI, Vulnerability ID: GHSA-9hjg-9r4m-mvj7.",
-      "severity": "Medium",
-      "file": "sample_ecommerce_app\\requirements.txt",
-      "line": 3,
-      "detection_method": "Dependency",
-      "cwe": "CWE-522",
-      "recommendation": "Review GHSA-9hjg-9r4m-mvj7 in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
-      "traceability": {
-        "requirement_id": "",
-        "api": "",
-        "module": ""
-      }
-    },
-    {
-      "finding_id": "SEC-046",
+      "finding_id": "SEC-034",
       "title": "Vulnerable dependency detected: requests",
       "description": "Unintended leak of Proxy-Authorization header in requests Package: requests, Version: 2.19.0, Ecosystem: PyPI, Vulnerability ID: GHSA-j8r2-6x86-q33q.",
       "severity": "Medium",
@@ -740,182 +548,6 @@
       "detection_method": "Dependency",
       "cwe": "CWE-200",
       "recommendation": "Review GHSA-j8r2-6x86-q33q in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
-      "traceability": {
-        "requirement_id": "",
-        "api": "",
-        "module": ""
-      }
-    },
-    {
-      "finding_id": "SEC-047",
-      "title": "Vulnerable dependency detected: requests",
-      "description": "The Requests package before 2.20.0 for Python sends an HTTP Authorization header to an http URI upon receiving a same-hostname https-to-http redirect, which makes it easier for remote attackers to discover credentials by sniffing the network. Package: requests, Version: 2.19.0, Ecosystem: PyPI, Vulnerability ID: PYSEC-2018-28.",
-      "severity": "Medium",
-      "file": "sample_ecommerce_app\\requirements.txt",
-      "line": 3,
-      "detection_method": "Dependency",
-      "cwe": "CWE-937",
-      "recommendation": "Review PYSEC-2018-28 in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
-      "traceability": {
-        "requirement_id": "",
-        "api": "",
-        "module": ""
-      }
-    },
-    {
-      "finding_id": "SEC-048",
-      "title": "Vulnerable dependency detected: requests",
-      "description": "Requests is a HTTP library. Since Requests 2.3.0, Requests has been leaking Proxy-Authorization headers to destination servers when redirected to an HTTPS endpoint. This is a product of how we use `rebuild_proxies` to reattach the `Proxy-Authorization` header to requests. For HTTP connections sent through the tunnel, the proxy will identify the header in the request itself and remove it prior to forwarding to the destination server. However when sent over HTTPS, the `Proxy-Authorization` header must be sent in the CONNECT request as the proxy has no visibility into the tunneled request. This results in Requests forwarding proxy credentials to the destination server unintentionally, allowing a malicious actor to potentially exfiltrate sensitive information. This issue has been patched in version 2.31.0.\n\n Package: requests, Version: 2.19.0, Ecosystem: PyPI, Vulnerability ID: PYSEC-2023-74.",
-      "severity": "Medium",
-      "file": "sample_ecommerce_app\\requirements.txt",
-      "line": 3,
-      "detection_method": "Dependency",
-      "cwe": "CWE-937",
-      "recommendation": "Review PYSEC-2023-74 in OSV.dev and upgrade the affected dependency to a patched or currently supported version.",
-      "traceability": {
-        "requirement_id": "",
-        "api": "",
-        "module": ""
-      }
-    },
-    {
-      "finding_id": "SEC-049",
-      "title": "Insecure Secret Key Storage",
-      "description": "The SECRET_KEY is hardcoded in plain text. This allows an attacker to easily discover the key.",
-      "severity": "High",
-      "file": "sample_ecommerce_app\\app.py",
-      "line": 0,
-      "detection_method": "LLM",
-      "cwe": "CWE-259",
-      "recommendation": "Store secrets securely using a secrets management system or environment variables.",
-      "traceability": {
-        "requirement_id": "",
-        "api": "",
-        "module": ""
-      }
-    },
-    {
-      "finding_id": "SEC-050",
-      "title": "Insecure API Key Storage",
-      "description": "The API_KEY is hardcoded in plain text. This allows an attacker to easily discover the key.",
-      "severity": "High",
-      "file": "sample_ecommerce_app\\app.py",
-      "line": 0,
-      "detection_method": "LLM",
-      "cwe": "CWE-259",
-      "recommendation": "Store secrets securely using a secrets management system or environment variables.",
-      "traceability": {
-        "requirement_id": "",
-        "api": "",
-        "module": ""
-      }
-    },
-    {
-      "finding_id": "SEC-051",
-      "title": "Insecure Database Password Storage",
-      "description": "The DB_PASSWORD is hardcoded in plain text. This allows an attacker to easily discover the password.",
-      "severity": "High",
-      "file": "sample_ecommerce_app\\app.py",
-      "line": 0,
-      "detection_method": "LLM",
-      "cwe": "CWE-259",
-      "recommendation": "Store secrets securely using a secrets management system or environment variables.",
-      "traceability": {
-        "requirement_id": "",
-        "api": "",
-        "module": ""
-      }
-    },
-    {
-      "finding_id": "SEC-052",
-      "title": "Open Redirect",
-      "description": "The allow_origins parameter in the CORSMiddleware allows an attacker to redirect users to any website.",
-      "severity": "Medium",
-      "file": "sample_ecommerce_app\\app.py",
-      "line": 7,
-      "detection_method": "LLM",
-      "cwe": "CWE-601",
-      "recommendation": "Restrict allowed origins to trusted domains only.",
-      "traceability": {
-        "requirement_id": "",
-        "api": "",
-        "module": ""
-      }
-    },
-    {
-      "finding_id": "SEC-053",
-      "title": "SQL Injection in search_product endpoint",
-      "description": "The search_product endpoint uses a vulnerable SQL query that can be exploited by an attacker.",
-      "severity": "Critical",
-      "file": "sample_ecommerce_app\\app.py",
-      "line": 18,
-      "detection_method": "LLM",
-      "cwe": "CWE-89",
-      "recommendation": "Use parameterized queries or an ORM to prevent SQL injection attacks.",
-      "traceability": {
-        "requirement_id": "",
-        "api": "",
-        "module": ""
-      }
-    },
-    {
-      "finding_id": "SEC-054",
-      "title": "Arbitrary Code Execution in dangerous_code endpoint",
-      "description": "The dangerous_code endpoint uses eval() function which can execute arbitrary code, allowing an attacker to execute malicious code on the server.",
-      "severity": "Critical",
-      "file": "sample_ecommerce_app\\app.py",
-      "line": 24,
-      "detection_method": "LLM",
-      "cwe": "CWE-94",
-      "recommendation": "Do not use eval() or other similar functions. Instead, validate and sanitize user input before processing it.",
-      "traceability": {
-        "requirement_id": "",
-        "api": "",
-        "module": ""
-      }
-    },
-    {
-      "finding_id": "SEC-055",
-      "title": "Command Injection in run_command endpoint",
-      "description": "The run_command endpoint uses subprocess.run() function which can execute arbitrary system commands, allowing an attacker to execute malicious code on the server.",
-      "severity": "Critical",
-      "file": "sample_ecommerce_app\\app.py",
-      "line": 30,
-      "detection_method": "LLM",
-      "cwe": "CWE-78",
-      "recommendation": "Do not use subprocess.run() or other similar functions. Instead, validate and sanitize user input before processing it.",
-      "traceability": {
-        "requirement_id": "",
-        "api": "",
-        "module": ""
-      }
-    },
-    {
-      "finding_id": "SEC-056",
-      "title": "Insecure Token Storage",
-      "description": "Storing sensitive tokens in local storage is a security risk. An attacker can access the token by exploiting browser vulnerabilities or accessing the user's local storage.",
-      "severity": "High",
-      "file": "sample_ecommerce_app\\frontend.js",
-      "line": 0,
-      "detection_method": "LLM",
-      "cwe": "CWE-356",
-      "recommendation": "Use a secure token storage mechanism, such as a server-side session or an encrypted cookie.",
-      "traceability": {
-        "requirement_id": "",
-        "api": "",
-        "module": ""
-      }
-    },
-    {
-      "finding_id": "SEC-057",
-      "title": "Untrusted Eval",
-      "description": "The eval() function is vulnerable to code injection attacks. It can execute arbitrary JavaScript code, which can be used to steal sensitive data or perform malicious actions.",
-      "severity": "Critical",
-      "file": "sample_ecommerce_app\\frontend.js",
-      "line": 14,
-      "detection_method": "LLM",
-      "cwe": "CWE-95",
-      "recommendation": "Avoid using the eval() function or use a safer alternative like JSON.parse().",
       "traceability": {
         "requirement_id": "",
         "api": "",
@@ -1224,101 +856,57 @@
   ],
   "llm_findings": [
     {
-      "title": "Insecure Secret Key Storage",
-      "description": "The SECRET_KEY is hardcoded in plain text. This allows an attacker to easily discover the key.",
-      "severity": "High",
-      "file": "sample_ecommerce_app\\app.py",
-      "line": 0,
-      "cwe": "CWE-259",
-      "recommendation": "Store secrets securely using a secrets management system or environment variables.",
-      "confidence": 1.0,
-      "source": "ollama"
-    },
-    {
-      "title": "Insecure API Key Storage",
-      "description": "The API_KEY is hardcoded in plain text. This allows an attacker to easily discover the key.",
-      "severity": "High",
-      "file": "sample_ecommerce_app\\app.py",
-      "line": 0,
-      "cwe": "CWE-259",
-      "recommendation": "Store secrets securely using a secrets management system or environment variables.",
-      "confidence": 1.0,
-      "source": "ollama"
-    },
-    {
-      "title": "Insecure Database Password Storage",
-      "description": "The DB_PASSWORD is hardcoded in plain text. This allows an attacker to easily discover the password.",
-      "severity": "High",
-      "file": "sample_ecommerce_app\\app.py",
-      "line": 0,
-      "cwe": "CWE-259",
-      "recommendation": "Store secrets securely using a secrets management system or environment variables.",
-      "confidence": 1.0,
-      "source": "ollama"
-    },
-    {
-      "title": "Open Redirect",
-      "description": "The allow_origins parameter in the CORSMiddleware allows an attacker to redirect users to any website.",
+      "title": "Weak Hash Generation",
+      "description": "The weak_hash endpoint uses MD5 for hashing, which is considered insecure. It's recommended to use a more secure hashing algorithm such as bcrypt or Argon2.",
       "severity": "Medium",
       "file": "sample_ecommerce_app\\app.py",
-      "line": 7,
-      "cwe": "CWE-601",
-      "recommendation": "Restrict allowed origins to trusted domains only.",
+      "line": 0,
+      "cwe": "CWE327",
+      "recommendation": "Replace MD5 with a more secure hashing algorithm",
       "confidence": 1.0,
       "source": "ollama"
     },
     {
-      "title": "SQL Injection in search_product endpoint",
-      "description": "The search_product endpoint uses a vulnerable SQL query that can be exploited by an attacker.",
+      "title": "Arbitrary Code Execution via eval()",
+      "description": "The dangerous_code endpoint uses eval() to execute user-inputted code, which allows for arbitrary code execution and poses a significant security risk.",
       "severity": "Critical",
       "file": "sample_ecommerce_app\\app.py",
-      "line": 18,
-      "cwe": "CWE-89",
-      "recommendation": "Use parameterized queries or an ORM to prevent SQL injection attacks.",
+      "line": 0,
+      "cwe": "CWE94",
+      "recommendation": "Do not use eval() or other similar functions that allow executing untrusted input. Instead, consider using a safer alternative like ast.literal_eval() for safe evaluation of literals.",
       "confidence": 1.0,
       "source": "ollama"
     },
     {
-      "title": "Arbitrary Code Execution in dangerous_code endpoint",
-      "description": "The dangerous_code endpoint uses eval() function which can execute arbitrary code, allowing an attacker to execute malicious code on the server.",
-      "severity": "Critical",
+      "title": "Unrestricted File Execution via subprocess",
+      "description": "The run_command endpoint uses subprocess to execute commands from user-inputted strings. This allows an attacker to execute arbitrary system commands, which can lead to privilege escalation or file manipulation.",
+      "severity": "High",
       "file": "sample_ecommerce_app\\app.py",
-      "line": 24,
-      "cwe": "CWE-94",
-      "recommendation": "Do not use eval() or other similar functions. Instead, validate and sanitize user input before processing it.",
+      "line": 0,
+      "cwe": "CWE78",
+      "recommendation": "Validate the input command string and prevent any malicious execution by whitelisting allowed commands, using a secure shell, or avoiding direct system calls altogether.",
       "confidence": 1.0,
       "source": "ollama"
     },
     {
-      "title": "Command Injection in run_command endpoint",
-      "description": "The run_command endpoint uses subprocess.run() function which can execute arbitrary system commands, allowing an attacker to execute malicious code on the server.",
-      "severity": "Critical",
-      "file": "sample_ecommerce_app\\app.py",
-      "line": 30,
-      "cwe": "CWE-78",
-      "recommendation": "Do not use subprocess.run() or other similar functions. Instead, validate and sanitize user input before processing it.",
-      "confidence": 1.0,
-      "source": "ollama"
-    },
-    {
-      "title": "Insecure Token Storage",
-      "description": "Storing sensitive tokens in local storage is a security risk. An attacker can access the token by exploiting browser vulnerabilities or accessing the user's local storage.",
+      "title": "Insecure Storage of Auth Token",
+      "description": "Auth token is stored in local storage without proper encryption, allowing unauthorized access to the token.",
       "severity": "High",
       "file": "sample_ecommerce_app\\frontend.js",
       "line": 0,
-      "cwe": "CWE-356",
-      "recommendation": "Use a secure token storage mechanism, such as a server-side session or an encrypted cookie.",
+      "cwe": "CWE-522: Inadequate Encryption of Sensitive Data",
+      "recommendation": "Use a secure storage mechanism such as encrypted local storage or a secure session cookie.",
       "confidence": 1.0,
       "source": "ollama"
     },
     {
-      "title": "Untrusted Eval",
-      "description": "The eval() function is vulnerable to code injection attacks. It can execute arbitrary JavaScript code, which can be used to steal sensitive data or perform malicious actions.",
+      "title": "Untrusted Code Execution via Eval",
+      "description": "The 'runDangerous' function uses eval to execute untrusted input, allowing arbitrary code execution and potential remote code injection attacks.",
       "severity": "Critical",
       "file": "sample_ecommerce_app\\frontend.js",
-      "line": 14,
-      "cwe": "CWE-95",
-      "recommendation": "Avoid using the eval() function or use a safer alternative like JSON.parse().",
+      "line": 9,
+      "cwe": "CWE-94: Use of Untrusted Data in Security Decision",
+      "recommendation": "Avoid using eval or similar functions that execute untrusted code. Instead, use a safer parsing mechanism or sandboxed execution environment.",
       "confidence": 1.0,
       "source": "ollama"
     }
