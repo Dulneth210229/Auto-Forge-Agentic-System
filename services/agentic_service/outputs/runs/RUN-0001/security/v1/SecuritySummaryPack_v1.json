@@ -2,7 +2,7 @@
   "run_id": "RUN-0001",
   "stage": "security",
   "version": "v1",
-  "generated_at": "2026-05-02T22:56:24.652792+00:00",
+  "generated_at": "2026-05-02T23:26:05.387495+00:00",
   "target_path": "./sample_ecommerce_app",
   "security_gate": {
     "status": "FAIL",
@@ -35,7 +35,7 @@
   },
   "counts": {
     "total_findings": 36,
-    "dependency_vulnerabilities": 27,
+    "dependency_vulnerabilities": 81,
     "llm_findings": 2,
     "fix_suggestions": 36,
     "top_blocking_findings": 10
