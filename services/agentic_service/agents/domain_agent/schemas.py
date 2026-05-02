@@ -1,84 +1,86 @@
-from typing import List, Literal
-from pydantic import BaseModel, Field
+from typing import List, Literal, Optional
+from pydantic import BaseModel
 
 
-class DomainWorkflowStep(BaseModel):
-    """Single step within a domain workflow."""
-    step_number: int
-    description: str
+class RetrievedKnowledgeChunk(BaseModel):
+    """
+    Stores one chunk retrieved from the vector database.
+
+    This is important for RAG traceability because later we can show
+    which domain knowledge chunks influenced the generated DomainPack.
+    """
+    chunk_id: str
+    source: str
+    content: str
+    score: Optional[float] = None
 
 
 class DomainWorkflow(BaseModel):
-    """Business workflow with steps, exceptions, and related requirements."""
-    id: str = Field(..., description="Workflow ID such as WF-001")
+    """
+    Represents one E-commerce workflow.
+    Example: Product browsing, cart update, checkout, order placement.
+    """
+    id: str
     name: str
-    actor: str
     description: str
-    trigger: str
-    steps: List[DomainWorkflowStep]
+    actors: List[str]
+    steps: List[str]
     exceptions: List[str]
     related_requirements: List[str]
 
 
-class BusinessRule(BaseModel):
-    """Normalized business rule with a category, rationale, and traceability."""
-    id: str = Field(..., description="Business rule ID such as BR-001")
-    category: Literal[
-        "Catalog",
-        "Pricing",
-        "Stock",
-        "Cart",
-        "Checkout",
-        "Payment",
-        "Order",
-        "Return",
-        "Refund",
-        "Discount",
-        "General"
-    ]
-    rule: str
-    rationale: str
+class DomainBusinessRule(BaseModel):
+    """
+    Represents an E-commerce business rule.
+    Example: Customers cannot checkout with out-of-stock items.
+    """
+    id: str
+    title: str
+    description: str
     related_requirements: List[str]
 
 
-class DomainException(BaseModel):
-    """Exception scenario and expected system response."""
-    id: str = Field(..., description="Exception ID such as EX-001")
-    scenario: str
-    system_response: str
-    related_workflow: str
-
-
 class DomainEntity(BaseModel):
-    """Key domain entity and its important fields."""
-    id: str = Field(..., description="Entity ID such as DE-001")
+    """
+    Represents an important domain concept.
+
+    This is not yet a database table. The Architect Agent will later use
+    these entities to design tables/entities/API resources.
+    """
+    id: str
     name: str
     description: str
-    important_fields: List[str]
+    key_attributes: List[str]
 
 
-class DomainPolicy(BaseModel):
-    """Policy statement that governs domain behavior."""
-    id: str = Field(..., description="Policy ID such as DP-001")
+class DomainException(BaseModel):
+    """
+    Represents business exceptions that can happen in E-commerce flows.
+    Example: payment failure, invalid coupon, out-of-stock item.
+    """
+    id: str
     name: str
     description: str
+    handling_rule: str
 
 
 class DomainPack(BaseModel):
-    """Top-level bundle of extracted domain knowledge for a project."""
+    """
+    Final output schema of the Domain Agent.
+    This is saved as DomainPack_v1.json and rendered to DomainPack_v1.md.
+    """
     project_name: str
     version: str
     domain: Literal["E-commerce"]
-    source_srs_version: str
 
-    domain_summary: str
-    retrieved_knowledge_summary: str
+    overview: str
 
     workflows: List[DomainWorkflow]
-    business_rules: List[BusinessRule]
-    exceptions: List[DomainException]
+    business_rules: List[DomainBusinessRule]
     domain_entities: List[DomainEntity]
-    policies: List[DomainPolicy]
+    exceptions: List[DomainException]
 
     assumptions: List[str]
     constraints: List[str]
+
+    retrieved_knowledge: List[RetrievedKnowledgeChunk]
