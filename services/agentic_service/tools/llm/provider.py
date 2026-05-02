@@ -110,7 +110,7 @@ class OllamaProvider(LLMProvider):
             "stream": False,
             "format": "json",
             "options": {
-                "temperature": 0.1
+                "temperature": 0.2
             }
         }
 
