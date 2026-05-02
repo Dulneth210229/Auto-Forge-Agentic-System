@@ -22,6 +22,7 @@ from agents.security_agent.summary_pack import (
     SecuritySummaryPackRenderer
 )
 from tools.llm.provider import OllamaProvider
+from tools.artifact_registry import ArtifactRegistry
 
 
 class SecurityAgent:
@@ -40,6 +41,7 @@ class SecurityAgent:
     - Security gate decision
     - Structured fix suggestions
     - Security summary pack generation
+    - Run metadata artifact registration
     """
 
     def __init__(self, output_root: str = "outputs"):
@@ -71,6 +73,9 @@ class SecurityAgent:
         # Builds compact dashboard/API-friendly summary artifacts.
         self.summary_pack_builder = SecuritySummaryPackBuilder()
         self.summary_pack_renderer = SecuritySummaryPackRenderer()
+
+        # Registers generated artifacts into outputs/runs/{run_id}/run_metadata.json.
+        self.artifact_registry = ArtifactRegistry(output_root=output_root)
 
     def run(
         self,
@@ -207,7 +212,48 @@ class SecurityAgent:
         )
 
         # ---------------------------------------------------------
-        # 9. Return CLI/API response
+        # 9. Register generated artifacts in run_metadata.json
+        # ---------------------------------------------------------
+        metadata_path = self.artifact_registry.register_many(
+            run_id=run_id,
+            artifacts=[
+                {
+                    "stage": "security",
+                    "version": version,
+                    "type": "security_report_json",
+                    "format": "json",
+                    "path": str(json_path),
+                    "description": "Full machine-readable Security Report."
+                },
+                {
+                    "stage": "security",
+                    "version": version,
+                    "type": "security_report_markdown",
+                    "format": "md",
+                    "path": str(md_path),
+                    "description": "Human-readable Security Report."
+                },
+                {
+                    "stage": "security",
+                    "version": version,
+                    "type": "security_summary_pack_json",
+                    "format": "json",
+                    "path": str(summary_pack_json_path),
+                    "description": "Compact dashboard/API Security Summary Pack."
+                },
+                {
+                    "stage": "security",
+                    "version": version,
+                    "type": "security_summary_pack_markdown",
+                    "format": "md",
+                    "path": str(summary_pack_md_path),
+                    "description": "Human-readable Security Summary Pack."
+                }
+            ]
+        )
+
+        # ---------------------------------------------------------
+        # 10. Return CLI/API response
         # ---------------------------------------------------------
         return {
             "run_id": run_id,
@@ -219,6 +265,7 @@ class SecurityAgent:
             "markdown_path": str(md_path),
             "summary_pack_json_path": str(summary_pack_json_path),
             "summary_pack_markdown_path": str(summary_pack_md_path),
+            "metadata_path": metadata_path,
             "summary": report.summary.model_dump(),
             "dependency_vulnerabilities_count": len(dependency_vulnerabilities),
             "llm_findings_count": len(llm_findings_data),

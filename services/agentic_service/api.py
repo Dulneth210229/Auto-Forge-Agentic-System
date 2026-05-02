@@ -70,6 +70,7 @@ class SecurityRunResponse(BaseModel):
     markdown_path: str
     summary_pack_json_path: str
     summary_pack_markdown_path: str
+    metadata_path: str
 
     summary: dict
     dependency_vulnerabilities_count: int

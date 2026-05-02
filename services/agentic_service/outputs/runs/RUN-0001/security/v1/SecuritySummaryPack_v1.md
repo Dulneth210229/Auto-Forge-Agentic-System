@@ -3,7 +3,7 @@
 **Run ID:** RUN-0001  
 **Stage:** security  
 **Version:** v1  
-**Generated At:** 2026-05-02T23:26:05.387495+00:00  
+**Generated At:** 2026-05-02T23:42:05.316361+00:00  
 **Target Path:** ./sample_ecommerce_app
 
 ---
@@ -34,7 +34,7 @@
 
 | Metric | Count |
 |---|---:|
-| Dependency Vulnerabilities | 81 |
+| Dependency Vulnerabilities | 27 |
 | LLM Findings | 2 |
 | Fix Suggestions | 36 |
 | Top Blocking Findings | 10 |

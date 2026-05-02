@@ -1,0 +1,43 @@
+{
+  "run_id": "RUN-0001",
+  "created_at": "2026-05-02T23:42:05.317389+00:00",
+  "updated_at": "2026-05-02T23:42:05.343964+00:00",
+  "artifacts": [
+    {
+      "stage": "security",
+      "version": "v1",
+      "type": "security_report_json",
+      "format": "json",
+      "path": "outputs\\runs\\RUN-0001\\security\\v1\\SecurityReport_v1.json",
+      "description": "Full machine-readable Security Report.",
+      "registered_at": "2026-05-02T23:42:05.317403+00:00"
+    },
+    {
+      "stage": "security",
+      "version": "v1",
+      "type": "security_report_markdown",
+      "format": "md",
+      "path": "outputs\\runs\\RUN-0001\\security\\v1\\SecurityReport_v1.md",
+      "description": "Human-readable Security Report.",
+      "registered_at": "2026-05-02T23:42:05.327955+00:00"
+    },
+    {
+      "stage": "security",
+      "version": "v1",
+      "type": "security_summary_pack_json",
+      "format": "json",
+      "path": "outputs\\runs\\RUN-0001\\security\\v1\\SecuritySummaryPack_v1.json",
+      "description": "Compact dashboard/API Security Summary Pack.",
+      "registered_at": "2026-05-02T23:42:05.335415+00:00"
+    },
+    {
+      "stage": "security",
+      "version": "v1",
+      "type": "security_summary_pack_markdown",
+      "format": "md",
+      "path": "outputs\\runs\\RUN-0001\\security\\v1\\SecuritySummaryPack_v1.md",
+      "description": "Human-readable Security Summary Pack.",
+      "registered_at": "2026-05-02T23:42:05.343753+00:00"
+    }
+  ]
+}
