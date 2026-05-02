@@ -16,3 +16,8 @@ numpy
 sentence-transformers
 faiss-cpu
 chromadb
+
+
+pyyaml
+openapi-spec-validator
+pillow
