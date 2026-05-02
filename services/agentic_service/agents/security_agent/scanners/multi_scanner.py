@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import List
+from typing import List, Dict, Any
 
 from agents.security_agent.schemas import SecurityFinding
 from agents.security_agent.scanners.base import FindingFactory
@@ -7,27 +7,32 @@ from agents.security_agent.scanners.python_ast_scanner import PythonASTScanner
 from agents.security_agent.scanners.js_ts_scanner import JSTypescriptScanner
 from agents.security_agent.scanners.secret_scanner import SecretScanner
 from agents.security_agent.scanners.config_scanner import ConfigScanner
+from agents.security_agent.scanners.dependency_scanner import DependencyScanner
 
 
 class MultiSecurityScanner:
     """
-    Runs all available security scanners on a target project folder.
+    Runs all rule-based security scanners on a target project folder.
 
     Current scanners:
     - PythonASTScanner
     - JSTypescriptScanner
     - SecretScanner
     - ConfigScanner
+    - DependencyScanner
     """
 
     def __init__(self):
         self.factory = FindingFactory()
 
+        self.dependency_scanner = DependencyScanner(self.factory)
+
         self.scanners = [
             PythonASTScanner(self.factory),
             JSTypescriptScanner(self.factory),
             SecretScanner(self.factory),
-            ConfigScanner(self.factory)
+            ConfigScanner(self.factory),
+            self.dependency_scanner
         ]
 
     def scan_directory(self, target_path: str) -> List[SecurityFinding]:
@@ -42,3 +47,17 @@ class MultiSecurityScanner:
             findings.extend(scanner.scan_directory(target_path))
 
         return findings
+
+    def get_dependency_vulnerabilities(self) -> List[Dict[str, Any]]:
+        """
+        Return normalized dependency vulnerability records.
+        """
+
+        return self.dependency_scanner.dependency_vulnerabilities
+
+    def get_factory(self) -> FindingFactory:
+        """
+        Return the shared finding factory so LLM findings continue the same SEC ID sequence.
+        """
+
+        return self.factory

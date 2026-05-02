@@ -18,7 +18,27 @@
 
 ---
 
-## 2. Findings
+## 2. Security Gate Decision
+
+| Field | Value |
+|---|---|
+| Status | **{{ report.security_gate.status }}** |
+| Reason | {{ report.security_gate.reason }} |
+| Policy | {{ report.security_gate.policy }} |
+
+{% if report.security_gate.blocking_findings %}
+### Blocking Findings
+
+{% for finding_id in report.security_gate.blocking_findings %}
+- {{ finding_id }}
+{% endfor %}
+{% else %}
+No blocking findings.
+{% endif %}
+
+---
+
+## 3. Findings
 
 {% if report.findings %}
 | ID | Title | Severity | File | Line | Method | CWE |
@@ -32,8 +52,9 @@ No security findings were detected.
 
 ---
 
-## 3. Finding Details
+## 4. Finding Details
 
+{% if report.findings %}
 {% for finding in report.findings %}
 ### {{ finding.finding_id }} — {{ finding.title }}
 
@@ -55,43 +76,110 @@ No security findings were detected.
 - Module: {{ finding.traceability.module }}
 
 {% endfor %}
+{% else %}
+No finding details available.
+{% endif %}
 
 ---
 
-## 4. Dependency Vulnerabilities
+## 5. Fix Suggestions
+
+{% if report.fix_suggestions %}
+| Finding ID | Issue | Severity | Priority | Effort |
+|---|---|---|---|---|
+{% for fix in report.fix_suggestions %}
+| {{ fix.finding_id }} | {{ fix.issue }} | {{ fix.severity }} | {{ fix.priority }} | {{ fix.effort }} |
+{% endfor %}
+
+{% for fix in report.fix_suggestions %}
+### {{ fix.finding_id }} — {{ fix.issue }}
+
+**Severity:** {{ fix.severity }}  
+**File:** {{ fix.file }}  
+**Priority:** {{ fix.priority }}  
+**Estimated Effort:** {{ fix.effort }}
+
+**Recommended Fix:**  
+{{ fix.recommended_fix }}
+
+**Example Fix:**
+
+```txt
+{{ fix.example_fix }}
+```
+
+{% endfor %}
+{% else %}
+No fix suggestions were generated.
+{% endif %}
+
+---
+
+## 6. Dependency Vulnerabilities
 
 {% if report.dependency_vulnerabilities %}
+| Vulnerability ID | Package | Version | Ecosystem | Severity | CWE | Source |
+|---|---|---|---|---|---|---|
 {% for vuln in report.dependency_vulnerabilities %}
-- {{ vuln }}
+| {{ vuln.id }} | {{ vuln.package }} | {{ vuln.version }} | {{ vuln.ecystem if vuln.ecystem is defined else vuln.ecosystem }} | {{ vuln.severity }} | {{ vuln.cwe }} | {{ vuln.source }} |
+{% endfor %}
+
+{% for vuln in report.dependency_vulnerabilities %}
+### {{ vuln.id }} — {{ vuln.package }} {{ vuln.version }}
+
+**Ecosystem:** {{ vuln.ecystem if vuln.ecystem is defined else vuln.ecosystem }}  
+**Severity:** {{ vuln.severity }}  
+**CWE:** {{ vuln.cwe }}  
+**Source:** {{ vuln.source }}
+
+**Description:**  
+{{ vuln.description }}
+
+**Recommendation:**  
+{{ vuln.recommendation }}
+
 {% endfor %}
 {% else %}
-No dependency vulnerabilities were recorded in this skeleton version.
+No dependency vulnerabilities were detected.
 {% endif %}
 
 ---
 
-## 5. LLM Findings
+## 7. LLM Findings
 
 {% if report.llm_findings %}
-{% for item in report.llm_findings %}
-- {{ item }}
+| Title | Severity | File | Line | CWE | Confidence |
+|---|---|---|---:|---|---:|
+{% for finding in report.llm_findings %}
+| {{ finding.title }} | {{ finding.severity }} | {{ finding.file }} | {{ finding.line }} | {{ finding.cwe }} | {{ finding.confidence }} |
+{% endfor %}
+
+{% for finding in report.llm_findings %}
+### {{ finding.title }}
+
+**Severity:** {{ finding.severity }}  
+**File:** {{ finding.file }}  
+**Line:** {{ finding.line }}  
+**CWE:** {{ finding.cwe }}  
+**Confidence:** {{ finding.confidence }}  
+**Source:** {{ finding.source }}
+
+**Description:**  
+{{ finding.description }}
+
+**Recommendation:**  
+{{ finding.recommendation }}
+
 {% endfor %}
 {% else %}
-No LLM-assisted findings were recorded in this skeleton version.
+No LLM-assisted findings were recorded.
 {% endif %}
 
 ---
 
-## 6. Metrics
+## 8. Metrics
 
 | Metric | Value |
 |---|---:|
 | Coverage | {{ report.metrics.coverage }} |
 | Confidence | {{ report.metrics.confidence }} |
-
----
-
-## 7. Notes
-
-This is the initial Security Agent skeleton report.  
-Real AST scanning, dependency scanning, and LLM-assisted secure code review will be added in later steps.

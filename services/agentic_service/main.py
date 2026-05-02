@@ -14,7 +14,8 @@ def run_security(args):
     result = agent.run(
         run_id=args.run_id,
         version=args.version,
-        target_path=args.target
+        target_path=args.target,
+        enable_llm=args.enable_llm
     )
 
     print(json.dumps(result, indent=2))
@@ -24,8 +25,8 @@ def main():
     """
     Main CLI entry point for AutoForge.
 
-    Current supported command:
-    python main.py run-security --run-id RUN-0001 --target ./sample_ecommerce_app
+    Example:
+    python main.py run-security --run-id RUN-0001 --target ./sample_ecommerce_app --enable-llm
     """
 
     parser = argparse.ArgumentParser(
@@ -55,6 +56,12 @@ def main():
         "--target",
         default=None,
         help="Target source code folder to scan"
+    )
+
+    security_parser.add_argument(
+        "--enable-llm",
+        action="store_true",
+        help="Enable Ollama LLM-assisted secure code review"
     )
 
     security_parser.set_defaults(func=run_security)
