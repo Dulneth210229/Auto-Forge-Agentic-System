@@ -3,11 +3,11 @@
   "stage": "security",
   "version": "v1",
   "summary": {
-    "total_findings": 34,
+    "total_findings": 36,
     "critical": 6,
     "high": 15,
     "medium": 12,
-    "low": 1
+    "low": 3
   },
   "findings": [
     {
@@ -553,6 +553,38 @@
         "api": "/auth",
         "module": "authentication"
       }
+    },
+    {
+      "finding_id": "SEC-035",
+      "title": "LLM review failed",
+      "description": "The LLM review failed for this file: the JSON object must be str, bytes or bytearray, not coroutine",
+      "severity": "Low",
+      "file": "sample_ecommerce_app\\app.py",
+      "line": 0,
+      "detection_method": "LLM",
+      "cwe": "N/A",
+      "recommendation": "Check Ollama availability and retry the LLM review.",
+      "traceability": {
+        "requirement_id": "NFR-SEC-001",
+        "api": "N/A",
+        "module": "general_security"
+      }
+    },
+    {
+      "finding_id": "SEC-036",
+      "title": "LLM review failed",
+      "description": "The LLM review failed for this file: the JSON object must be str, bytes or bytearray, not coroutine",
+      "severity": "Low",
+      "file": "sample_ecommerce_app\\frontend.js",
+      "line": 0,
+      "detection_method": "LLM",
+      "cwe": "N/A",
+      "recommendation": "Check Ollama availability and retry the LLM review.",
+      "traceability": {
+        "requirement_id": "FR-007",
+        "api": "UI",
+        "module": "frontend"
+      }
     }
   ],
   "dependency_vulnerabilities": [
@@ -856,69 +888,25 @@
   ],
   "llm_findings": [
     {
-      "title": "Insecure API Key",
-      "description": "The API_KEY is hardcoded and not properly secured.",
-      "severity": "High",
+      "title": "LLM review failed",
+      "description": "The LLM review failed for this file: the JSON object must be str, bytes or bytearray, not coroutine",
+      "severity": "Low",
       "file": "sample_ecommerce_app\\app.py",
       "line": 0,
-      "cwe": "CWE-259",
-      "recommendation": "Use environment variables or a secure configuration file to store sensitive data.",
-      "confidence": 1.0,
+      "cwe": "N/A",
+      "recommendation": "Check Ollama availability and retry the LLM review.",
+      "confidence": 0.0,
       "source": "ollama"
     },
     {
-      "title": "SQL Injection Risk",
-      "description": "The search_product endpoint is vulnerable to SQL injection attacks due to the use of unescaped user input in the query.",
-      "severity": "High",
-      "file": "sample_ecommerce_app\\app.py",
-      "line": 23,
-      "cwe": "CWE-89",
-      "recommendation": "Use parameterized queries or an ORM to prevent SQL injection attacks.",
-      "confidence": 1.0,
-      "source": "ollama"
-    },
-    {
-      "title": "Command Injection Risk",
-      "description": "The run_command endpoint is vulnerable to command injection attacks due to the use of subprocess.run with shell=True and unescaped user input.",
-      "severity": "Critical",
-      "file": "sample_ecommerce_app\\app.py",
-      "line": 42,
-      "cwe": "CWE-94",
-      "recommendation": "Use a secure alternative, such as os.execvp or a library like Popen, to execute commands securely.",
-      "confidence": 1.0,
-      "source": "ollama"
-    },
-    {
-      "title": "Arbitrary Code Execution Risk",
-      "description": "The dangerous_code endpoint is vulnerable to arbitrary code execution due to the use of eval on user-provided input.",
-      "severity": "Critical",
-      "file": "sample_ecommerce_app\\app.py",
-      "line": 38,
-      "cwe": "CWE-95",
-      "recommendation": "Do not use eval or similar functions with untrusted input. Instead, use a safe alternative like ast.literal_eval or a library like safe-exec.",
-      "confidence": 1.0,
-      "source": "ollama"
-    },
-    {
-      "title": "Insecure Storage of Authentication Token",
-      "description": "The authentication token is stored in local storage without proper encryption or validation, making it vulnerable to theft or tampering.",
-      "severity": "High",
+      "title": "LLM review failed",
+      "description": "The LLM review failed for this file: the JSON object must be str, bytes or bytearray, not coroutine",
+      "severity": "Low",
       "file": "sample_ecommerce_app\\frontend.js",
       "line": 0,
-      "cwe": "CWE-312",
-      "recommendation": "Use a secure storage mechanism like HTTPS cookies or encrypted local storage.",
-      "confidence": 1.0,
-      "source": "ollama"
-    },
-    {
-      "title": "Arbitrary Code Execution via eval()",
-      "description": "The runDangerous function uses eval() to execute arbitrary JavaScript code, which can lead to remote code execution and privilege escalation attacks.",
-      "severity": "Critical",
-      "file": "sample_ecommerce_app\\frontend.js",
-      "line": 7,
-      "cwe": "CWE-94",
-      "recommendation": "Avoid using eval() or similar functions. Instead, use a safe evaluation mechanism like JSON.parse() or a parsing library.",
-      "confidence": 1.0,
+      "cwe": "N/A",
+      "recommendation": "Check Ollama availability and retry the LLM review.",
+      "confidence": 0.0,
       "source": "ollama"
     }
   ],
@@ -1274,6 +1262,26 @@
       "recommended_fix": "Upgrade the vulnerable dependency to a patched and currently supported version.",
       "example_fix": "Update requirements.txt or package.json, then rerun dependency scanning.",
       "priority": "Normal",
+      "effort": "Medium"
+    },
+    {
+      "finding_id": "SEC-035",
+      "issue": "LLM review failed",
+      "severity": "Low",
+      "file": "sample_ecommerce_app\\app.py",
+      "recommended_fix": "Review the finding and apply a secure coding fix based on the recommendation.",
+      "example_fix": "Check Ollama availability and retry the LLM review.",
+      "priority": "Low",
+      "effort": "Medium"
+    },
+    {
+      "finding_id": "SEC-036",
+      "issue": "LLM review failed",
+      "severity": "Low",
+      "file": "sample_ecommerce_app\\frontend.js",
+      "recommended_fix": "Review the finding and apply a secure coding fix based on the recommendation.",
+      "example_fix": "Check Ollama availability and retry the LLM review.",
+      "priority": "Low",
       "effort": "Medium"
     }
   ],
