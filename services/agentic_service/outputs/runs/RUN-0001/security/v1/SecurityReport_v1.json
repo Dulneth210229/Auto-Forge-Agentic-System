@@ -856,57 +856,68 @@
   ],
   "llm_findings": [
     {
-      "title": "Insecure Secret Storage",
-      "description": "The SECRET_KEY is hardcoded and easily accessible.",
+      "title": "Insecure API Key",
+      "description": "The API_KEY is hardcoded and not properly secured.",
       "severity": "High",
       "file": "sample_ecommerce_app\\app.py",
       "line": 0,
-      "cwe": "CWE-312",
-      "recommendation": "Store the secret key securely using a secrets management system or environment variables.",
+      "cwe": "CWE-259",
+      "recommendation": "Use environment variables or a secure configuration file to store sensitive data.",
       "confidence": 1.0,
       "source": "ollama"
     },
     {
-      "title": "/danger Endpoint Vulnerable to Code Injection",
-      "description": "The /danger endpoint uses eval() function which can lead to code injection attacks.",
+      "title": "SQL Injection Risk",
+      "description": "The search_product endpoint is vulnerable to SQL injection attacks due to the use of unescaped user input in the query.",
+      "severity": "High",
+      "file": "sample_ecommerce_app\\app.py",
+      "line": 23,
+      "cwe": "CWE-89",
+      "recommendation": "Use parameterized queries or an ORM to prevent SQL injection attacks.",
+      "confidence": 1.0,
+      "source": "ollama"
+    },
+    {
+      "title": "Command Injection Risk",
+      "description": "The run_command endpoint is vulnerable to command injection attacks due to the use of subprocess.run with shell=True and unescaped user input.",
       "severity": "Critical",
       "file": "sample_ecommerce_app\\app.py",
-      "line": 24,
+      "line": 42,
       "cwe": "CWE-94",
-      "recommendation": "Replace eval() with a safe evaluation method or disable the endpoint altogether.",
+      "recommendation": "Use a secure alternative, such as os.execvp or a library like Popen, to execute commands securely.",
       "confidence": 1.0,
       "source": "ollama"
     },
     {
-      "title": "/run Endpoint Vulnerable to Command Injection",
-      "description": "The /run endpoint uses subprocess.run() function which can lead to command injection attacks.",
+      "title": "Arbitrary Code Execution Risk",
+      "description": "The dangerous_code endpoint is vulnerable to arbitrary code execution due to the use of eval on user-provided input.",
       "severity": "Critical",
       "file": "sample_ecommerce_app\\app.py",
-      "line": 34,
-      "cwe": "CWE-78",
-      "recommendation": "Disable the /run endpoint or use a safe method for executing shell commands, such as using os.system() with whitelisted commands.",
+      "line": 38,
+      "cwe": "CWE-95",
+      "recommendation": "Do not use eval or similar functions with untrusted input. Instead, use a safe alternative like ast.literal_eval or a library like safe-exec.",
       "confidence": 1.0,
       "source": "ollama"
     },
     {
-      "title": "Insecure Token Storage",
-      "description": "Storing sensitive data like auth tokens in local storage is not secure.",
-      "severity": "Medium",
+      "title": "Insecure Storage of Authentication Token",
+      "description": "The authentication token is stored in local storage without proper encryption or validation, making it vulnerable to theft or tampering.",
+      "severity": "High",
       "file": "sample_ecommerce_app\\frontend.js",
       "line": 0,
-      "cwe": "CWE-749",
-      "recommendation": "Use a more secure method to store and manage authentication tokens, such as using a secure token service or encrypting the data.",
+      "cwe": "CWE-312",
+      "recommendation": "Use a secure storage mechanism like HTTPS cookies or encrypted local storage.",
       "confidence": 1.0,
       "source": "ollama"
     },
     {
-      "title": "Arbitrary Code Execution",
-      "description": "The `runDangerous` function uses eval() to execute arbitrary code, which can lead to code injection attacks and arbitrary code execution.",
+      "title": "Arbitrary Code Execution via eval()",
+      "description": "The runDangerous function uses eval() to execute arbitrary JavaScript code, which can lead to remote code execution and privilege escalation attacks.",
       "severity": "Critical",
       "file": "sample_ecommerce_app\\frontend.js",
-      "line": 13,
+      "line": 7,
       "cwe": "CWE-94",
-      "recommendation": "Do not use eval() or any other method that allows executing arbitrary code. Instead, consider using a safer evaluation function or parsing the input in a safe way.",
+      "recommendation": "Avoid using eval() or similar functions. Instead, use a safe evaluation mechanism like JSON.parse() or a parsing library.",
       "confidence": 1.0,
       "source": "ollama"
     }
@@ -924,6 +935,348 @@
       "SEC-028"
     ]
   },
+  "fix_suggestions": [
+    {
+      "finding_id": "SEC-001",
+      "issue": "Hardcoded secret detected",
+      "severity": "High",
+      "file": "sample_ecommerce_app\\app.py",
+      "recommended_fix": "Move hardcoded secrets into environment variables or a secure secret manager.",
+      "example_fix": "import os\nSECRET_KEY = os.getenv('SECRET_KEY')",
+      "priority": "High",
+      "effort": "Low"
+    },
+    {
+      "finding_id": "SEC-002",
+      "issue": "Use of eval() detected",
+      "severity": "Critical",
+      "file": "sample_ecommerce_app\\app.py",
+      "recommended_fix": "Remove eval/exec usage and replace it with safe parsing or explicit controlled logic.",
+      "example_fix": "Use json.loads(user_input) for JSON data instead of eval(user_input).",
+      "priority": "Immediate",
+      "effort": "Medium"
+    },
+    {
+      "finding_id": "SEC-003",
+      "issue": "Unsafe subprocess usage with shell=True",
+      "severity": "High",
+      "file": "sample_ecommerce_app\\app.py",
+      "recommended_fix": "Avoid shell=True and pass command arguments as a safe list with strict input validation.",
+      "example_fix": "subprocess.run(['echo', safe_value], shell=False, check=True)",
+      "priority": "High",
+      "effort": "Medium"
+    },
+    {
+      "finding_id": "SEC-004",
+      "issue": "Weak hashing algorithm detected",
+      "severity": "Medium",
+      "file": "sample_ecommerce_app\\app.py",
+      "recommended_fix": "Replace weak hashing algorithms with secure hashing suitable for the use case.",
+      "example_fix": "hashlib.sha256(value.encode()).hexdigest()",
+      "priority": "Normal",
+      "effort": "Low"
+    },
+    {
+      "finding_id": "SEC-005",
+      "issue": "Debug mode enabled",
+      "severity": "Medium",
+      "file": "sample_ecommerce_app\\app.py",
+      "recommended_fix": "Disable debug mode in production and control it through environment configuration.",
+      "example_fix": "app = FastAPI(debug=False)",
+      "priority": "Normal",
+      "effort": "Low"
+    },
+    {
+      "finding_id": "SEC-006",
+      "issue": "Insecure CORS wildcard detected",
+      "severity": "Medium",
+      "file": "sample_ecommerce_app\\app.py",
+      "recommended_fix": "Remove eval/exec usage and replace it with safe parsing or explicit controlled logic.",
+      "example_fix": "Use json.loads(user_input) for JSON data instead of eval(user_input).",
+      "priority": "Normal",
+      "effort": "Medium"
+    },
+    {
+      "finding_id": "SEC-007",
+      "issue": "Possible raw SQL string formatting",
+      "severity": "High",
+      "file": "sample_ecommerce_app\\app.py",
+      "recommended_fix": "Replace SQL string concatenation with parameterized queries or ORM-safe query methods.",
+      "example_fix": "db.execute('SELECT * FROM products WHERE name = ?', [keyword])",
+      "priority": "High",
+      "effort": "Medium"
+    },
+    {
+      "finding_id": "SEC-008",
+      "issue": "Direct innerHTML assignment detected",
+      "severity": "High",
+      "file": "sample_ecommerce_app\\frontend.js",
+      "recommended_fix": "Avoid rendering unsanitized user input as HTML. Use safe text rendering or sanitize HTML.",
+      "example_fix": "element.textContent = userInput;",
+      "priority": "High",
+      "effort": "Medium"
+    },
+    {
+      "finding_id": "SEC-009",
+      "issue": "Sensitive token stored in localStorage",
+      "severity": "Medium",
+      "file": "sample_ecommerce_app\\frontend.js",
+      "recommended_fix": "Move hardcoded secrets into environment variables or a secure secret manager.",
+      "example_fix": "import os\nSECRET_KEY = os.getenv('SECRET_KEY')",
+      "priority": "Normal",
+      "effort": "Low"
+    },
+    {
+      "finding_id": "SEC-010",
+      "issue": "JavaScript eval() usage detected",
+      "severity": "Critical",
+      "file": "sample_ecommerce_app\\frontend.js",
+      "recommended_fix": "Remove eval/exec usage and replace it with safe parsing or explicit controlled logic.",
+      "example_fix": "Use json.loads(user_input) for JSON data instead of eval(user_input).",
+      "priority": "Immediate",
+      "effort": "Medium"
+    },
+    {
+      "finding_id": "SEC-011",
+      "issue": "Possible hardcoded secret detected",
+      "severity": "High",
+      "file": "sample_ecommerce_app\\.env",
+      "recommended_fix": "Move hardcoded secrets into environment variables or a secure secret manager.",
+      "example_fix": "import os\nSECRET_KEY = os.getenv('SECRET_KEY')",
+      "priority": "High",
+      "effort": "Low"
+    },
+    {
+      "finding_id": "SEC-012",
+      "issue": "Debug configuration enabled",
+      "severity": "Medium",
+      "file": "sample_ecommerce_app\\.env",
+      "recommended_fix": "Disable debug mode in production and control it through environment configuration.",
+      "example_fix": "app = FastAPI(debug=False)",
+      "priority": "Normal",
+      "effort": "Low"
+    },
+    {
+      "finding_id": "SEC-013",
+      "issue": "Wildcard CORS setting in configuration",
+      "severity": "Medium",
+      "file": "sample_ecommerce_app\\.env",
+      "recommended_fix": "Remove eval/exec usage and replace it with safe parsing or explicit controlled logic.",
+      "example_fix": "Use json.loads(user_input) for JSON data instead of eval(user_input).",
+      "priority": "Normal",
+      "effort": "Medium"
+    },
+    {
+      "finding_id": "SEC-014",
+      "issue": "Docker container runs as root",
+      "severity": "Medium",
+      "file": "sample_ecommerce_app\\Dockerfile",
+      "recommended_fix": "Run the container using a non-root user to reduce the impact of container compromise.",
+      "example_fix": "RUN adduser --disabled-password appuser\nUSER appuser",
+      "priority": "Normal",
+      "effort": "Medium"
+    },
+    {
+      "finding_id": "SEC-015",
+      "issue": "Vulnerable dependency detected: lodash",
+      "severity": "High",
+      "file": "sample_ecommerce_app\\package.json",
+      "recommended_fix": "Avoid shell=True and pass command arguments as a safe list with strict input validation.",
+      "example_fix": "subprocess.run(['echo', safe_value], shell=False, check=True)",
+      "priority": "High",
+      "effort": "Medium"
+    },
+    {
+      "finding_id": "SEC-016",
+      "issue": "Vulnerable dependency detected: lodash",
+      "severity": "High",
+      "file": "sample_ecommerce_app\\package.json",
+      "recommended_fix": "Upgrade the vulnerable dependency to a patched and currently supported version.",
+      "example_fix": "Update requirements.txt or package.json, then rerun dependency scanning.",
+      "priority": "High",
+      "effort": "Medium"
+    },
+    {
+      "finding_id": "SEC-017",
+      "issue": "Vulnerable dependency detected: lodash",
+      "severity": "High",
+      "file": "sample_ecommerce_app\\package.json",
+      "recommended_fix": "Remove eval/exec usage and replace it with safe parsing or explicit controlled logic.",
+      "example_fix": "Use json.loads(user_input) for JSON data instead of eval(user_input).",
+      "priority": "High",
+      "effort": "Medium"
+    },
+    {
+      "finding_id": "SEC-018",
+      "issue": "Vulnerable dependency detected: lodash",
+      "severity": "Medium",
+      "file": "sample_ecommerce_app\\package.json",
+      "recommended_fix": "Upgrade the vulnerable dependency to a patched and currently supported version.",
+      "example_fix": "Update requirements.txt or package.json, then rerun dependency scanning.",
+      "priority": "Normal",
+      "effort": "Medium"
+    },
+    {
+      "finding_id": "SEC-019",
+      "issue": "Vulnerable dependency detected: axios",
+      "severity": "High",
+      "file": "sample_ecommerce_app\\package.json",
+      "recommended_fix": "Upgrade the vulnerable dependency to a patched and currently supported version.",
+      "example_fix": "Update requirements.txt or package.json, then rerun dependency scanning.",
+      "priority": "High",
+      "effort": "Medium"
+    },
+    {
+      "finding_id": "SEC-020",
+      "issue": "Vulnerable dependency detected: axios",
+      "severity": "High",
+      "file": "sample_ecommerce_app\\package.json",
+      "recommended_fix": "Upgrade the vulnerable dependency to a patched and currently supported version.",
+      "example_fix": "Update requirements.txt or package.json, then rerun dependency scanning.",
+      "priority": "High",
+      "effort": "Medium"
+    },
+    {
+      "finding_id": "SEC-021",
+      "issue": "Vulnerable dependency detected: axios",
+      "severity": "High",
+      "file": "sample_ecommerce_app\\package.json",
+      "recommended_fix": "Move hardcoded secrets into environment variables or a secure secret manager.",
+      "example_fix": "import os\nSECRET_KEY = os.getenv('SECRET_KEY')",
+      "priority": "High",
+      "effort": "Low"
+    },
+    {
+      "finding_id": "SEC-022",
+      "issue": "Vulnerable dependency detected: axios",
+      "severity": "Medium",
+      "file": "sample_ecommerce_app\\package.json",
+      "recommended_fix": "Upgrade the vulnerable dependency to a patched and currently supported version.",
+      "example_fix": "Update requirements.txt or package.json, then rerun dependency scanning.",
+      "priority": "Normal",
+      "effort": "Medium"
+    },
+    {
+      "finding_id": "SEC-023",
+      "issue": "Vulnerable dependency detected: express",
+      "severity": "Medium",
+      "file": "sample_ecommerce_app\\package.json",
+      "recommended_fix": "Upgrade the vulnerable dependency to a patched and currently supported version.",
+      "example_fix": "Update requirements.txt or package.json, then rerun dependency scanning.",
+      "priority": "Normal",
+      "effort": "Medium"
+    },
+    {
+      "finding_id": "SEC-024",
+      "issue": "Vulnerable dependency detected: express",
+      "severity": "Low",
+      "file": "sample_ecommerce_app\\package.json",
+      "recommended_fix": "Avoid rendering unsanitized user input as HTML. Use safe text rendering or sanitize HTML.",
+      "example_fix": "element.textContent = userInput;",
+      "priority": "Low",
+      "effort": "Medium"
+    },
+    {
+      "finding_id": "SEC-025",
+      "issue": "Vulnerable dependency detected: django",
+      "severity": "Critical",
+      "file": "sample_ecommerce_app\\requirements.txt",
+      "recommended_fix": "Avoid rendering unsanitized user input as HTML. Use safe text rendering or sanitize HTML.",
+      "example_fix": "element.textContent = userInput;",
+      "priority": "Immediate",
+      "effort": "Medium"
+    },
+    {
+      "finding_id": "SEC-026",
+      "issue": "Vulnerable dependency detected: django",
+      "severity": "Critical",
+      "file": "sample_ecommerce_app\\requirements.txt",
+      "recommended_fix": "Upgrade the vulnerable dependency to a patched and currently supported version.",
+      "example_fix": "Update requirements.txt or package.json, then rerun dependency scanning.",
+      "priority": "Immediate",
+      "effort": "Medium"
+    },
+    {
+      "finding_id": "SEC-027",
+      "issue": "Vulnerable dependency detected: django",
+      "severity": "Critical",
+      "file": "sample_ecommerce_app\\requirements.txt",
+      "recommended_fix": "Replace SQL string concatenation with parameterized queries or ORM-safe query methods.",
+      "example_fix": "db.execute('SELECT * FROM products WHERE name = ?', [keyword])",
+      "priority": "Immediate",
+      "effort": "Medium"
+    },
+    {
+      "finding_id": "SEC-028",
+      "issue": "Vulnerable dependency detected: django",
+      "severity": "Critical",
+      "file": "sample_ecommerce_app\\requirements.txt",
+      "recommended_fix": "Remove eval/exec usage and replace it with safe parsing or explicit controlled logic.",
+      "example_fix": "Use json.loads(user_input) for JSON data instead of eval(user_input).",
+      "priority": "Immediate",
+      "effort": "Medium"
+    },
+    {
+      "finding_id": "SEC-029",
+      "issue": "Vulnerable dependency detected: flask",
+      "severity": "High",
+      "file": "sample_ecommerce_app\\requirements.txt",
+      "recommended_fix": "Upgrade the vulnerable dependency to a patched and currently supported version.",
+      "example_fix": "Update requirements.txt or package.json, then rerun dependency scanning.",
+      "priority": "High",
+      "effort": "Medium"
+    },
+    {
+      "finding_id": "SEC-030",
+      "issue": "Vulnerable dependency detected: flask",
+      "severity": "High",
+      "file": "sample_ecommerce_app\\requirements.txt",
+      "recommended_fix": "Upgrade the vulnerable dependency to a patched and currently supported version.",
+      "example_fix": "Update requirements.txt or package.json, then rerun dependency scanning.",
+      "priority": "High",
+      "effort": "Medium"
+    },
+    {
+      "finding_id": "SEC-031",
+      "issue": "Vulnerable dependency detected: flask",
+      "severity": "High",
+      "file": "sample_ecommerce_app\\requirements.txt",
+      "recommended_fix": "Upgrade the vulnerable dependency to a patched and currently supported version.",
+      "example_fix": "Update requirements.txt or package.json, then rerun dependency scanning.",
+      "priority": "High",
+      "effort": "Medium"
+    },
+    {
+      "finding_id": "SEC-032",
+      "issue": "Vulnerable dependency detected: flask",
+      "severity": "Medium",
+      "file": "sample_ecommerce_app\\requirements.txt",
+      "recommended_fix": "Upgrade the vulnerable dependency to a patched and currently supported version.",
+      "example_fix": "Update requirements.txt or package.json, then rerun dependency scanning.",
+      "priority": "Normal",
+      "effort": "Medium"
+    },
+    {
+      "finding_id": "SEC-033",
+      "issue": "Vulnerable dependency detected: requests",
+      "severity": "High",
+      "file": "sample_ecommerce_app\\requirements.txt",
+      "recommended_fix": "Move hardcoded secrets into environment variables or a secure secret manager.",
+      "example_fix": "import os\nSECRET_KEY = os.getenv('SECRET_KEY')",
+      "priority": "High",
+      "effort": "Low"
+    },
+    {
+      "finding_id": "SEC-034",
+      "issue": "Vulnerable dependency detected: requests",
+      "severity": "Medium",
+      "file": "sample_ecommerce_app\\requirements.txt",
+      "recommended_fix": "Upgrade the vulnerable dependency to a patched and currently supported version.",
+      "example_fix": "Update requirements.txt or package.json, then rerun dependency scanning.",
+      "priority": "Normal",
+      "effort": "Medium"
+    }
+  ],
   "metrics": {
     "coverage": 1.0,
     "confidence": 0.85

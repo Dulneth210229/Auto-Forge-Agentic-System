@@ -35,6 +35,8 @@
 - SEC-027
 - SEC-028
 
+---
+
 ## 3. Findings
 
 | ID | Title | Severity | File | Line | Method | CWE |
@@ -727,7 +729,599 @@ Review GHSA-j8r2-6x86-q33q in OSV.dev and upgrade the affected dependency to a p
 
 ---
 
-## 5. Dependency Vulnerabilities
+## 5. Fix Suggestions
+
+| Finding ID | Issue | Severity | Priority | Effort |
+|---|---|---|---|---|
+| SEC-001 | Hardcoded secret detected | High | High | Low |
+| SEC-002 | Use of eval() detected | Critical | Immediate | Medium |
+| SEC-003 | Unsafe subprocess usage with shell=True | High | High | Medium |
+| SEC-004 | Weak hashing algorithm detected | Medium | Normal | Low |
+| SEC-005 | Debug mode enabled | Medium | Normal | Low |
+| SEC-006 | Insecure CORS wildcard detected | Medium | Normal | Medium |
+| SEC-007 | Possible raw SQL string formatting | High | High | Medium |
+| SEC-008 | Direct innerHTML assignment detected | High | High | Medium |
+| SEC-009 | Sensitive token stored in localStorage | Medium | Normal | Low |
+| SEC-010 | JavaScript eval() usage detected | Critical | Immediate | Medium |
+| SEC-011 | Possible hardcoded secret detected | High | High | Low |
+| SEC-012 | Debug configuration enabled | Medium | Normal | Low |
+| SEC-013 | Wildcard CORS setting in configuration | Medium | Normal | Medium |
+| SEC-014 | Docker container runs as root | Medium | Normal | Medium |
+| SEC-015 | Vulnerable dependency detected: lodash | High | High | Medium |
+| SEC-016 | Vulnerable dependency detected: lodash | High | High | Medium |
+| SEC-017 | Vulnerable dependency detected: lodash | High | High | Medium |
+| SEC-018 | Vulnerable dependency detected: lodash | Medium | Normal | Medium |
+| SEC-019 | Vulnerable dependency detected: axios | High | High | Medium |
+| SEC-020 | Vulnerable dependency detected: axios | High | High | Medium |
+| SEC-021 | Vulnerable dependency detected: axios | High | High | Low |
+| SEC-022 | Vulnerable dependency detected: axios | Medium | Normal | Medium |
+| SEC-023 | Vulnerable dependency detected: express | Medium | Normal | Medium |
+| SEC-024 | Vulnerable dependency detected: express | Low | Low | Medium |
+| SEC-025 | Vulnerable dependency detected: django | Critical | Immediate | Medium |
+| SEC-026 | Vulnerable dependency detected: django | Critical | Immediate | Medium |
+| SEC-027 | Vulnerable dependency detected: django | Critical | Immediate | Medium |
+| SEC-028 | Vulnerable dependency detected: django | Critical | Immediate | Medium |
+| SEC-029 | Vulnerable dependency detected: flask | High | High | Medium |
+| SEC-030 | Vulnerable dependency detected: flask | High | High | Medium |
+| SEC-031 | Vulnerable dependency detected: flask | High | High | Medium |
+| SEC-032 | Vulnerable dependency detected: flask | Medium | Normal | Medium |
+| SEC-033 | Vulnerable dependency detected: requests | High | High | Low |
+| SEC-034 | Vulnerable dependency detected: requests | Medium | Normal | Medium |
+
+### SEC-001 — Hardcoded secret detected
+
+**Severity:** High  
+**File:** sample_ecommerce_app\app.py  
+**Priority:** High  
+**Estimated Effort:** Low
+
+**Recommended Fix:**  
+Move hardcoded secrets into environment variables or a secure secret manager.
+
+**Example Fix:**
+
+```txt
+import os
+SECRET_KEY = os.getenv('SECRET_KEY')
+```
+
+### SEC-002 — Use of eval() detected
+
+**Severity:** Critical  
+**File:** sample_ecommerce_app\app.py  
+**Priority:** Immediate  
+**Estimated Effort:** Medium
+
+**Recommended Fix:**  
+Remove eval/exec usage and replace it with safe parsing or explicit controlled logic.
+
+**Example Fix:**
+
+```txt
+Use json.loads(user_input) for JSON data instead of eval(user_input).
+```
+
+### SEC-003 — Unsafe subprocess usage with shell=True
+
+**Severity:** High  
+**File:** sample_ecommerce_app\app.py  
+**Priority:** High  
+**Estimated Effort:** Medium
+
+**Recommended Fix:**  
+Avoid shell=True and pass command arguments as a safe list with strict input validation.
+
+**Example Fix:**
+
+```txt
+subprocess.run(['echo', safe_value], shell=False, check=True)
+```
+
+### SEC-004 — Weak hashing algorithm detected
+
+**Severity:** Medium  
+**File:** sample_ecommerce_app\app.py  
+**Priority:** Normal  
+**Estimated Effort:** Low
+
+**Recommended Fix:**  
+Replace weak hashing algorithms with secure hashing suitable for the use case.
+
+**Example Fix:**
+
+```txt
+hashlib.sha256(value.encode()).hexdigest()
+```
+
+### SEC-005 — Debug mode enabled
+
+**Severity:** Medium  
+**File:** sample_ecommerce_app\app.py  
+**Priority:** Normal  
+**Estimated Effort:** Low
+
+**Recommended Fix:**  
+Disable debug mode in production and control it through environment configuration.
+
+**Example Fix:**
+
+```txt
+app = FastAPI(debug=False)
+```
+
+### SEC-006 — Insecure CORS wildcard detected
+
+**Severity:** Medium  
+**File:** sample_ecommerce_app\app.py  
+**Priority:** Normal  
+**Estimated Effort:** Medium
+
+**Recommended Fix:**  
+Remove eval/exec usage and replace it with safe parsing or explicit controlled logic.
+
+**Example Fix:**
+
+```txt
+Use json.loads(user_input) for JSON data instead of eval(user_input).
+```
+
+### SEC-007 — Possible raw SQL string formatting
+
+**Severity:** High  
+**File:** sample_ecommerce_app\app.py  
+**Priority:** High  
+**Estimated Effort:** Medium
+
+**Recommended Fix:**  
+Replace SQL string concatenation with parameterized queries or ORM-safe query methods.
+
+**Example Fix:**
+
+```txt
+db.execute('SELECT * FROM products WHERE name = ?', [keyword])
+```
+
+### SEC-008 — Direct innerHTML assignment detected
+
+**Severity:** High  
+**File:** sample_ecommerce_app\frontend.js  
+**Priority:** High  
+**Estimated Effort:** Medium
+
+**Recommended Fix:**  
+Avoid rendering unsanitized user input as HTML. Use safe text rendering or sanitize HTML.
+
+**Example Fix:**
+
+```txt
+element.textContent = userInput;
+```
+
+### SEC-009 — Sensitive token stored in localStorage
+
+**Severity:** Medium  
+**File:** sample_ecommerce_app\frontend.js  
+**Priority:** Normal  
+**Estimated Effort:** Low
+
+**Recommended Fix:**  
+Move hardcoded secrets into environment variables or a secure secret manager.
+
+**Example Fix:**
+
+```txt
+import os
+SECRET_KEY = os.getenv('SECRET_KEY')
+```
+
+### SEC-010 — JavaScript eval() usage detected
+
+**Severity:** Critical  
+**File:** sample_ecommerce_app\frontend.js  
+**Priority:** Immediate  
+**Estimated Effort:** Medium
+
+**Recommended Fix:**  
+Remove eval/exec usage and replace it with safe parsing or explicit controlled logic.
+
+**Example Fix:**
+
+```txt
+Use json.loads(user_input) for JSON data instead of eval(user_input).
+```
+
+### SEC-011 — Possible hardcoded secret detected
+
+**Severity:** High  
+**File:** sample_ecommerce_app\.env  
+**Priority:** High  
+**Estimated Effort:** Low
+
+**Recommended Fix:**  
+Move hardcoded secrets into environment variables or a secure secret manager.
+
+**Example Fix:**
+
+```txt
+import os
+SECRET_KEY = os.getenv('SECRET_KEY')
+```
+
+### SEC-012 — Debug configuration enabled
+
+**Severity:** Medium  
+**File:** sample_ecommerce_app\.env  
+**Priority:** Normal  
+**Estimated Effort:** Low
+
+**Recommended Fix:**  
+Disable debug mode in production and control it through environment configuration.
+
+**Example Fix:**
+
+```txt
+app = FastAPI(debug=False)
+```
+
+### SEC-013 — Wildcard CORS setting in configuration
+
+**Severity:** Medium  
+**File:** sample_ecommerce_app\.env  
+**Priority:** Normal  
+**Estimated Effort:** Medium
+
+**Recommended Fix:**  
+Remove eval/exec usage and replace it with safe parsing or explicit controlled logic.
+
+**Example Fix:**
+
+```txt
+Use json.loads(user_input) for JSON data instead of eval(user_input).
+```
+
+### SEC-014 — Docker container runs as root
+
+**Severity:** Medium  
+**File:** sample_ecommerce_app\Dockerfile  
+**Priority:** Normal  
+**Estimated Effort:** Medium
+
+**Recommended Fix:**  
+Run the container using a non-root user to reduce the impact of container compromise.
+
+**Example Fix:**
+
+```txt
+RUN adduser --disabled-password appuser
+USER appuser
+```
+
+### SEC-015 — Vulnerable dependency detected: lodash
+
+**Severity:** High  
+**File:** sample_ecommerce_app\package.json  
+**Priority:** High  
+**Estimated Effort:** Medium
+
+**Recommended Fix:**  
+Avoid shell=True and pass command arguments as a safe list with strict input validation.
+
+**Example Fix:**
+
+```txt
+subprocess.run(['echo', safe_value], shell=False, check=True)
+```
+
+### SEC-016 — Vulnerable dependency detected: lodash
+
+**Severity:** High  
+**File:** sample_ecommerce_app\package.json  
+**Priority:** High  
+**Estimated Effort:** Medium
+
+**Recommended Fix:**  
+Upgrade the vulnerable dependency to a patched and currently supported version.
+
+**Example Fix:**
+
+```txt
+Update requirements.txt or package.json, then rerun dependency scanning.
+```
+
+### SEC-017 — Vulnerable dependency detected: lodash
+
+**Severity:** High  
+**File:** sample_ecommerce_app\package.json  
+**Priority:** High  
+**Estimated Effort:** Medium
+
+**Recommended Fix:**  
+Remove eval/exec usage and replace it with safe parsing or explicit controlled logic.
+
+**Example Fix:**
+
+```txt
+Use json.loads(user_input) for JSON data instead of eval(user_input).
+```
+
+### SEC-018 — Vulnerable dependency detected: lodash
+
+**Severity:** Medium  
+**File:** sample_ecommerce_app\package.json  
+**Priority:** Normal  
+**Estimated Effort:** Medium
+
+**Recommended Fix:**  
+Upgrade the vulnerable dependency to a patched and currently supported version.
+
+**Example Fix:**
+
+```txt
+Update requirements.txt or package.json, then rerun dependency scanning.
+```
+
+### SEC-019 — Vulnerable dependency detected: axios
+
+**Severity:** High  
+**File:** sample_ecommerce_app\package.json  
+**Priority:** High  
+**Estimated Effort:** Medium
+
+**Recommended Fix:**  
+Upgrade the vulnerable dependency to a patched and currently supported version.
+
+**Example Fix:**
+
+```txt
+Update requirements.txt or package.json, then rerun dependency scanning.
+```
+
+### SEC-020 — Vulnerable dependency detected: axios
+
+**Severity:** High  
+**File:** sample_ecommerce_app\package.json  
+**Priority:** High  
+**Estimated Effort:** Medium
+
+**Recommended Fix:**  
+Upgrade the vulnerable dependency to a patched and currently supported version.
+
+**Example Fix:**
+
+```txt
+Update requirements.txt or package.json, then rerun dependency scanning.
+```
+
+### SEC-021 — Vulnerable dependency detected: axios
+
+**Severity:** High  
+**File:** sample_ecommerce_app\package.json  
+**Priority:** High  
+**Estimated Effort:** Low
+
+**Recommended Fix:**  
+Move hardcoded secrets into environment variables or a secure secret manager.
+
+**Example Fix:**
+
+```txt
+import os
+SECRET_KEY = os.getenv('SECRET_KEY')
+```
+
+### SEC-022 — Vulnerable dependency detected: axios
+
+**Severity:** Medium  
+**File:** sample_ecommerce_app\package.json  
+**Priority:** Normal  
+**Estimated Effort:** Medium
+
+**Recommended Fix:**  
+Upgrade the vulnerable dependency to a patched and currently supported version.
+
+**Example Fix:**
+
+```txt
+Update requirements.txt or package.json, then rerun dependency scanning.
+```
+
+### SEC-023 — Vulnerable dependency detected: express
+
+**Severity:** Medium  
+**File:** sample_ecommerce_app\package.json  
+**Priority:** Normal  
+**Estimated Effort:** Medium
+
+**Recommended Fix:**  
+Upgrade the vulnerable dependency to a patched and currently supported version.
+
+**Example Fix:**
+
+```txt
+Update requirements.txt or package.json, then rerun dependency scanning.
+```
+
+### SEC-024 — Vulnerable dependency detected: express
+
+**Severity:** Low  
+**File:** sample_ecommerce_app\package.json  
+**Priority:** Low  
+**Estimated Effort:** Medium
+
+**Recommended Fix:**  
+Avoid rendering unsanitized user input as HTML. Use safe text rendering or sanitize HTML.
+
+**Example Fix:**
+
+```txt
+element.textContent = userInput;
+```
+
+### SEC-025 — Vulnerable dependency detected: django
+
+**Severity:** Critical  
+**File:** sample_ecommerce_app\requirements.txt  
+**Priority:** Immediate  
+**Estimated Effort:** Medium
+
+**Recommended Fix:**  
+Avoid rendering unsanitized user input as HTML. Use safe text rendering or sanitize HTML.
+
+**Example Fix:**
+
+```txt
+element.textContent = userInput;
+```
+
+### SEC-026 — Vulnerable dependency detected: django
+
+**Severity:** Critical  
+**File:** sample_ecommerce_app\requirements.txt  
+**Priority:** Immediate  
+**Estimated Effort:** Medium
+
+**Recommended Fix:**  
+Upgrade the vulnerable dependency to a patched and currently supported version.
+
+**Example Fix:**
+
+```txt
+Update requirements.txt or package.json, then rerun dependency scanning.
+```
+
+### SEC-027 — Vulnerable dependency detected: django
+
+**Severity:** Critical  
+**File:** sample_ecommerce_app\requirements.txt  
+**Priority:** Immediate  
+**Estimated Effort:** Medium
+
+**Recommended Fix:**  
+Replace SQL string concatenation with parameterized queries or ORM-safe query methods.
+
+**Example Fix:**
+
+```txt
+db.execute('SELECT * FROM products WHERE name = ?', [keyword])
+```
+
+### SEC-028 — Vulnerable dependency detected: django
+
+**Severity:** Critical  
+**File:** sample_ecommerce_app\requirements.txt  
+**Priority:** Immediate  
+**Estimated Effort:** Medium
+
+**Recommended Fix:**  
+Remove eval/exec usage and replace it with safe parsing or explicit controlled logic.
+
+**Example Fix:**
+
+```txt
+Use json.loads(user_input) for JSON data instead of eval(user_input).
+```
+
+### SEC-029 — Vulnerable dependency detected: flask
+
+**Severity:** High  
+**File:** sample_ecommerce_app\requirements.txt  
+**Priority:** High  
+**Estimated Effort:** Medium
+
+**Recommended Fix:**  
+Upgrade the vulnerable dependency to a patched and currently supported version.
+
+**Example Fix:**
+
+```txt
+Update requirements.txt or package.json, then rerun dependency scanning.
+```
+
+### SEC-030 — Vulnerable dependency detected: flask
+
+**Severity:** High  
+**File:** sample_ecommerce_app\requirements.txt  
+**Priority:** High  
+**Estimated Effort:** Medium
+
+**Recommended Fix:**  
+Upgrade the vulnerable dependency to a patched and currently supported version.
+
+**Example Fix:**
+
+```txt
+Update requirements.txt or package.json, then rerun dependency scanning.
+```
+
+### SEC-031 — Vulnerable dependency detected: flask
+
+**Severity:** High  
+**File:** sample_ecommerce_app\requirements.txt  
+**Priority:** High  
+**Estimated Effort:** Medium
+
+**Recommended Fix:**  
+Upgrade the vulnerable dependency to a patched and currently supported version.
+
+**Example Fix:**
+
+```txt
+Update requirements.txt or package.json, then rerun dependency scanning.
+```
+
+### SEC-032 — Vulnerable dependency detected: flask
+
+**Severity:** Medium  
+**File:** sample_ecommerce_app\requirements.txt  
+**Priority:** Normal  
+**Estimated Effort:** Medium
+
+**Recommended Fix:**  
+Upgrade the vulnerable dependency to a patched and currently supported version.
+
+**Example Fix:**
+
+```txt
+Update requirements.txt or package.json, then rerun dependency scanning.
+```
+
+### SEC-033 — Vulnerable dependency detected: requests
+
+**Severity:** High  
+**File:** sample_ecommerce_app\requirements.txt  
+**Priority:** High  
+**Estimated Effort:** Low
+
+**Recommended Fix:**  
+Move hardcoded secrets into environment variables or a secure secret manager.
+
+**Example Fix:**
+
+```txt
+import os
+SECRET_KEY = os.getenv('SECRET_KEY')
+```
+
+### SEC-034 — Vulnerable dependency detected: requests
+
+**Severity:** Medium  
+**File:** sample_ecommerce_app\requirements.txt  
+**Priority:** Normal  
+**Estimated Effort:** Medium
+
+**Recommended Fix:**  
+Upgrade the vulnerable dependency to a patched and currently supported version.
+
+**Example Fix:**
+
+```txt
+Update requirements.txt or package.json, then rerun dependency scanning.
+```
+
+
+---
+
+## 6. Dependency Vulnerabilities
 
 | Vulnerability ID | Package | Version | Ecosystem | Severity | CWE | Source |
 |---|---|---|---|---|---|---|
@@ -1115,104 +1709,113 @@ Review PYSEC-2023-74 in OSV.dev and upgrade the affected dependency to a patched
 
 ---
 
-## 6. LLM Findings
+## 7. LLM Findings
 
 | Title | Severity | File | Line | CWE | Confidence |
 |---|---|---|---:|---|---:|
-| Insecure Secret Storage | High | sample_ecommerce_app\app.py | 0 | CWE-312 | 1.0 |
-| /danger Endpoint Vulnerable to Code Injection | Critical | sample_ecommerce_app\app.py | 24 | CWE-94 | 1.0 |
-| /run Endpoint Vulnerable to Command Injection | Critical | sample_ecommerce_app\app.py | 34 | CWE-78 | 1.0 |
-| Insecure Token Storage | Medium | sample_ecommerce_app\frontend.js | 0 | CWE-749 | 1.0 |
-| Arbitrary Code Execution | Critical | sample_ecommerce_app\frontend.js | 13 | CWE-94 | 1.0 |
+| Insecure API Key | High | sample_ecommerce_app\app.py | 0 | CWE-259 | 1.0 |
+| SQL Injection Risk | High | sample_ecommerce_app\app.py | 23 | CWE-89 | 1.0 |
+| Command Injection Risk | Critical | sample_ecommerce_app\app.py | 42 | CWE-94 | 1.0 |
+| Arbitrary Code Execution Risk | Critical | sample_ecommerce_app\app.py | 38 | CWE-95 | 1.0 |
+| Insecure Storage of Authentication Token | High | sample_ecommerce_app\frontend.js | 0 | CWE-312 | 1.0 |
+| Arbitrary Code Execution via eval() | Critical | sample_ecommerce_app\frontend.js | 7 | CWE-94 | 1.0 |
 
-### Insecure Secret Storage
+### Insecure API Key
 
 **Severity:** High  
 **File:** sample_ecommerce_app\app.py  
+**Line:** 0  
+**CWE:** CWE-259  
+**Confidence:** 1.0  
+**Source:** ollama
+
+**Description:**  
+The API_KEY is hardcoded and not properly secured.
+
+**Recommendation:**  
+Use environment variables or a secure configuration file to store sensitive data.
+
+### SQL Injection Risk
+
+**Severity:** High  
+**File:** sample_ecommerce_app\app.py  
+**Line:** 23  
+**CWE:** CWE-89  
+**Confidence:** 1.0  
+**Source:** ollama
+
+**Description:**  
+The search_product endpoint is vulnerable to SQL injection attacks due to the use of unescaped user input in the query.
+
+**Recommendation:**  
+Use parameterized queries or an ORM to prevent SQL injection attacks.
+
+### Command Injection Risk
+
+**Severity:** Critical  
+**File:** sample_ecommerce_app\app.py  
+**Line:** 42  
+**CWE:** CWE-94  
+**Confidence:** 1.0  
+**Source:** ollama
+
+**Description:**  
+The run_command endpoint is vulnerable to command injection attacks due to the use of subprocess.run with shell=True and unescaped user input.
+
+**Recommendation:**  
+Use a secure alternative, such as os.execvp or a library like Popen, to execute commands securely.
+
+### Arbitrary Code Execution Risk
+
+**Severity:** Critical  
+**File:** sample_ecommerce_app\app.py  
+**Line:** 38  
+**CWE:** CWE-95  
+**Confidence:** 1.0  
+**Source:** ollama
+
+**Description:**  
+The dangerous_code endpoint is vulnerable to arbitrary code execution due to the use of eval on user-provided input.
+
+**Recommendation:**  
+Do not use eval or similar functions with untrusted input. Instead, use a safe alternative like ast.literal_eval or a library like safe-exec.
+
+### Insecure Storage of Authentication Token
+
+**Severity:** High  
+**File:** sample_ecommerce_app\frontend.js  
 **Line:** 0  
 **CWE:** CWE-312  
 **Confidence:** 1.0  
 **Source:** ollama
 
 **Description:**  
-The SECRET_KEY is hardcoded and easily accessible.
+The authentication token is stored in local storage without proper encryption or validation, making it vulnerable to theft or tampering.
 
 **Recommendation:**  
-Store the secret key securely using a secrets management system or environment variables.
+Use a secure storage mechanism like HTTPS cookies or encrypted local storage.
 
-### /danger Endpoint Vulnerable to Code Injection
+### Arbitrary Code Execution via eval()
 
 **Severity:** Critical  
-**File:** sample_ecommerce_app\app.py  
-**Line:** 24  
+**File:** sample_ecommerce_app\frontend.js  
+**Line:** 7  
 **CWE:** CWE-94  
 **Confidence:** 1.0  
 **Source:** ollama
 
 **Description:**  
-The /danger endpoint uses eval() function which can lead to code injection attacks.
+The runDangerous function uses eval() to execute arbitrary JavaScript code, which can lead to remote code execution and privilege escalation attacks.
 
 **Recommendation:**  
-Replace eval() with a safe evaluation method or disable the endpoint altogether.
-
-### /run Endpoint Vulnerable to Command Injection
-
-**Severity:** Critical  
-**File:** sample_ecommerce_app\app.py  
-**Line:** 34  
-**CWE:** CWE-78  
-**Confidence:** 1.0  
-**Source:** ollama
-
-**Description:**  
-The /run endpoint uses subprocess.run() function which can lead to command injection attacks.
-
-**Recommendation:**  
-Disable the /run endpoint or use a safe method for executing shell commands, such as using os.system() with whitelisted commands.
-
-### Insecure Token Storage
-
-**Severity:** Medium  
-**File:** sample_ecommerce_app\frontend.js  
-**Line:** 0  
-**CWE:** CWE-749  
-**Confidence:** 1.0  
-**Source:** ollama
-
-**Description:**  
-Storing sensitive data like auth tokens in local storage is not secure.
-
-**Recommendation:**  
-Use a more secure method to store and manage authentication tokens, such as using a secure token service or encrypting the data.
-
-### Arbitrary Code Execution
-
-**Severity:** Critical  
-**File:** sample_ecommerce_app\frontend.js  
-**Line:** 13  
-**CWE:** CWE-94  
-**Confidence:** 1.0  
-**Source:** ollama
-
-**Description:**  
-The `runDangerous` function uses eval() to execute arbitrary code, which can lead to code injection attacks and arbitrary code execution.
-
-**Recommendation:**  
-Do not use eval() or any other method that allows executing arbitrary code. Instead, consider using a safer evaluation function or parsing the input in a safe way.
+Avoid using eval() or similar functions. Instead, use a safe evaluation mechanism like JSON.parse() or a parsing library.
 
 
 ---
 
-## 7. Metrics
+## 8. Metrics
 
 | Metric | Value |
 |---|---:|
 | Coverage | 1.0 |
 | Confidence | 0.85 |
-
----
-
-## 8. Notes
-
-This is the initial Security Agent skeleton report.  
-Real AST scanning, dependency scanning, and LLM-assisted secure code review will be added in later steps.

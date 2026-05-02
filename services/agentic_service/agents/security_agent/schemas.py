@@ -53,21 +53,29 @@ class SecurityMetrics(BaseModel):
 class SecurityGateDecision(BaseModel):
     """
     Final security gate decision.
-
-    PASS:
-        No blocking security issues.
-
-    WARN:
-        Non-blocking issues exist, but the workflow may continue with caution.
-
-    FAIL:
-        Blocking security issues exist and the generated code should not be approved.
     """
 
     status: Literal["PASS", "WARN", "FAIL"]
     reason: str
     policy: str
     blocking_findings: List[str] = []
+
+
+class SecurityFixSuggestion(BaseModel):
+    """
+    Structured remediation guidance for one security finding.
+
+    This helps the Coder Agent or developer understand how to fix the issue.
+    """
+
+    finding_id: str
+    issue: str
+    severity: Literal["Critical", "High", "Medium", "Low"]
+    file: str
+    recommended_fix: str
+    example_fix: str
+    priority: Literal["Immediate", "High", "Normal", "Low"]
+    effort: Literal["Low", "Medium", "High"]
 
 
 class SecurityReport(BaseModel):
@@ -84,4 +92,5 @@ class SecurityReport(BaseModel):
     dependency_vulnerabilities: List[dict] = []
     llm_findings: List[dict] = []
     security_gate: SecurityGateDecision
+    fix_suggestions: List[SecurityFixSuggestion] = []
     metrics: SecurityMetrics

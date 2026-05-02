@@ -7,7 +7,8 @@ from agents.security_agent.schemas import (
     SecuritySummary,
     SecurityFinding,
     SecurityMetrics,
-    SecurityGateDecision
+    SecurityGateDecision,
+    SecurityFixSuggestion
 )
 from agents.security_agent.renderer import render_security_report_markdown
 from agents.security_agent.scanners.multi_scanner import MultiSecurityScanner
@@ -15,6 +16,7 @@ from agents.security_agent.llm_reviewer import LLMSecureCodeReviewer
 from agents.security_agent.deduplicator import FindingDeduplicator
 from agents.security_agent.gate import SecurityGateEvaluator
 from agents.security_agent.traceability import SecurityTraceabilityMapper
+from agents.security_agent.fix_suggester import SecurityFixSuggester
 from tools.llm.provider import OllamaProvider
 
 
@@ -32,6 +34,7 @@ class SecurityAgent:
     - Finding deduplication
     - Security gate decision
     - Traceability mapping
+    - Structured fix suggestions
     """
 
     def __init__(self, output_root: str = "outputs"):
@@ -40,6 +43,7 @@ class SecurityAgent:
         self.deduplicator = FindingDeduplicator()
         self.gate_evaluator = SecurityGateEvaluator()
         self.traceability_mapper = SecurityTraceabilityMapper()
+        self.fix_suggester = SecurityFixSuggester()
 
     def run(
         self,
@@ -83,11 +87,11 @@ class SecurityAgent:
             after_count=after_dedup_count
         )
 
-        # Step 11:
-        # Add requirement/API/module traceability after deduplication.
         findings = self.traceability_mapper.map_findings(findings)
 
         security_gate = self.gate_evaluator.evaluate(findings)
+
+        fix_suggestions = self.fix_suggester.generate_fix_suggestions(findings)
 
         report = self.create_report(
             run_id=run_id,
@@ -95,7 +99,8 @@ class SecurityAgent:
             findings=findings,
             dependency_vulnerabilities=dependency_vulnerabilities,
             llm_findings=llm_findings_data,
-            security_gate=security_gate
+            security_gate=security_gate,
+            fix_suggestions=fix_suggestions
         )
 
         output_dir = self.output_root / "runs" / run_id / "security" / version
@@ -129,7 +134,8 @@ class SecurityAgent:
             "llm_findings_count": len(llm_findings_data),
             "deduplication": deduplication_summary,
             "security_gate": report.security_gate.model_dump(),
-            "traceability_mapped": True
+            "traceability_mapped": True,
+            "fix_suggestions_count": len(fix_suggestions)
         }
 
     def create_report(
@@ -139,7 +145,8 @@ class SecurityAgent:
         findings: List[SecurityFinding],
         dependency_vulnerabilities: List[Dict[str, Any]],
         llm_findings: List[Dict[str, Any]],
-        security_gate: SecurityGateDecision
+        security_gate: SecurityGateDecision,
+        fix_suggestions: List[SecurityFixSuggestion]
     ) -> SecurityReport:
         """
         Creates the final SecurityReport object from all scanner findings.
@@ -161,6 +168,7 @@ class SecurityAgent:
             dependency_vulnerabilities=dependency_vulnerabilities,
             llm_findings=llm_findings,
             security_gate=security_gate,
+            fix_suggestions=fix_suggestions,
             metrics=metrics
         )
 
