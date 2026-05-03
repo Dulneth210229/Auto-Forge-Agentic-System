@@ -10,7 +10,8 @@ from agents.tester_agent.schemas import (
     TestMetrics,
     GeneratedTestFile,
     PytestRunResult,
-    RegressionTestCase
+    RegressionTestCase,
+    SecurityValidationCase
 )
 from agents.tester_agent.renderer import render_test_report_markdown
 from agents.tester_agent.test_generator import PytestTestGenerator
@@ -22,14 +23,12 @@ class TesterAgent:
     """
     Testing / QA Agent for AutoForge.
 
-    Step 8:
+    Step 9:
     - Generates pytest files.
     - Executes generated pytest files.
     - Captures individual pytest test results.
-    - Adds functional API-style tests.
-    - Adds integration workflow tests.
-    - Adds validation and edge-case tests.
-    - Adds regression test support.
+    - Adds regression tests.
+    - Adds security validation tests using SecurityReport_v1.json.
     """
 
     def __init__(self, output_root: str = "outputs"):
@@ -58,6 +57,7 @@ class TesterAgent:
 
         generated_tests_path = output_dir / "generated_tests"
         regression_tests_path = output_dir / "regression_tests"
+        security_validation_tests_path = output_dir / "security_validation_tests"
 
         collected_test_ids = self.runner.collect_test_ids(
             generated_tests_path=str(generated_tests_path)
@@ -78,6 +78,7 @@ class TesterAgent:
         )
 
         regression_test_cases = self.test_generator.get_default_regression_cases()
+        security_validation_cases = self.test_generator.get_default_security_validation_cases()
 
         report = self.create_report(
             run_id=run_id,
@@ -87,6 +88,8 @@ class TesterAgent:
             generated_test_files=generated_test_files,
             regression_tests_path=str(regression_tests_path),
             regression_test_cases=regression_test_cases,
+            security_validation_tests_path=str(security_validation_tests_path),
+            security_validation_cases=security_validation_cases,
             pytest_result=pytest_result,
             execution_results=execution_results,
             counts=counts
@@ -139,6 +142,14 @@ class TesterAgent:
                 "format": "folder",
                 "path": str(regression_tests_path),
                 "description": "Folder containing regression test metadata."
+            },
+            {
+                "stage": "testing",
+                "version": version,
+                "type": "security_validation_tests_folder",
+                "format": "folder",
+                "path": str(security_validation_tests_path),
+                "description": "Folder containing security validation test metadata."
             }
         ]
 
@@ -162,6 +173,17 @@ class TesterAgent:
                 "format": "json",
                 "path": str(regression_tests_path / "regression_cases.json"),
                 "description": "Machine-readable regression test scenarios."
+            }
+        )
+
+        artifacts.append(
+            {
+                "stage": "testing",
+                "version": version,
+                "type": "security_validation_cases_json",
+                "format": "json",
+                "path": str(security_validation_tests_path / "security_validation_cases.json"),
+                "description": "Machine-readable security validation test scenarios."
             }
         )
 
@@ -195,6 +217,8 @@ class TesterAgent:
         generated_test_files: List[GeneratedTestFile],
         regression_tests_path: str,
         regression_test_cases: List[RegressionTestCase],
+        security_validation_tests_path: str,
+        security_validation_cases: List[SecurityValidationCase],
         pytest_result: PytestRunResult,
         execution_results: List[TestExecutionResult],
         counts: dict
@@ -273,6 +297,16 @@ class TesterAgent:
                 target_file=target_path,
                 related_requirement_id="NFR-REGRESSION-001",
                 expected_result="Generated code should prevent known bugs from returning."
+            ),
+            TestCase(
+                test_id="TC-008",
+                title="Validate Security Agent report consistency",
+                description="Checks whether SecurityReport_v1.json contains valid security gate, findings, fix suggestions, and traceability.",
+                test_type="security_validation",
+                target_module="security_validation",
+                target_file="SecurityReport_v1.json",
+                related_requirement_id="NFR-SEC-VALIDATION-001",
+                expected_result="Security report should be structurally valid and useful for downstream fixing."
             )
         ]
 
@@ -301,13 +335,18 @@ class TesterAgent:
             "Integration workflow tests were generated for Product -> Cart -> Checkout -> Order.",
             "Validation and edge-case tests were generated for common e-commerce failure cases.",
             "Regression tests were generated to prevent known bugs from returning.",
-            "Next step should add security validation tests using SecurityReport_v1.json."
+            "Security validation tests were generated using SecurityReport_v1.json."
         ]
 
         if summary.failed > 0:
             recommendations.insert(
                 0,
                 "Some generated tests failed. Review pytest stdout/stderr in TestReport_v1.json."
+            )
+
+        if summary.skipped > 0:
+            recommendations.append(
+                "Some tests were skipped. If security validation tests were skipped, run the Security Agent before the Testing Agent."
             )
 
         return TestReport(
@@ -319,6 +358,8 @@ class TesterAgent:
             generated_test_files=generated_test_files,
             regression_tests_path=regression_tests_path,
             regression_test_cases=regression_test_cases,
+            security_validation_tests_path=security_validation_tests_path,
+            security_validation_cases=security_validation_cases,
             pytest_run=pytest_result,
             summary=summary,
             test_cases=test_cases,

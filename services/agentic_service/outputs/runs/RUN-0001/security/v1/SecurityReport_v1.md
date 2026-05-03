@@ -13,8 +13,8 @@
 | Critical | 6 |
 | High | 15 |
 | Medium | 12 |
-| Low | 3 |
-| **Total** | **36** |
+| Low | 1 |
+| **Total** | **34** |
 
 ---
 
@@ -75,8 +75,6 @@
 | SEC-032 | Vulnerable dependency detected: flask | Medium | sample_ecommerce_app\requirements.txt | 2 | Dependency | CWE-937 |
 | SEC-033 | Vulnerable dependency detected: requests | High | sample_ecommerce_app\requirements.txt | 3 | Dependency | CWE-522 |
 | SEC-034 | Vulnerable dependency detected: requests | Medium | sample_ecommerce_app\requirements.txt | 3 | Dependency | CWE-200 |
-| SEC-035 | LLM review failed | Low | sample_ecommerce_app\app.py | 0 | LLM | N/A |
-| SEC-036 | LLM review failed | Low | sample_ecommerce_app\frontend.js | 0 | LLM | N/A |
 
 ---
 
@@ -728,44 +726,6 @@ Review GHSA-j8r2-6x86-q33q in OSV.dev and upgrade the affected dependency to a p
 - API: /auth
 - Module: authentication
 
-### SEC-035 — LLM review failed
-
-**Severity:** Low  
-**Detection Method:** LLM  
-**File:** sample_ecommerce_app\app.py  
-**Line:** 0  
-**CWE:** N/A
-
-**Description:**  
-The LLM review failed for this file: the JSON object must be str, bytes or bytearray, not coroutine
-
-**Recommendation:**  
-Check Ollama availability and retry the LLM review.
-
-**Traceability:**  
-- Requirement ID: NFR-SEC-001
-- API: N/A
-- Module: general_security
-
-### SEC-036 — LLM review failed
-
-**Severity:** Low  
-**Detection Method:** LLM  
-**File:** sample_ecommerce_app\frontend.js  
-**Line:** 0  
-**CWE:** N/A
-
-**Description:**  
-The LLM review failed for this file: the JSON object must be str, bytes or bytearray, not coroutine
-
-**Recommendation:**  
-Check Ollama availability and retry the LLM review.
-
-**Traceability:**  
-- Requirement ID: FR-007
-- API: UI
-- Module: frontend
-
 
 ---
 
@@ -807,8 +767,6 @@ Check Ollama availability and retry the LLM review.
 | SEC-032 | Vulnerable dependency detected: flask | Medium | Normal | Medium |
 | SEC-033 | Vulnerable dependency detected: requests | High | High | Low |
 | SEC-034 | Vulnerable dependency detected: requests | Medium | Normal | Medium |
-| SEC-035 | LLM review failed | Low | Low | Medium |
-| SEC-036 | LLM review failed | Low | Low | Medium |
 
 ### SEC-001 — Hardcoded secret detected
 
@@ -1360,38 +1318,6 @@ Upgrade the vulnerable dependency to a patched and currently supported version.
 Update requirements.txt or package.json, then rerun dependency scanning.
 ```
 
-### SEC-035 — LLM review failed
-
-**Severity:** Low  
-**File:** sample_ecommerce_app\app.py  
-**Priority:** Low  
-**Estimated Effort:** Medium
-
-**Recommended Fix:**  
-Review the finding and apply a secure coding fix based on the recommendation.
-
-**Example Fix:**
-
-```txt
-Check Ollama availability and retry the LLM review.
-```
-
-### SEC-036 — LLM review failed
-
-**Severity:** Low  
-**File:** sample_ecommerce_app\frontend.js  
-**Priority:** Low  
-**Estimated Effort:** Medium
-
-**Recommended Fix:**  
-Review the finding and apply a secure coding fix based on the recommendation.
-
-**Example Fix:**
-
-```txt
-Check Ollama availability and retry the LLM review.
-```
-
 
 ---
 
@@ -1785,41 +1711,7 @@ Review PYSEC-2023-74 in OSV.dev and upgrade the affected dependency to a patched
 
 ## 7. LLM Findings
 
-| Title | Severity | File | Line | CWE | Confidence |
-|---|---|---|---:|---|---:|
-| LLM review failed | Low | sample_ecommerce_app\app.py | 0 | N/A | 0.0 |
-| LLM review failed | Low | sample_ecommerce_app\frontend.js | 0 | N/A | 0.0 |
-
-### LLM review failed
-
-**Severity:** Low  
-**File:** sample_ecommerce_app\app.py  
-**Line:** 0  
-**CWE:** N/A  
-**Confidence:** 0.0  
-**Source:** ollama
-
-**Description:**  
-The LLM review failed for this file: the JSON object must be str, bytes or bytearray, not coroutine
-
-**Recommendation:**  
-Check Ollama availability and retry the LLM review.
-
-### LLM review failed
-
-**Severity:** Low  
-**File:** sample_ecommerce_app\frontend.js  
-**Line:** 0  
-**CWE:** N/A  
-**Confidence:** 0.0  
-**Source:** ollama
-
-**Description:**  
-The LLM review failed for this file: the JSON object must be str, bytes or bytearray, not coroutine
-
-**Recommendation:**  
-Check Ollama availability and retry the LLM review.
-
+No LLM-assisted findings were recorded.
 
 ---
 
@@ -1828,4 +1720,4 @@ Check Ollama availability and retry the LLM review.
 | Metric | Value |
 |---|---:|
 | Coverage | 1.0 |
-| Confidence | 0.85 |
+| Confidence | 0.8 |

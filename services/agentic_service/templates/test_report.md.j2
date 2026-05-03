@@ -5,7 +5,8 @@
 **Version:** {{ report.version }}  
 **Target Path:** {{ report.target_path }}  
 **Generated Tests Path:** {{ report.generated_tests_path }}  
-**Regression Tests Path:** {{ report.regression_tests_path }}
+**Regression Tests Path:** {{ report.regression_tests_path }}  
+**Security Validation Tests Path:** {{ report.security_validation_tests_path }}
 
 ---
 
@@ -76,7 +77,21 @@ No regression test cases were generated.
 
 ---
 
-## 5. Test Cases
+## 5. Security Validation Cases
+
+{% if report.security_validation_cases %}
+| Validation ID | Title | Security Artifact | Expected Behavior |
+|---|---|---|---|
+{% for validation in report.security_validation_cases %}
+| {{ validation.validation_id }} | {{ validation.title }} | {{ validation.related_security_artifact }} | {{ validation.expected_behavior }} |
+{% endfor %}
+{% else %}
+No security validation cases were generated.
+{% endif %}
+
+---
+
+## 6. Test Cases
 
 {% if report.test_cases %}
 | Test ID | Title | Type | Module | Target File | Requirement |
@@ -90,7 +105,7 @@ No test cases were generated.
 
 ---
 
-## 6. Test Case Details
+## 7. Test Case Details
 
 {% if report.test_cases %}
 {% for test in report.test_cases %}
@@ -114,7 +129,7 @@ No test case details available.
 
 ---
 
-## 7. Execution Results
+## 8. Execution Results
 
 {% if report.execution_results %}
 | Test ID | Status | Duration | Message |
@@ -128,7 +143,7 @@ No tests were executed yet.
 
 ---
 
-## 8. Metrics
+## 9. Metrics
 
 | Metric | Value |
 |---|---:|
@@ -138,7 +153,7 @@ No tests were executed yet.
 
 ---
 
-## 9. Recommendations
+## 10. Recommendations
 
 {% if report.recommendations %}
 {% for recommendation in report.recommendations %}

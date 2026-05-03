@@ -57,9 +57,6 @@ class GeneratedTestFile(BaseModel):
 class RegressionTestCase(BaseModel):
     """
     Represents one regression test scenario.
-
-    Regression tests are created from previously found bugs or expected failure cases.
-    They help verify that known issues do not return after code changes.
     """
 
     regression_id: str
@@ -67,6 +64,20 @@ class RegressionTestCase(BaseModel):
     description: str
     related_requirement_id: str = ""
     related_module: str
+    expected_behavior: str
+
+
+class SecurityValidationCase(BaseModel):
+    """
+    Represents one security validation scenario.
+
+    These scenarios are generated from or aligned with SecurityReport_v1.json.
+    """
+
+    validation_id: str
+    title: str
+    description: str
+    related_security_artifact: str
     expected_behavior: str
 
 
@@ -120,6 +131,9 @@ class TestReport(BaseModel):
 
     regression_tests_path: str = ""
     regression_test_cases: List[RegressionTestCase] = []
+
+    security_validation_tests_path: str = ""
+    security_validation_cases: List[SecurityValidationCase] = []
 
     pytest_run: PytestRunResult | None = None
 

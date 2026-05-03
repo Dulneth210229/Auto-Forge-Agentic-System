@@ -3,11 +3,11 @@
   "stage": "security",
   "version": "v1",
   "summary": {
-    "total_findings": 36,
+    "total_findings": 34,
     "critical": 6,
     "high": 15,
     "medium": 12,
-    "low": 3
+    "low": 1
   },
   "findings": [
     {
@@ -553,38 +553,6 @@
         "api": "/auth",
         "module": "authentication"
       }
-    },
-    {
-      "finding_id": "SEC-035",
-      "title": "LLM review failed",
-      "description": "The LLM review failed for this file: the JSON object must be str, bytes or bytearray, not coroutine",
-      "severity": "Low",
-      "file": "sample_ecommerce_app\\app.py",
-      "line": 0,
-      "detection_method": "LLM",
-      "cwe": "N/A",
-      "recommendation": "Check Ollama availability and retry the LLM review.",
-      "traceability": {
-        "requirement_id": "NFR-SEC-001",
-        "api": "N/A",
-        "module": "general_security"
-      }
-    },
-    {
-      "finding_id": "SEC-036",
-      "title": "LLM review failed",
-      "description": "The LLM review failed for this file: the JSON object must be str, bytes or bytearray, not coroutine",
-      "severity": "Low",
-      "file": "sample_ecommerce_app\\frontend.js",
-      "line": 0,
-      "detection_method": "LLM",
-      "cwe": "N/A",
-      "recommendation": "Check Ollama availability and retry the LLM review.",
-      "traceability": {
-        "requirement_id": "FR-007",
-        "api": "UI",
-        "module": "frontend"
-      }
     }
   ],
   "dependency_vulnerabilities": [
@@ -886,30 +854,7 @@
       "source": "osv.dev"
     }
   ],
-  "llm_findings": [
-    {
-      "title": "LLM review failed",
-      "description": "The LLM review failed for this file: the JSON object must be str, bytes or bytearray, not coroutine",
-      "severity": "Low",
-      "file": "sample_ecommerce_app\\app.py",
-      "line": 0,
-      "cwe": "N/A",
-      "recommendation": "Check Ollama availability and retry the LLM review.",
-      "confidence": 0.0,
-      "source": "ollama"
-    },
-    {
-      "title": "LLM review failed",
-      "description": "The LLM review failed for this file: the JSON object must be str, bytes or bytearray, not coroutine",
-      "severity": "Low",
-      "file": "sample_ecommerce_app\\frontend.js",
-      "line": 0,
-      "cwe": "N/A",
-      "recommendation": "Check Ollama availability and retry the LLM review.",
-      "confidence": 0.0,
-      "source": "ollama"
-    }
-  ],
+  "llm_findings": [],
   "security_gate": {
     "status": "FAIL",
     "reason": "Security gate failed because Critical vulnerabilities were detected.",
@@ -1263,30 +1208,10 @@
       "example_fix": "Update requirements.txt or package.json, then rerun dependency scanning.",
       "priority": "Normal",
       "effort": "Medium"
-    },
-    {
-      "finding_id": "SEC-035",
-      "issue": "LLM review failed",
-      "severity": "Low",
-      "file": "sample_ecommerce_app\\app.py",
-      "recommended_fix": "Review the finding and apply a secure coding fix based on the recommendation.",
-      "example_fix": "Check Ollama availability and retry the LLM review.",
-      "priority": "Low",
-      "effort": "Medium"
-    },
-    {
-      "finding_id": "SEC-036",
-      "issue": "LLM review failed",
-      "severity": "Low",
-      "file": "sample_ecommerce_app\\frontend.js",
-      "recommended_fix": "Review the finding and apply a secure coding fix based on the recommendation.",
-      "example_fix": "Check Ollama availability and retry the LLM review.",
-      "priority": "Low",
-      "effort": "Medium"
     }
   ],
   "metrics": {
     "coverage": 1.0,
-    "confidence": 0.85
+    "confidence": 0.8
   }
 }

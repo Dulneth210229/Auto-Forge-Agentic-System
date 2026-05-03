@@ -1,7 +1,7 @@
 {
   "run_id": "RUN-0001",
   "created_at": "2026-05-02T23:42:05.317389+00:00",
-  "updated_at": "2026-05-03T22:45:09.447740+00:00",
+  "updated_at": "2026-05-03T22:53:16.343464+00:00",
   "artifacts": [
     {
       "stage": "security",
@@ -146,6 +146,33 @@
       "path": "outputs\\runs\\RUN-0001\\tests\\v1\\regression_tests\\regression_cases.json",
       "description": "Machine-readable regression test scenarios.",
       "registered_at": "2026-05-03T22:45:09.447420+00:00"
+    },
+    {
+      "stage": "testing",
+      "version": "v1",
+      "type": "security_validation_tests_folder",
+      "format": "folder",
+      "path": "outputs\\runs\\RUN-0001\\tests\\v1\\security_validation_tests",
+      "description": "Folder containing security validation test metadata.",
+      "registered_at": "2026-05-03T22:53:16.056971+00:00"
+    },
+    {
+      "stage": "testing",
+      "version": "v1",
+      "type": "generated_test_file",
+      "format": "py",
+      "path": "outputs\\runs\\RUN-0001\\tests\\v1\\generated_tests\\test_security_validation.py",
+      "description": "Validates SecurityReport_v1.json structure, security gate, fix suggestions, and traceability.",
+      "registered_at": "2026-05-03T22:53:16.278337+00:00"
+    },
+    {
+      "stage": "testing",
+      "version": "v1",
+      "type": "security_validation_cases_json",
+      "format": "json",
+      "path": "outputs\\runs\\RUN-0001\\tests\\v1\\security_validation_tests\\security_validation_cases.json",
+      "description": "Machine-readable security validation test scenarios.",
+      "registered_at": "2026-05-03T22:53:16.343004+00:00"
     }
   ]
 }

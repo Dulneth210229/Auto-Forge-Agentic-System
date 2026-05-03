@@ -2,7 +2,11 @@ import json
 from pathlib import Path
 from typing import List
 
-from agents.tester_agent.schemas import GeneratedTestFile, RegressionTestCase
+from agents.tester_agent.schemas import (
+    GeneratedTestFile,
+    RegressionTestCase,
+    SecurityValidationCase
+)
 
 
 class PytestTestGenerator:
@@ -10,7 +14,6 @@ class PytestTestGenerator:
     Generates pytest files for a target generated project.
 
     Current behavior:
-    - Inspect target project folder
     - Generate smoke tests
     - Generate syntax tests
     - Generate e-commerce keyword tests
@@ -18,6 +21,7 @@ class PytestTestGenerator:
     - Generate integration workflow tests
     - Generate edge-case and validation tests
     - Generate regression tests
+    - Generate security validation tests using SecurityReport_v1.json
     """
 
     def generate_tests(
@@ -40,58 +44,33 @@ class PytestTestGenerator:
         regression_tests_dir = output_dir / "regression_tests"
         regression_tests_dir.mkdir(parents=True, exist_ok=True)
 
+        security_validation_tests_dir = output_dir / "security_validation_tests"
+        security_validation_tests_dir.mkdir(parents=True, exist_ok=True)
+
         self.write_regression_cases_file(regression_tests_dir)
+        self.write_security_validation_cases_file(security_validation_tests_dir)
 
         generated_files: List[GeneratedTestFile] = []
 
-        generated_files.append(
-            self._write_project_structure_test(
-                target_path=target_path,
-                generated_tests_dir=generated_tests_dir
-            )
-        )
+        writers = [
+            self._write_project_structure_test,
+            self._write_python_syntax_test,
+            self._write_ecommerce_keywords_test,
+            self._write_functional_api_contract_test,
+            self._write_ecommerce_workflow_test,
+            self._write_validation_edge_cases_test,
+            self._write_regression_cases_test,
+            self._write_security_validation_test
+        ]
 
-        generated_files.append(
-            self._write_python_syntax_test(
-                target_path=target_path,
-                generated_tests_dir=generated_tests_dir
+        for writer in writers:
+            generated_files.append(
+                writer(
+                    target_path=target_path,
+                    generated_tests_dir=generated_tests_dir,
+                    output_dir=output_dir
+                )
             )
-        )
-
-        generated_files.append(
-            self._write_ecommerce_keywords_test(
-                target_path=target_path,
-                generated_tests_dir=generated_tests_dir
-            )
-        )
-
-        generated_files.append(
-            self._write_functional_api_contract_test(
-                target_path=target_path,
-                generated_tests_dir=generated_tests_dir
-            )
-        )
-
-        generated_files.append(
-            self._write_ecommerce_workflow_test(
-                target_path=target_path,
-                generated_tests_dir=generated_tests_dir
-            )
-        )
-
-        generated_files.append(
-            self._write_validation_edge_cases_test(
-                target_path=target_path,
-                generated_tests_dir=generated_tests_dir
-            )
-        )
-
-        generated_files.append(
-            self._write_regression_cases_test(
-                target_path=target_path,
-                generated_tests_dir=generated_tests_dir
-            )
-        )
 
         return generated_files
 
@@ -143,18 +122,52 @@ class PytestTestGenerator:
             )
         ]
 
+    def get_default_security_validation_cases(self) -> List[SecurityValidationCase]:
+        """
+        Return default security validation scenarios for Testing Agent.
+        """
+
+        return [
+            SecurityValidationCase(
+                validation_id="SV-001",
+                title="Validate Security Report structure",
+                description="SecurityReport_v1.json should contain findings, summary, security gate, and metrics.",
+                related_security_artifact="SecurityReport_v1.json",
+                expected_behavior="Security report should be readable and structurally valid."
+            ),
+            SecurityValidationCase(
+                validation_id="SV-002",
+                title="Validate security gate",
+                description="Security report should include PASS, WARN, or FAIL security gate status.",
+                related_security_artifact="SecurityReport_v1.json",
+                expected_behavior="Security gate should contain status, reason, policy, and blocking findings."
+            ),
+            SecurityValidationCase(
+                validation_id="SV-003",
+                title="Validate fix suggestions",
+                description="Security fix suggestions should reference existing security findings.",
+                related_security_artifact="SecurityReport_v1.json",
+                expected_behavior="Every fix suggestion should map to a known finding ID."
+            ),
+            SecurityValidationCase(
+                validation_id="SV-004",
+                title="Validate finding traceability",
+                description="Security findings should have requirement, API, and module traceability where possible.",
+                related_security_artifact="SecurityReport_v1.json",
+                expected_behavior="Findings should include traceability fields."
+            )
+        ]
+
     def write_regression_cases_file(self, regression_tests_dir: Path) -> str:
         """
         Save default regression scenarios as JSON.
         """
 
-        regression_cases = self.get_default_regression_cases()
-
         file_path = regression_tests_dir / "regression_cases.json"
 
         data = [
             regression_case.model_dump()
-            for regression_case in regression_cases
+            for regression_case in self.get_default_regression_cases()
         ]
 
         file_path.write_text(
@@ -164,10 +177,65 @@ class PytestTestGenerator:
 
         return str(file_path)
 
+    def write_security_validation_cases_file(
+        self,
+        security_validation_tests_dir: Path
+    ) -> str:
+        """
+        Save default security validation scenarios as JSON.
+        """
+
+        file_path = security_validation_tests_dir / "security_validation_cases.json"
+
+        data = [
+            validation_case.model_dump()
+            for validation_case in self.get_default_security_validation_cases()
+        ]
+
+        file_path.write_text(
+            json.dumps(data, indent=2),
+            encoding="utf-8"
+        )
+
+        return str(file_path)
+
+    def _read_project_helper_code(self, target_path: str) -> str:
+        """
+        Reusable helper inserted into generated pytest files.
+        """
+
+        return f'''from pathlib import Path
+
+
+TARGET_PATH = Path(r"{target_path}")
+
+
+def _read_project_text() -> str:
+    combined_text = ""
+
+    allowed_extensions = [
+        ".py", ".js", ".jsx", ".ts", ".tsx", ".json", ".md", ".yaml", ".yml"
+    ]
+
+    for file_path in TARGET_PATH.rglob("*"):
+        if file_path.is_file() and file_path.suffix.lower() in allowed_extensions:
+            try:
+                combined_text += "\\n" + file_path.read_text(encoding="utf-8").lower()
+            except UnicodeDecodeError:
+                continue
+
+    return combined_text
+
+
+def _has_any(text: str, keywords: list[str]) -> bool:
+    return any(keyword in text for keyword in keywords)
+'''
+
     def _write_project_structure_test(
         self,
         target_path: str,
-        generated_tests_dir: Path
+        generated_tests_dir: Path,
+        output_dir: Path
     ) -> GeneratedTestFile:
         file_path = generated_tests_dir / "test_project_structure.py"
 
@@ -222,7 +290,8 @@ def test_target_project_has_ecommerce_related_files_or_content():
     def _write_python_syntax_test(
         self,
         target_path: str,
-        generated_tests_dir: Path
+        generated_tests_dir: Path,
+        output_dir: Path
     ) -> GeneratedTestFile:
         file_path = generated_tests_dir / "test_python_syntax.py"
 
@@ -257,28 +326,12 @@ def test_python_files_have_valid_syntax():
     def _write_ecommerce_keywords_test(
         self,
         target_path: str,
-        generated_tests_dir: Path
+        generated_tests_dir: Path,
+        output_dir: Path
     ) -> GeneratedTestFile:
         file_path = generated_tests_dir / "test_ecommerce_keywords.py"
 
-        content = f'''from pathlib import Path
-
-
-TARGET_PATH = Path(r"{target_path}")
-
-
-def _read_project_text() -> str:
-    combined_text = ""
-
-    for file_path in TARGET_PATH.rglob("*"):
-        if file_path.is_file() and file_path.suffix.lower() in [".py", ".js", ".jsx", ".ts", ".tsx", ".json", ".md"]:
-            try:
-                combined_text += "\\n" + file_path.read_text(encoding="utf-8").lower()
-            except UnicodeDecodeError:
-                continue
-
-    return combined_text
-
+        content = self._read_project_helper_code(target_path) + '''
 
 def test_catalog_or_product_feature_exists():
     text = _read_project_text()
@@ -307,36 +360,12 @@ def test_checkout_or_order_feature_exists():
     def _write_functional_api_contract_test(
         self,
         target_path: str,
-        generated_tests_dir: Path
+        generated_tests_dir: Path,
+        output_dir: Path
     ) -> GeneratedTestFile:
         file_path = generated_tests_dir / "test_functional_api_contract.py"
 
-        content = f'''from pathlib import Path
-
-
-TARGET_PATH = Path(r"{target_path}")
-
-
-def _read_project_text() -> str:
-    combined_text = ""
-
-    allowed_extensions = [
-        ".py", ".js", ".jsx", ".ts", ".tsx", ".json", ".md", ".yaml", ".yml"
-    ]
-
-    for file_path in TARGET_PATH.rglob("*"):
-        if file_path.is_file() and file_path.suffix.lower() in allowed_extensions:
-            try:
-                combined_text += "\\n" + file_path.read_text(encoding="utf-8").lower()
-            except UnicodeDecodeError:
-                continue
-
-    return combined_text
-
-
-def _has_any(text: str, keywords: list[str]) -> bool:
-    return any(keyword in text for keyword in keywords)
-
+        content = self._read_project_helper_code(target_path) + '''
 
 def test_catalog_api_or_function_contract_exists():
     text = _read_project_text()
@@ -402,36 +431,12 @@ def test_order_api_or_function_contract_exists():
     def _write_ecommerce_workflow_test(
         self,
         target_path: str,
-        generated_tests_dir: Path
+        generated_tests_dir: Path,
+        output_dir: Path
     ) -> GeneratedTestFile:
         file_path = generated_tests_dir / "test_ecommerce_workflow.py"
 
-        content = f'''from pathlib import Path
-
-
-TARGET_PATH = Path(r"{target_path}")
-
-
-def _read_project_text() -> str:
-    combined_text = ""
-
-    allowed_extensions = [
-        ".py", ".js", ".jsx", ".ts", ".tsx", ".json", ".md", ".yaml", ".yml"
-    ]
-
-    for file_path in TARGET_PATH.rglob("*"):
-        if file_path.is_file() and file_path.suffix.lower() in allowed_extensions:
-            try:
-                combined_text += "\\n" + file_path.read_text(encoding="utf-8").lower()
-            except UnicodeDecodeError:
-                continue
-
-    return combined_text
-
-
-def _has_any(text: str, keywords: list[str]) -> bool:
-    return any(keyword in text for keyword in keywords)
-
+        content = self._read_project_helper_code(target_path) + '''
 
 def test_product_to_cart_workflow_is_supported():
     text = _read_project_text()
@@ -483,12 +488,12 @@ def test_checkout_to_order_workflow_is_supported():
 def test_full_ecommerce_workflow_keywords_exist():
     text = _read_project_text()
 
-    workflow_groups = {{
+    workflow_groups = {
         "product_or_catalog": ["product", "products", "catalog", "list_products", "/products"],
         "cart": ["cart", "add_to_cart", "view_cart", "/cart"],
         "checkout": ["checkout", "process_checkout", "payment", "/checkout"],
         "order": ["order", "orders", "create_order", "place_order", "/orders"]
-    }}
+    }
 
     missing_groups = [
         group_name
@@ -496,7 +501,7 @@ def test_full_ecommerce_workflow_keywords_exist():
         if not _has_any(text, keywords)
     ]
 
-    assert not missing_groups, f"Missing workflow groups: {{missing_groups}}"
+    assert not missing_groups, f"Missing workflow groups: {missing_groups}"
 '''
 
         file_path.write_text(content, encoding="utf-8")
@@ -511,36 +516,12 @@ def test_full_ecommerce_workflow_keywords_exist():
     def _write_validation_edge_cases_test(
         self,
         target_path: str,
-        generated_tests_dir: Path
+        generated_tests_dir: Path,
+        output_dir: Path
     ) -> GeneratedTestFile:
         file_path = generated_tests_dir / "test_validation_edge_cases.py"
 
-        content = f'''from pathlib import Path
-
-
-TARGET_PATH = Path(r"{target_path}")
-
-
-def _read_project_text() -> str:
-    combined_text = ""
-
-    allowed_extensions = [
-        ".py", ".js", ".jsx", ".ts", ".tsx", ".json", ".md", ".yaml", ".yml"
-    ]
-
-    for file_path in TARGET_PATH.rglob("*"):
-        if file_path.is_file() and file_path.suffix.lower() in allowed_extensions:
-            try:
-                combined_text += "\\n" + file_path.read_text(encoding="utf-8").lower()
-            except UnicodeDecodeError:
-                continue
-
-    return combined_text
-
-
-def _has_any(text: str, keywords: list[str]) -> bool:
-    return any(keyword in text for keyword in keywords)
-
+        content = self._read_project_helper_code(target_path) + '''
 
 def test_invalid_product_id_validation_exists():
     text = _read_project_text()
@@ -632,40 +613,12 @@ def test_out_of_stock_handling_exists():
     def _write_regression_cases_test(
         self,
         target_path: str,
-        generated_tests_dir: Path
+        generated_tests_dir: Path,
+        output_dir: Path
     ) -> GeneratedTestFile:
-        """
-        Generate regression tests for known e-commerce bug patterns.
-        """
-
         file_path = generated_tests_dir / "test_regression_cases.py"
 
-        content = f'''from pathlib import Path
-
-
-TARGET_PATH = Path(r"{target_path}")
-
-
-def _read_project_text() -> str:
-    combined_text = ""
-
-    allowed_extensions = [
-        ".py", ".js", ".jsx", ".ts", ".tsx", ".json", ".md", ".yaml", ".yml"
-    ]
-
-    for file_path in TARGET_PATH.rglob("*"):
-        if file_path.is_file() and file_path.suffix.lower() in allowed_extensions:
-            try:
-                combined_text += "\\n" + file_path.read_text(encoding="utf-8").lower()
-            except UnicodeDecodeError:
-                continue
-
-    return combined_text
-
-
-def _has_any(text: str, keywords: list[str]) -> bool:
-    return any(keyword in text for keyword in keywords)
-
+        content = self._read_project_helper_code(target_path) + '''
 
 def test_regression_empty_cart_checkout_is_prevented():
     text = _read_project_text()
@@ -753,4 +706,150 @@ def test_regression_order_creation_depends_on_checkout_or_cart():
             file_path=str(file_path),
             test_type="regression",
             description="Checks whether known e-commerce bug patterns are prevented."
+        )
+
+    def _resolve_security_report_path(self, output_dir: Path) -> Path:
+        """
+        Resolve expected SecurityReport path using the current run/version folder.
+
+        output_dir example:
+            outputs/runs/RUN-0001/tests/v1
+
+        expected security report:
+            outputs/runs/RUN-0001/security/v1/SecurityReport_v1.json
+        """
+
+        version = output_dir.name
+        run_dir = output_dir.parent.parent
+
+        return run_dir / "security" / version / f"SecurityReport_{version}.json"
+
+    def _write_security_validation_test(
+        self,
+        target_path: str,
+        generated_tests_dir: Path,
+        output_dir: Path
+    ) -> GeneratedTestFile:
+        """
+        Generate tests that validate SecurityReport_v1.json consistency.
+
+        If the SecurityReport does not exist yet, tests will be skipped.
+        This keeps the Testing Agent usable before the Security Agent runs.
+        """
+
+        security_report_path = self._resolve_security_report_path(output_dir)
+
+        file_path = generated_tests_dir / "test_security_validation.py"
+
+        content = f'''import json
+from pathlib import Path
+
+import pytest
+
+
+SECURITY_REPORT_PATH = Path(r"{security_report_path}")
+
+
+def _load_security_report() -> dict:
+    if not SECURITY_REPORT_PATH.exists():
+        pytest.skip(f"Security report not found: {{SECURITY_REPORT_PATH}}")
+
+    return json.loads(SECURITY_REPORT_PATH.read_text(encoding="utf-8"))
+
+
+def test_security_report_json_exists():
+    if not SECURITY_REPORT_PATH.exists():
+        pytest.skip(f"Security report not found: {{SECURITY_REPORT_PATH}}")
+
+    assert SECURITY_REPORT_PATH.exists()
+
+
+def test_security_report_has_required_top_level_sections():
+    report = _load_security_report()
+
+    required_sections = [
+        "run_id",
+        "stage",
+        "version",
+        "summary",
+        "findings",
+        "security_gate",
+        "metrics"
+    ]
+
+    for section in required_sections:
+        assert section in report, f"Missing SecurityReport section: {{section}}"
+
+
+def test_security_gate_has_valid_structure():
+    report = _load_security_report()
+
+    gate = report.get("security_gate", {{}})
+
+    assert gate.get("status") in ["PASS", "WARN", "FAIL"]
+    assert isinstance(gate.get("reason", ""), str)
+    assert isinstance(gate.get("policy", ""), str)
+    assert isinstance(gate.get("blocking_findings", []), list)
+
+
+def test_security_findings_have_required_fields():
+    report = _load_security_report()
+
+    findings = report.get("findings", [])
+
+    for finding in findings:
+        assert finding.get("finding_id"), "Finding is missing finding_id."
+        assert finding.get("title"), "Finding is missing title."
+        assert finding.get("severity") in ["Critical", "High", "Medium", "Low"]
+        assert "file" in finding
+        assert "recommendation" in finding
+
+
+def test_security_fix_suggestions_reference_existing_findings():
+    report = _load_security_report()
+
+    findings = report.get("findings", [])
+    fix_suggestions = report.get("fix_suggestions", [])
+
+    finding_ids = {{
+        finding.get("finding_id")
+        for finding in findings
+        if finding.get("finding_id")
+    }}
+
+    for fix in fix_suggestions:
+        assert fix.get("finding_id") in finding_ids, (
+            f"Fix suggestion references unknown finding: {{fix.get('finding_id')}}"
+        )
+
+
+def test_security_findings_have_traceability_fields():
+    report = _load_security_report()
+
+    findings = report.get("findings", [])
+
+    for finding in findings:
+        traceability = finding.get("traceability", {{}})
+
+        assert "requirement_id" in traceability
+        assert "api" in traceability
+        assert "module" in traceability
+
+
+def test_security_summary_matches_findings_count():
+    report = _load_security_report()
+
+    summary = report.get("summary", {{}})
+    findings = report.get("findings", [])
+
+    assert summary.get("total_findings", 0) == len(findings)
+'''
+
+        file_path.write_text(content, encoding="utf-8")
+
+        return GeneratedTestFile(
+            file_name=file_path.name,
+            file_path=str(file_path),
+            test_type="security_validation",
+            description="Validates SecurityReport_v1.json structure, security gate, fix suggestions, and traceability."
         )
