@@ -10,7 +10,7 @@ class TestCase(BaseModel):
     test_id: str
     title: str
     description: str
-    test_type: Literal["unit", "integration", "api", "ui", "security_validation"]
+    test_type: Literal["unit", "integration", "api", "ui", "security_validation", "smoke"]
     target_module: str
     target_file: str
     related_requirement_id: str = ""
@@ -19,13 +19,36 @@ class TestCase(BaseModel):
 
 class TestExecutionResult(BaseModel):
     """
-    Represents the execution result of one test case.
+    Represents the execution result of one test case or generated pytest file.
     """
 
     test_id: str
     status: Literal["passed", "failed", "skipped", "not_run"]
     message: str = ""
     duration_ms: int = Field(default=0, ge=0)
+
+
+class GeneratedTestFile(BaseModel):
+    """
+    Represents one generated pytest file.
+    """
+
+    file_name: str
+    file_path: str
+    test_type: Literal["smoke", "unit", "integration", "api", "security_validation"]
+    description: str
+
+
+class PytestRunResult(BaseModel):
+    """
+    Represents the overall pytest execution result.
+    """
+
+    exit_code: int
+    status: Literal["passed", "failed", "error"]
+    duration_ms: int = Field(default=0, ge=0)
+    stdout: str = ""
+    stderr: str = ""
 
 
 class TestSummary(BaseModel):
@@ -60,6 +83,9 @@ class TestReport(BaseModel):
     stage: Literal["testing"] = "testing"
     version: str
     target_path: str
+    generated_tests_path: str = ""
+    generated_test_files: List[GeneratedTestFile] = []
+    pytest_run: PytestRunResult | None = None
     summary: TestSummary
     test_cases: List[TestCase]
     execution_results: List[TestExecutionResult]

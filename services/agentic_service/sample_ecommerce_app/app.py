@@ -46,3 +46,65 @@ def dangerous_code(user_input: str):
 def run_command(command: str):
     subprocess.run(command, shell=True)
     return {"status": "executed"}
+
+cart = []
+
+
+def add_to_cart(product_id: int, quantity: int):
+    """
+    Add a product to the shopping cart.
+    """
+
+    item = {
+        "product_id": product_id,
+        "quantity": quantity
+    }
+
+    cart.append(item)
+
+    return {
+        "message": "Product added to cart",
+        "cart": cart
+    }
+
+
+def view_cart():
+    """
+    View current cart items.
+    """
+
+    return {
+        "cart": cart
+    }
+
+
+def checkout(customer_id: int):
+    """
+    Perform a mock checkout operation.
+    """
+
+    if not cart:
+        return {
+            "status": "failed",
+            "message": "Cannot checkout with an empty cart"
+        }
+
+    return {
+        "status": "success",
+        "message": "Checkout completed",
+        "customer_id": customer_id,
+        "cart": cart
+    }
+
+
+def create_order(customer_id: int):
+    """
+    Create a mock order after checkout.
+    """
+
+    return {
+        "order_id": 1,
+        "customer_id": customer_id,
+        "status": "created",
+        "items": cart
+    }

@@ -1,7 +1,7 @@
 {
   "run_id": "RUN-0001",
   "created_at": "2026-05-02T23:42:05.317389+00:00",
-  "updated_at": "2026-05-03T00:23:10.599405+00:00",
+  "updated_at": "2026-05-03T22:11:08.103330+00:00",
   "artifacts": [
     {
       "stage": "security",
@@ -56,6 +56,42 @@
       "path": "outputs\\runs\\RUN-0001\\tests\\v1\\TestReport_v1.md",
       "description": "Human-readable Testing Agent report.",
       "registered_at": "2026-05-03T00:17:12.359469+00:00"
+    },
+    {
+      "stage": "testing",
+      "version": "v1",
+      "type": "generated_tests_folder",
+      "format": "folder",
+      "path": "outputs\\runs\\RUN-0001\\tests\\v1\\generated_tests",
+      "description": "Folder containing generated pytest files.",
+      "registered_at": "2026-05-03T21:59:54.212785+00:00"
+    },
+    {
+      "stage": "testing",
+      "version": "v1",
+      "type": "generated_test_file",
+      "format": "py",
+      "path": "outputs\\runs\\RUN-0001\\tests\\v1\\generated_tests\\test_project_structure.py",
+      "description": "Checks whether the target project folder and source files exist.",
+      "registered_at": "2026-05-03T21:59:54.226146+00:00"
+    },
+    {
+      "stage": "testing",
+      "version": "v1",
+      "type": "generated_test_file",
+      "format": "py",
+      "path": "outputs\\runs\\RUN-0001\\tests\\v1\\generated_tests\\test_python_syntax.py",
+      "description": "Checks whether Python source files compile without syntax errors.",
+      "registered_at": "2026-05-03T21:59:54.241499+00:00"
+    },
+    {
+      "stage": "testing",
+      "version": "v1",
+      "type": "generated_test_file",
+      "format": "py",
+      "path": "outputs\\runs\\RUN-0001\\tests\\v1\\generated_tests\\test_ecommerce_keywords.py",
+      "description": "Checks whether minimum e-commerce modules are represented in the generated code.",
+      "registered_at": "2026-05-03T21:59:54.254497+00:00"
     }
   ]
 }

@@ -3,7 +3,8 @@
 **Run ID:** {{ report.run_id }}  
 **Stage:** {{ report.stage }}  
 **Version:** {{ report.version }}  
-**Target Path:** {{ report.target_path }}
+**Target Path:** {{ report.target_path }}  
+**Generated Tests Path:** {{ report.generated_tests_path }}
 
 ---
 
@@ -19,7 +20,48 @@
 
 ---
 
-## 2. Test Cases
+## 2. Pytest Run
+
+{% if report.pytest_run %}
+| Field | Value |
+|---|---|
+| Status | {{ report.pytest_run.status }} |
+| Exit Code | {{ report.pytest_run.exit_code }} |
+| Duration | {{ report.pytest_run.duration_ms }} ms |
+
+### Pytest Stdout
+
+```txt
+{{ report.pytest_run.stdout }}
+```
+
+### Pytest Stderr
+
+```txt
+{{ report.pytest_run.stderr }}
+```
+
+{% else %}
+Pytest was not executed.
+{% endif %}
+
+---
+
+## 3. Generated Test Files
+
+{% if report.generated_test_files %}
+| File Name | Type | Path | Description |
+|---|---|---|---|
+{% for file in report.generated_test_files %}
+| {{ file.file_name }} | {{ file.test_type }} | {{ file.file_path }} | {{ file.description }} |
+{% endfor %}
+{% else %}
+No pytest files were generated.
+{% endif %}
+
+---
+
+## 4. Test Cases
 
 {% if report.test_cases %}
 | Test ID | Title | Type | Module | Target File | Requirement |
@@ -33,7 +75,7 @@ No test cases were generated.
 
 ---
 
-## 3. Test Case Details
+## 5. Test Case Details
 
 {% if report.test_cases %}
 {% for test in report.test_cases %}
@@ -57,7 +99,7 @@ No test case details available.
 
 ---
 
-## 4. Execution Results
+## 6. Execution Results
 
 {% if report.execution_results %}
 | Test ID | Status | Duration | Message |
@@ -71,17 +113,17 @@ No tests were executed yet.
 
 ---
 
-## 5. Metrics
+## 7. Metrics
 
 | Metric | Value |
 |---|---:|
 | Test Coverage | {{ report.metrics.test_coverage }} |
 | Pass Rate | {{ report.metrics.pass_rate }} |
-| Execution Efficiency | {{ report.metrics.execution_efficiency }} |
+| Execution Efficiency | {{ report.metrics.execution_efficiency }} ms |
 
 ---
 
-## 6. Recommendations
+## 8. Recommendations
 
 {% if report.recommendations %}
 {% for recommendation in report.recommendations %}
