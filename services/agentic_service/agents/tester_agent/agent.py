@@ -21,11 +21,12 @@ class TesterAgent:
     """
     Testing / QA Agent for AutoForge.
 
-    Step 3:
+    Step 4:
     - Generates pytest files.
     - Executes generated pytest files.
-    - Captures pytest output.
-    - Updates TestReport JSON and Markdown with execution summary.
+    - Collects individual pytest test IDs.
+    - Builds one execution result per pytest test.
+    - Updates TestReport JSON and Markdown with detailed execution results.
     """
 
     def __init__(self, output_root: str = "outputs"):
@@ -54,11 +55,23 @@ class TesterAgent:
 
         generated_tests_path = output_dir / "generated_tests"
 
-        pytest_result = self.runner.run_tests(str(generated_tests_path))
+        collected_test_ids = self.runner.collect_test_ids(
+            generated_tests_path=str(generated_tests_path)
+        )
 
-        execution_results = self.runner.build_execution_results(pytest_result)
+        pytest_result = self.runner.run_tests(
+            generated_tests_path=str(generated_tests_path)
+        )
 
-        counts = self.runner.extract_counts(pytest_result)
+        execution_results = self.runner.build_execution_results(
+            pytest_result=pytest_result,
+            collected_test_ids=collected_test_ids
+        )
+
+        counts = self.runner.extract_counts(
+            pytest_result=pytest_result,
+            execution_results=execution_results
+        )
 
         report = self.create_report(
             run_id=run_id,
@@ -215,7 +228,7 @@ class TesterAgent:
 
         recommendations = [
             "Generated pytest files were executed.",
-            "Step 4 will improve detailed individual test parsing.",
+            "Individual pytest test results are now captured in execution_results.",
             "Review failed tests before moving to Security Agent validation."
         ]
 

@@ -27,13 +27,13 @@
   "pytest_run": {
     "exit_code": 0,
     "status": "passed",
-    "duration_ms": 1286,
+    "duration_ms": 428,
     "stdout": ".......                                                                  [100%]\n7 passed in 0.03s\n",
     "stderr": ""
   },
   "summary": {
-    "total_tests": 1,
-    "passed": 1,
+    "total_tests": 7,
+    "passed": 7,
     "failed": 0,
     "skipped": 0,
     "not_run": 0
@@ -72,20 +72,56 @@
   ],
   "execution_results": [
     {
-      "test_id": "PYTEST-RUN-001",
+      "test_id": "outputs/runs/RUN-0001/tests/v1/generated_tests/test_ecommerce_keywords.py::test_catalog_or_product_feature_exists",
       "status": "passed",
-      "message": "7 passed in 0.03s",
-      "duration_ms": 1286
+      "message": "Test passed.",
+      "duration_ms": 61
+    },
+    {
+      "test_id": "outputs/runs/RUN-0001/tests/v1/generated_tests/test_ecommerce_keywords.py::test_cart_feature_exists",
+      "status": "passed",
+      "message": "Test passed.",
+      "duration_ms": 61
+    },
+    {
+      "test_id": "outputs/runs/RUN-0001/tests/v1/generated_tests/test_ecommerce_keywords.py::test_checkout_or_order_feature_exists",
+      "status": "passed",
+      "message": "Test passed.",
+      "duration_ms": 61
+    },
+    {
+      "test_id": "outputs/runs/RUN-0001/tests/v1/generated_tests/test_project_structure.py::test_target_project_folder_exists",
+      "status": "passed",
+      "message": "Test passed.",
+      "duration_ms": 61
+    },
+    {
+      "test_id": "outputs/runs/RUN-0001/tests/v1/generated_tests/test_project_structure.py::test_target_project_contains_source_files",
+      "status": "passed",
+      "message": "Test passed.",
+      "duration_ms": 61
+    },
+    {
+      "test_id": "outputs/runs/RUN-0001/tests/v1/generated_tests/test_project_structure.py::test_target_project_has_ecommerce_related_files_or_content",
+      "status": "passed",
+      "message": "Test passed.",
+      "duration_ms": 61
+    },
+    {
+      "test_id": "outputs/runs/RUN-0001/tests/v1/generated_tests/test_python_syntax.py::test_python_files_have_valid_syntax",
+      "status": "passed",
+      "message": "Test passed.",
+      "duration_ms": 61
     }
   ],
   "metrics": {
     "test_coverage": 1.0,
     "pass_rate": 1.0,
-    "execution_efficiency": 1286.0
+    "execution_efficiency": 428.0
   },
   "recommendations": [
     "Generated pytest files were executed.",
-    "Step 4 will improve detailed individual test parsing.",
+    "Individual pytest test results are now captured in execution_results.",
     "Review failed tests before moving to Security Agent validation."
   ]
 }

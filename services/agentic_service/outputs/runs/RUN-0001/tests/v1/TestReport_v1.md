@@ -12,8 +12,8 @@
 
 | Metric | Count |
 |---|---:|
-| Total Tests | 1 |
-| Passed | 1 |
+| Total Tests | 7 |
+| Passed | 7 |
 | Failed | 0 |
 | Skipped | 0 |
 | Not Run | 0 |
@@ -27,7 +27,7 @@
 |---|---|
 | Status | passed |
 | Exit Code | 0 |
-| Duration | 1286 ms |
+| Duration | 428 ms |
 
 ### Pytest Stdout
 
@@ -135,7 +135,19 @@ Generated code should include catalog/product, cart, and checkout/order features
 | Test ID | Status | Duration | Message |
 |---|---|---:|---|
 
-| PYTEST-RUN-001 | passed | 1286 ms | 7 passed in 0.03s |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_ecommerce_keywords.py::test_catalog_or_product_feature_exists | passed | 61 ms | Test passed. |
+
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_ecommerce_keywords.py::test_cart_feature_exists | passed | 61 ms | Test passed. |
+
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_ecommerce_keywords.py::test_checkout_or_order_feature_exists | passed | 61 ms | Test passed. |
+
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_project_structure.py::test_target_project_folder_exists | passed | 61 ms | Test passed. |
+
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_project_structure.py::test_target_project_contains_source_files | passed | 61 ms | Test passed. |
+
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_project_structure.py::test_target_project_has_ecommerce_related_files_or_content | passed | 61 ms | Test passed. |
+
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_python_syntax.py::test_python_files_have_valid_syntax | passed | 61 ms | Test passed. |
 
 
 
@@ -147,7 +159,7 @@ Generated code should include catalog/product, cart, and checkout/order features
 |---|---:|
 | Test Coverage | 1.0 |
 | Pass Rate | 1.0 |
-| Execution Efficiency | 1286.0 ms |
+| Execution Efficiency | 428.0 ms |
 
 ---
 
@@ -157,7 +169,7 @@ Generated code should include catalog/product, cart, and checkout/order features
 
 - Generated pytest files were executed.
 
-- Step 4 will improve detailed individual test parsing.
+- Individual pytest test results are now captured in execution_results.
 
 - Review failed tests before moving to Security Agent validation.
 

@@ -3,9 +3,12 @@ from pathlib import Path
 from agents.tester_agent.agent import TesterAgent
 
 
-def test_tester_agent_generates_and_executes_pytest_files(tmp_path: Path):
+def test_tester_agent_generates_and_executes_individual_pytest_results(tmp_path: Path):
     """
-    Test whether TesterAgent generates pytest files and executes them.
+    Test whether TesterAgent:
+    - generates pytest files
+    - executes pytest files
+    - parses individual pytest results
     """
 
     target = tmp_path / "sample_ecommerce_app"
@@ -18,10 +21,15 @@ def list_products():
     return [{"id": 1, "name": "Demo Product"}]
 
 def add_to_cart(product_id, quantity):
-    return {"product_id": product_id, "quantity": quantity}
+    cart = []
+    cart.append({"product_id": product_id, "quantity": quantity})
+    return cart
 
 def checkout(cart):
     return {"order_id": 1, "status": "created"}
+
+def create_order(customer_id):
+    return {"order_id": 1, "customer_id": customer_id, "status": "created"}
 """,
         encoding="utf-8"
     )
@@ -43,10 +51,12 @@ def checkout(cart):
     assert result["generated_tests_path"].endswith("generated_tests")
     assert result["generated_test_files_count"] == 3
 
-    assert result["pytest_status"] in ["passed", "failed", "error"]
-    assert isinstance(result["pytest_exit_code"], int)
+    assert result["pytest_status"] == "passed"
+    assert result["pytest_exit_code"] == 0
 
-    assert result["summary"]["total_tests"] >= 1
+    assert result["summary"]["total_tests"] >= 7
+    assert result["summary"]["passed"] >= 7
+    assert result["summary"]["failed"] == 0
     assert result["summary"]["not_run"] == 0
 
     assert result["json_path"].endswith("TestReport_v1.json")
