@@ -166,6 +166,7 @@ def build_openapi_document(project_name: str, api_endpoints: List[APIEndpoint]) 
 
     paths = {}
 
+    
     for endpoint in api_endpoints:
         method = endpoint.method.lower()
 
@@ -192,6 +193,40 @@ def build_openapi_document(project_name: str, api_endpoints: List[APIEndpoint]) 
                 "500": {"description": "Internal server error"},
             },
         }
+
+        # OpenAPI requires every path variable like {product_id}
+        # to be explicitly defined as a path parameter.
+        path_parameters = []
+
+        if "{product_id}" in endpoint.path:
+            path_parameters.append({
+                "name": "product_id",
+                "in": "path",
+                "required": True,
+                "schema": {"type": "string"},
+                "description": "Unique product identifier."
+            })
+
+        if "{item_id}" in endpoint.path:
+            path_parameters.append({
+                "name": "item_id",
+                "in": "path",
+                "required": True,
+                "schema": {"type": "string"},
+                "description": "Unique cart item identifier."
+            })
+
+        if "{order_id}" in endpoint.path:
+            path_parameters.append({
+                "name": "order_id",
+                "in": "path",
+                "required": True,
+                "schema": {"type": "string"},
+                "description": "Unique order identifier."
+            })
+
+        if path_parameters:
+            operation["parameters"] = path_parameters
 
         if endpoint.request_schema:
             operation["requestBody"] = {
