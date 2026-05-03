@@ -12,8 +12,8 @@
 
 | Metric | Count |
 |---|---:|
-| Total Tests | 7 |
-| Passed | 7 |
+| Total Tests | 11 |
+| Passed | 11 |
 | Failed | 0 |
 | Skipped | 0 |
 | Not Run | 0 |
@@ -27,13 +27,13 @@
 |---|---|
 | Status | passed |
 | Exit Code | 0 |
-| Duration | 428 ms |
+| Duration | 440 ms |
 
 ### Pytest Stdout
 
 ```txt
-.......                                                                  [100%]
-7 passed in 0.03s
+...........                                                              [100%]
+11 passed in 0.04s
 
 ```
 
@@ -59,6 +59,8 @@
 
 | test_ecommerce_keywords.py | integration | outputs\runs\RUN-0001\tests\v1\generated_tests\test_ecommerce_keywords.py | Checks whether minimum e-commerce modules are represented in the generated code. |
 
+| test_functional_api_contract.py | api | outputs\runs\RUN-0001\tests\v1\generated_tests\test_functional_api_contract.py | Checks whether e-commerce API/function contracts exist for catalog, cart, checkout, and order. |
+
 
 
 ---
@@ -74,6 +76,8 @@
 | TC-002 | Validate Python source syntax | unit | backend | ./sample_ecommerce_app | NFR-TEST-002 |
 
 | TC-003 | Validate minimum e-commerce feature representation | integration | ecommerce | ./sample_ecommerce_app | FR-001 |
+
+| TC-004 | Validate e-commerce API/function contracts | api | ecommerce_api | ./sample_ecommerce_app | FR-API-001 |
 
 
 
@@ -125,6 +129,20 @@ Checks whether catalog/product, cart, checkout/order concepts exist in generated
 Generated code should include catalog/product, cart, and checkout/order features.
 
 
+### TC-004 — Validate e-commerce API/function contracts
+
+**Type:** api  
+**Target Module:** ecommerce_api  
+**Target File:** ./sample_ecommerce_app  
+**Related Requirement:** FR-API-001
+
+**Description:**  
+Checks whether generated code includes API or function contracts for catalog, cart, checkout, and order.
+
+**Expected Result:**  
+Generated code should include API/function contracts for catalog, cart, checkout, and order.
+
+
 
 
 ---
@@ -135,19 +153,27 @@ Generated code should include catalog/product, cart, and checkout/order features
 | Test ID | Status | Duration | Message |
 |---|---|---:|---|
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_ecommerce_keywords.py::test_catalog_or_product_feature_exists | passed | 61 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_ecommerce_keywords.py::test_catalog_or_product_feature_exists | passed | 40 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_ecommerce_keywords.py::test_cart_feature_exists | passed | 61 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_ecommerce_keywords.py::test_cart_feature_exists | passed | 40 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_ecommerce_keywords.py::test_checkout_or_order_feature_exists | passed | 61 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_ecommerce_keywords.py::test_checkout_or_order_feature_exists | passed | 40 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_project_structure.py::test_target_project_folder_exists | passed | 61 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_functional_api_contract.py::test_catalog_api_or_function_contract_exists | passed | 40 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_project_structure.py::test_target_project_contains_source_files | passed | 61 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_functional_api_contract.py::test_cart_api_or_function_contract_exists | passed | 40 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_project_structure.py::test_target_project_has_ecommerce_related_files_or_content | passed | 61 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_functional_api_contract.py::test_checkout_api_or_function_contract_exists | passed | 40 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_python_syntax.py::test_python_files_have_valid_syntax | passed | 61 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_functional_api_contract.py::test_order_api_or_function_contract_exists | passed | 40 ms | Test passed. |
+
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_project_structure.py::test_target_project_folder_exists | passed | 40 ms | Test passed. |
+
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_project_structure.py::test_target_project_contains_source_files | passed | 40 ms | Test passed. |
+
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_project_structure.py::test_target_project_has_ecommerce_related_files_or_content | passed | 40 ms | Test passed. |
+
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_python_syntax.py::test_python_files_have_valid_syntax | passed | 40 ms | Test passed. |
 
 
 
@@ -159,7 +185,7 @@ Generated code should include catalog/product, cart, and checkout/order features
 |---|---:|
 | Test Coverage | 1.0 |
 | Pass Rate | 1.0 |
-| Execution Efficiency | 428.0 ms |
+| Execution Efficiency | 440.0 ms |
 
 ---
 
@@ -169,7 +195,7 @@ Generated code should include catalog/product, cart, and checkout/order features
 
 - Generated pytest files were executed.
 
-- Individual pytest test results are now captured in execution_results.
+- Functional API-style tests were generated for catalog, cart, checkout, and order.
 
-- Review failed tests before moving to Security Agent validation.
+- Review failed tests before moving to integration workflow testing.
 

@@ -3,12 +3,12 @@ from pathlib import Path
 from agents.tester_agent.agent import TesterAgent
 
 
-def test_tester_agent_generates_and_executes_individual_pytest_results(tmp_path: Path):
+def test_tester_agent_generates_functional_api_tests(tmp_path: Path):
     """
     Test whether TesterAgent:
     - generates pytest files
-    - executes pytest files
-    - parses individual pytest results
+    - includes functional API contract tests
+    - executes individual pytest results
     """
 
     target = tmp_path / "sample_ecommerce_app"
@@ -24,6 +24,9 @@ def add_to_cart(product_id, quantity):
     cart = []
     cart.append({"product_id": product_id, "quantity": quantity})
     return cart
+
+def view_cart():
+    return {"cart": []}
 
 def checkout(cart):
     return {"order_id": 1, "status": "created"}
@@ -49,13 +52,13 @@ def create_order(customer_id):
     assert result["version"] == "v1"
 
     assert result["generated_tests_path"].endswith("generated_tests")
-    assert result["generated_test_files_count"] == 3
+    assert result["generated_test_files_count"] == 4
 
     assert result["pytest_status"] == "passed"
     assert result["pytest_exit_code"] == 0
 
-    assert result["summary"]["total_tests"] >= 7
-    assert result["summary"]["passed"] >= 7
+    assert result["summary"]["total_tests"] >= 11
+    assert result["summary"]["passed"] >= 11
     assert result["summary"]["failed"] == 0
     assert result["summary"]["not_run"] == 0
 
@@ -72,3 +75,4 @@ def create_order(customer_id):
     assert (generated_tests_path / "test_project_structure.py").exists()
     assert (generated_tests_path / "test_python_syntax.py").exists()
     assert (generated_tests_path / "test_ecommerce_keywords.py").exists()
+    assert (generated_tests_path / "test_functional_api_contract.py").exists()

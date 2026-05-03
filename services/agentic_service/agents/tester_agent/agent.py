@@ -21,12 +21,11 @@ class TesterAgent:
     """
     Testing / QA Agent for AutoForge.
 
-    Step 4:
+    Step 5:
     - Generates pytest files.
     - Executes generated pytest files.
-    - Collects individual pytest test IDs.
-    - Builds one execution result per pytest test.
-    - Updates TestReport JSON and Markdown with detailed execution results.
+    - Captures individual pytest test results.
+    - Adds functional API-style tests for e-commerce modules.
     """
 
     def __init__(self, output_root: str = "outputs"):
@@ -204,6 +203,16 @@ class TesterAgent:
                 target_file=target_path,
                 related_requirement_id="FR-001",
                 expected_result="Generated code should include catalog/product, cart, and checkout/order features."
+            ),
+            TestCase(
+                test_id="TC-004",
+                title="Validate e-commerce API/function contracts",
+                description="Checks whether generated code includes API or function contracts for catalog, cart, checkout, and order.",
+                test_type="api",
+                target_module="ecommerce_api",
+                target_file=target_path,
+                related_requirement_id="FR-API-001",
+                expected_result="Generated code should include API/function contracts for catalog, cart, checkout, and order."
             )
         ]
 
@@ -228,8 +237,8 @@ class TesterAgent:
 
         recommendations = [
             "Generated pytest files were executed.",
-            "Individual pytest test results are now captured in execution_results.",
-            "Review failed tests before moving to Security Agent validation."
+            "Functional API-style tests were generated for catalog, cart, checkout, and order.",
+            "Review failed tests before moving to integration workflow testing."
         ]
 
         if summary.failed > 0:
