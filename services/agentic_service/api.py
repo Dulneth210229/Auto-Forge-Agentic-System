@@ -1,7 +1,14 @@
-from fastapi import FastAPI
+from typing import Optional
+
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel, Field
+
 from agents.requirement_agent.agent import RequirementAgent
-from tools.llm.provider import OllamaProvider
 from agents.domain_agent.agent import DomainAgent
+from agents.security_agent.agent import SecurityAgent
+from agents.tester_agent.agent import TesterAgent
+from tools.llm.provider import OllamaProvider
+
 
 app = FastAPI(
     title="AutoForge Agentic Service API",
@@ -9,16 +16,127 @@ app = FastAPI(
     version="1.0.0"
 )
 
+
+# ---------------------------------------------------------
+# Agent instances
+# ---------------------------------------------------------
+
 requirement_agent = RequirementAgent(llm_provider=OllamaProvider())
 domain_agent = DomainAgent(llm_provider=OllamaProvider())
+security_agent = SecurityAgent(output_root="outputs")
+tester_agent = TesterAgent(output_root="outputs")
+
+
+# ---------------------------------------------------------
+# Request / Response Models
+# ---------------------------------------------------------
+
+class SecurityRunRequest(BaseModel):
+    """
+    Request body for running the Security Agent.
+    """
+
+    run_id: str = Field(
+        default="RUN-0001",
+        description="AutoForge run ID"
+    )
+
+    version: str = Field(
+        default="v1",
+        description="Artifact version"
+    )
+
+    target_path: str = Field(
+        default="./sample_ecommerce_app",
+        description="Target source code folder to scan"
+    )
+
+    enable_llm: bool = Field(
+        default=False,
+        description="Enable Ollama LLM-assisted secure code review"
+    )
+
+
+class SecurityRunResponse(BaseModel):
+    """
+    Response body after running the Security Agent.
+    """
+
+    run_id: str
+    stage: str
+    version: str
+    target_path: Optional[str]
+    llm_enabled: bool
+
+    json_path: str
+    markdown_path: str
+    summary_pack_json_path: str
+    summary_pack_markdown_path: str
+    metadata_path: str
+
+    summary: dict
+    dependency_vulnerabilities_count: int
+    llm_findings_count: int
+    deduplication: dict
+    security_gate: dict
+    traceability_mapped: bool
+    fix_suggestions_count: int
+
+
+class TestingRunRequest(BaseModel):
+    """
+    Request body for running the Testing / QA Agent.
+    """
+
+    run_id: str = Field(
+        default="RUN-0001",
+        description="AutoForge run ID"
+    )
+
+    version: str = Field(
+        default="v1",
+        description="Artifact version"
+    )
+
+    target_path: str = Field(
+        default="./sample_ecommerce_app",
+        description="Target source code folder to test"
+    )
+
+
+class TestingRunResponse(BaseModel):
+    """
+    Response body after running the Testing / QA Agent.
+    """
+
+    run_id: str
+    stage: str
+    version: str
+    target_path: str
+
+    json_path: str
+    markdown_path: str
+    metadata_path: str
+
+    summary: dict
+    metrics: dict
+
+
+# ---------------------------------------------------------
+# Health Endpoint
+# ---------------------------------------------------------
 
 @app.get("/health")
 def health():
     return {
         "status": "ok",
-        "service": "autoforge-requirement-agent"
+        "service": "autoforge-agentic-service"
     }
 
+
+# ---------------------------------------------------------
+# Requirement Agent Endpoints
+# ---------------------------------------------------------
 
 @app.post("/requirements/intake/validate")
 def validate_intake(payload: dict):
@@ -53,6 +171,8 @@ async def generate_srs(payload: dict):
     )
 
     return result
+
+
 @app.post("/requirements/srs/revise")
 async def revise_srs(payload: dict):
     result = await requirement_agent.revise_srs(
@@ -65,10 +185,17 @@ async def revise_srs(payload: dict):
     return result
 
 
+# ---------------------------------------------------------
+# Domain Agent Endpoints
+# ---------------------------------------------------------
+
 @app.post("/domain/knowledge/ingest")
 def ingest_domain_knowledge(payload: dict):
     result = domain_agent.ingest_domain_knowledge(
-        file_path=payload.get("file_path", "knowledge/ecommerce_domain_knowledge.txt"),
+        file_path=payload.get(
+            "file_path",
+            "knowledge/ecommerce_domain_knowledge.txt"
+        ),
         vector_store_type=payload.get("vector_store_type", "faiss")
     )
 
@@ -86,3 +213,83 @@ async def generate_domain_pack(payload: dict):
     )
 
     return result
+
+
+# ---------------------------------------------------------
+# Security Agent Endpoints
+# ---------------------------------------------------------
+
+@app.post("/security/run", response_model=SecurityRunResponse)
+def run_security_agent(request: SecurityRunRequest):
+    """
+    Run the Security Agent through FastAPI.
+
+    This endpoint:
+    - scans the target project folder
+    - generates SecurityReport_v1.json
+    - generates SecurityReport_v1.md
+    - generates SecuritySummaryPack_v1.json
+    - generates SecuritySummaryPack_v1.md
+    - updates run_metadata.json
+    - returns the summary, security gate, and artifact paths
+    """
+
+    try:
+        result = security_agent.run(
+            run_id=request.run_id,
+            version=request.version,
+            target_path=request.target_path,
+            enable_llm=request.enable_llm
+        )
+
+        return result
+
+    except FileNotFoundError as error:
+        raise HTTPException(
+            status_code=404,
+            detail=str(error)
+        )
+
+    except Exception as error:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Security Agent failed: {error}"
+        )
+
+
+# ---------------------------------------------------------
+# Testing / QA Agent Endpoints
+# ---------------------------------------------------------
+
+@app.post("/testing/run", response_model=TestingRunResponse)
+def run_testing_agent(request: TestingRunRequest):
+    """
+    Run the Testing / QA Agent through FastAPI.
+
+    This endpoint:
+    - generates TestReport_v1.json
+    - generates TestReport_v1.md
+    - updates run_metadata.json
+    - returns the test summary and artifact paths
+    """
+
+    try:
+        result = tester_agent.run(
+            run_id=request.run_id,
+            version=request.version,
+            target_path=request.target_path
+        )
+
+        return result
+
+    except FileNotFoundError as error:
+        raise HTTPException(
+            status_code=404,
+            detail=str(error)
+        )
+
+    except Exception as error:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Testing Agent failed: {error}"
+        )

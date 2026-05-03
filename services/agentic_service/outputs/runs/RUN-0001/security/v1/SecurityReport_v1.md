@@ -13,8 +13,8 @@
 | Critical | 6 |
 | High | 15 |
 | Medium | 12 |
-| Low | 1 |
-| **Total** | **34** |
+| Low | 3 |
+| **Total** | **36** |
 
 ---
 
@@ -75,6 +75,8 @@
 | SEC-032 | Vulnerable dependency detected: flask | Medium | sample_ecommerce_app\requirements.txt | 2 | Dependency | CWE-937 |
 | SEC-033 | Vulnerable dependency detected: requests | High | sample_ecommerce_app\requirements.txt | 3 | Dependency | CWE-522 |
 | SEC-034 | Vulnerable dependency detected: requests | Medium | sample_ecommerce_app\requirements.txt | 3 | Dependency | CWE-200 |
+| SEC-035 | LLM review failed | Low | sample_ecommerce_app\app.py | 0 | LLM | N/A |
+| SEC-036 | LLM review failed | Low | sample_ecommerce_app\frontend.js | 0 | LLM | N/A |
 
 ---
 
@@ -726,6 +728,44 @@ Review GHSA-j8r2-6x86-q33q in OSV.dev and upgrade the affected dependency to a p
 - API: /auth
 - Module: authentication
 
+### SEC-035 — LLM review failed
+
+**Severity:** Low  
+**Detection Method:** LLM  
+**File:** sample_ecommerce_app\app.py  
+**Line:** 0  
+**CWE:** N/A
+
+**Description:**  
+The LLM review failed for this file: the JSON object must be str, bytes or bytearray, not coroutine
+
+**Recommendation:**  
+Check Ollama availability and retry the LLM review.
+
+**Traceability:**  
+- Requirement ID: NFR-SEC-001
+- API: N/A
+- Module: general_security
+
+### SEC-036 — LLM review failed
+
+**Severity:** Low  
+**Detection Method:** LLM  
+**File:** sample_ecommerce_app\frontend.js  
+**Line:** 0  
+**CWE:** N/A
+
+**Description:**  
+The LLM review failed for this file: the JSON object must be str, bytes or bytearray, not coroutine
+
+**Recommendation:**  
+Check Ollama availability and retry the LLM review.
+
+**Traceability:**  
+- Requirement ID: FR-007
+- API: UI
+- Module: frontend
+
 
 ---
 
@@ -767,6 +807,8 @@ Review GHSA-j8r2-6x86-q33q in OSV.dev and upgrade the affected dependency to a p
 | SEC-032 | Vulnerable dependency detected: flask | Medium | Normal | Medium |
 | SEC-033 | Vulnerable dependency detected: requests | High | High | Low |
 | SEC-034 | Vulnerable dependency detected: requests | Medium | Normal | Medium |
+| SEC-035 | LLM review failed | Low | Low | Medium |
+| SEC-036 | LLM review failed | Low | Low | Medium |
 
 ### SEC-001 — Hardcoded secret detected
 
@@ -1318,6 +1360,38 @@ Upgrade the vulnerable dependency to a patched and currently supported version.
 Update requirements.txt or package.json, then rerun dependency scanning.
 ```
 
+### SEC-035 — LLM review failed
+
+**Severity:** Low  
+**File:** sample_ecommerce_app\app.py  
+**Priority:** Low  
+**Estimated Effort:** Medium
+
+**Recommended Fix:**  
+Review the finding and apply a secure coding fix based on the recommendation.
+
+**Example Fix:**
+
+```txt
+Check Ollama availability and retry the LLM review.
+```
+
+### SEC-036 — LLM review failed
+
+**Severity:** Low  
+**File:** sample_ecommerce_app\frontend.js  
+**Priority:** Low  
+**Estimated Effort:** Medium
+
+**Recommended Fix:**  
+Review the finding and apply a secure coding fix based on the recommendation.
+
+**Example Fix:**
+
+```txt
+Check Ollama availability and retry the LLM review.
+```
+
 
 ---
 
@@ -1713,102 +1787,38 @@ Review PYSEC-2023-74 in OSV.dev and upgrade the affected dependency to a patched
 
 | Title | Severity | File | Line | CWE | Confidence |
 |---|---|---|---:|---|---:|
-| Insecure API Key | High | sample_ecommerce_app\app.py | 0 | CWE-259 | 1.0 |
-| SQL Injection Risk | High | sample_ecommerce_app\app.py | 23 | CWE-89 | 1.0 |
-| Command Injection Risk | Critical | sample_ecommerce_app\app.py | 42 | CWE-94 | 1.0 |
-| Arbitrary Code Execution Risk | Critical | sample_ecommerce_app\app.py | 38 | CWE-95 | 1.0 |
-| Insecure Storage of Authentication Token | High | sample_ecommerce_app\frontend.js | 0 | CWE-312 | 1.0 |
-| Arbitrary Code Execution via eval() | Critical | sample_ecommerce_app\frontend.js | 7 | CWE-94 | 1.0 |
+| LLM review failed | Low | sample_ecommerce_app\app.py | 0 | N/A | 0.0 |
+| LLM review failed | Low | sample_ecommerce_app\frontend.js | 0 | N/A | 0.0 |
 
-### Insecure API Key
+### LLM review failed
 
-**Severity:** High  
+**Severity:** Low  
 **File:** sample_ecommerce_app\app.py  
 **Line:** 0  
-**CWE:** CWE-259  
-**Confidence:** 1.0  
+**CWE:** N/A  
+**Confidence:** 0.0  
 **Source:** ollama
 
 **Description:**  
-The API_KEY is hardcoded and not properly secured.
+The LLM review failed for this file: the JSON object must be str, bytes or bytearray, not coroutine
 
 **Recommendation:**  
-Use environment variables or a secure configuration file to store sensitive data.
+Check Ollama availability and retry the LLM review.
 
-### SQL Injection Risk
+### LLM review failed
 
-**Severity:** High  
-**File:** sample_ecommerce_app\app.py  
-**Line:** 23  
-**CWE:** CWE-89  
-**Confidence:** 1.0  
-**Source:** ollama
-
-**Description:**  
-The search_product endpoint is vulnerable to SQL injection attacks due to the use of unescaped user input in the query.
-
-**Recommendation:**  
-Use parameterized queries or an ORM to prevent SQL injection attacks.
-
-### Command Injection Risk
-
-**Severity:** Critical  
-**File:** sample_ecommerce_app\app.py  
-**Line:** 42  
-**CWE:** CWE-94  
-**Confidence:** 1.0  
-**Source:** ollama
-
-**Description:**  
-The run_command endpoint is vulnerable to command injection attacks due to the use of subprocess.run with shell=True and unescaped user input.
-
-**Recommendation:**  
-Use a secure alternative, such as os.execvp or a library like Popen, to execute commands securely.
-
-### Arbitrary Code Execution Risk
-
-**Severity:** Critical  
-**File:** sample_ecommerce_app\app.py  
-**Line:** 38  
-**CWE:** CWE-95  
-**Confidence:** 1.0  
-**Source:** ollama
-
-**Description:**  
-The dangerous_code endpoint is vulnerable to arbitrary code execution due to the use of eval on user-provided input.
-
-**Recommendation:**  
-Do not use eval or similar functions with untrusted input. Instead, use a safe alternative like ast.literal_eval or a library like safe-exec.
-
-### Insecure Storage of Authentication Token
-
-**Severity:** High  
+**Severity:** Low  
 **File:** sample_ecommerce_app\frontend.js  
 **Line:** 0  
-**CWE:** CWE-312  
-**Confidence:** 1.0  
+**CWE:** N/A  
+**Confidence:** 0.0  
 **Source:** ollama
 
 **Description:**  
-The authentication token is stored in local storage without proper encryption or validation, making it vulnerable to theft or tampering.
+The LLM review failed for this file: the JSON object must be str, bytes or bytearray, not coroutine
 
 **Recommendation:**  
-Use a secure storage mechanism like HTTPS cookies or encrypted local storage.
-
-### Arbitrary Code Execution via eval()
-
-**Severity:** Critical  
-**File:** sample_ecommerce_app\frontend.js  
-**Line:** 7  
-**CWE:** CWE-94  
-**Confidence:** 1.0  
-**Source:** ollama
-
-**Description:**  
-The runDangerous function uses eval() to execute arbitrary JavaScript code, which can lead to remote code execution and privilege escalation attacks.
-
-**Recommendation:**  
-Avoid using eval() or similar functions. Instead, use a safe evaluation mechanism like JSON.parse() or a parsing library.
+Check Ollama availability and retry the LLM review.
 
 
 ---
