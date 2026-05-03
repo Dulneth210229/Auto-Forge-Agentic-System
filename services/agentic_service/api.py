@@ -8,6 +8,7 @@ from agents.domain_agent.agent import DomainAgent
 from agents.security_agent.agent import SecurityAgent
 from agents.tester_agent.agent import TesterAgent
 from tools.llm.provider import OllamaProvider
+from agents.architect_agent.agent import ArchitectAgent
 
 
 app = FastAPI(
@@ -25,6 +26,7 @@ requirement_agent = RequirementAgent(llm_provider=OllamaProvider())
 domain_agent = DomainAgent(llm_provider=OllamaProvider())
 security_agent = SecurityAgent(output_root="outputs")
 tester_agent = TesterAgent(output_root="outputs")
+architect_agent = ArchitectAgent()
 
 
 # ---------------------------------------------------------
@@ -213,6 +215,30 @@ async def generate_domain_pack(payload: dict):
     )
 
     return result
+
+# ---------------------------------------------------------
+# Architect Agent Endpoints
+# ---------------------------------------------------------
+@app.post("/architecture/generate")
+def generate_architecture(payload: dict):
+    """
+    Generates architecture artifacts from approved SRS and DomainPack.
+
+    Required previous files:
+    - outputs/runs/{run_id}/srs/{srs_version}/SRS_{srs_version}.json
+    - outputs/runs/{run_id}/domain/{domain_version}/DomainPack_{domain_version}.json
+    """
+
+    result = architect_agent.generate_architecture(
+        run_id=payload.get("run_id", "RUN-0001"),
+        srs_version=payload.get("srs_version", "v1"),
+        domain_version=payload.get("domain_version", "v1"),
+        architecture_version=payload.get("architecture_version", "v1"),
+        architecture_style=payload.get("architecture_style", "modular_monolith"),
+        export_visuals=payload.get("export_visuals", True),
+    )
+
+    return result.model_dump()
 
 
 # ---------------------------------------------------------
