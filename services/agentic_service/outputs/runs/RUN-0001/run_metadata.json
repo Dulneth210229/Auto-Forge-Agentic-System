@@ -1,7 +1,7 @@
 {
   "run_id": "RUN-0001",
   "created_at": "2026-05-02T23:42:05.317389+00:00",
-  "updated_at": "2026-05-03T23:00:17.422243+00:00",
+  "updated_at": "2026-05-03T23:06:50.554359+00:00",
   "artifacts": [
     {
       "stage": "security",
@@ -173,6 +173,24 @@
       "path": "outputs\\runs\\RUN-0001\\tests\\v1\\security_validation_tests\\security_validation_cases.json",
       "description": "Machine-readable security validation test scenarios.",
       "registered_at": "2026-05-03T22:53:16.343004+00:00"
+    },
+    {
+      "stage": "testing",
+      "version": "v1",
+      "type": "test_summary_pack_json",
+      "format": "json",
+      "path": "outputs\\runs\\RUN-0001\\tests\\v1\\TestSummaryPack_v1.json",
+      "description": "Compact dashboard/API Testing Summary Pack.",
+      "registered_at": "2026-05-03T23:06:50.338636+00:00"
+    },
+    {
+      "stage": "testing",
+      "version": "v1",
+      "type": "test_summary_pack_markdown",
+      "format": "md",
+      "path": "outputs\\runs\\RUN-0001\\tests\\v1\\TestSummaryPack_v1.md",
+      "description": "Human-readable Testing Summary Pack.",
+      "registered_at": "2026-05-03T23:06:50.348351+00:00"
     }
   ]
 }

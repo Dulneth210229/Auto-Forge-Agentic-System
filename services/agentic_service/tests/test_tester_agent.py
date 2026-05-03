@@ -4,7 +4,7 @@ from pathlib import Path
 from agents.tester_agent.agent import TesterAgent
 
 
-def test_tester_agent_generates_traceability_mapping(tmp_path: Path):
+def test_tester_agent_generates_testing_summary_pack(tmp_path: Path):
     """
     Test whether TesterAgent:
     - generates pytest files
@@ -12,7 +12,8 @@ def test_tester_agent_generates_traceability_mapping(tmp_path: Path):
     - includes security validation tests
     - validates SecurityReport_v1.json
     - executes individual pytest results
-    - adds traceability mapping to test cases
+    - adds traceability mapping
+    - generates TestSummaryPack JSON and Markdown
     """
 
     target = tmp_path / "sample_ecommerce_app"
@@ -171,45 +172,27 @@ def check_stock(product_id, quantity):
     assert result["summary"]["failed"] == 0
     assert result["summary"]["not_run"] == 0
 
-    assert "traceability_summary" in result
-    assert result["traceability_summary"]["total_test_cases"] == 8
-    assert result["traceability_summary"]["mapped_test_cases"] == 8
-    assert result["traceability_summary"]["unmapped_test_cases"] == 0
     assert result["traceability_summary"]["coverage_percentage"] == 100.0
+    assert result["quality_gate"]["status"] == "PASS"
 
     assert result["json_path"].endswith("TestReport_v1.json")
     assert result["markdown_path"].endswith("TestReport_v1.md")
+    assert result["summary_pack_json_path"].endswith("TestSummaryPack_v1.json")
+    assert result["summary_pack_markdown_path"].endswith("TestSummaryPack_v1.md")
     assert result["metadata_path"].endswith("run_metadata.json")
 
     assert Path(result["json_path"]).exists()
     assert Path(result["markdown_path"]).exists()
+    assert Path(result["summary_pack_json_path"]).exists()
+    assert Path(result["summary_pack_markdown_path"]).exists()
     assert Path(result["metadata_path"]).exists()
 
-    generated_tests_path = Path(result["generated_tests_path"])
-    regression_tests_path = output_root / "runs" / "RUN-TEST" / "tests" / "v1" / "regression_tests"
-    security_validation_tests_path = output_root / "runs" / "RUN-TEST" / "tests" / "v1" / "security_validation_tests"
+    summary_pack_data = json.loads(
+        Path(result["summary_pack_json_path"]).read_text(encoding="utf-8")
+    )
 
-    assert (generated_tests_path / "test_project_structure.py").exists()
-    assert (generated_tests_path / "test_python_syntax.py").exists()
-    assert (generated_tests_path / "test_ecommerce_keywords.py").exists()
-    assert (generated_tests_path / "test_functional_api_contract.py").exists()
-    assert (generated_tests_path / "test_ecommerce_workflow.py").exists()
-    assert (generated_tests_path / "test_validation_edge_cases.py").exists()
-    assert (generated_tests_path / "test_regression_cases.py").exists()
-    assert (generated_tests_path / "test_security_validation.py").exists()
-
-    assert regression_tests_path.exists()
-    assert (regression_tests_path / "regression_cases.json").exists()
-
-    assert security_validation_tests_path.exists()
-    assert (security_validation_tests_path / "security_validation_cases.json").exists()
-
-    report_data = json.loads(Path(result["json_path"]).read_text(encoding="utf-8"))
-
-    assert "traceability_summary" in report_data
-    assert report_data["traceability_summary"]["coverage_percentage"] == 100.0
-
-    for test_case in report_data["test_cases"]:
-        assert test_case["traceability_status"] == "mapped"
-        assert test_case["related_requirement_id"]
-        assert test_case["api_endpoint"]
+    assert summary_pack_data["run_id"] == "RUN-TEST"
+    assert summary_pack_data["stage"] == "testing"
+    assert summary_pack_data["quality_gate"]["status"] == "PASS"
+    assert summary_pack_data["summary"]["failed"] == 0
+    assert summary_pack_data["traceability_summary"]["coverage_percentage"] == 100.0

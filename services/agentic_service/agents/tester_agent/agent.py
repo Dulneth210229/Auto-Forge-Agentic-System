@@ -18,6 +18,10 @@ from agents.tester_agent.renderer import render_test_report_markdown
 from agents.tester_agent.test_generator import PytestTestGenerator
 from agents.tester_agent.runner import PytestRunner
 from agents.tester_agent.traceability import TestTraceabilityMapper
+from agents.tester_agent.summary_pack import (
+    TestSummaryPackBuilder,
+    TestSummaryPackRenderer
+)
 from tools.artifact_registry import ArtifactRegistry
 
 
@@ -25,13 +29,14 @@ class TesterAgent:
     """
     Testing / QA Agent for AutoForge.
 
-    Step 10:
+    Step 11:
     - Generates pytest files.
     - Executes generated pytest files.
     - Captures individual pytest test results.
     - Adds regression tests.
     - Adds security validation tests.
     - Adds traceability mapping for test cases.
+    - Generates Testing Summary Pack for dashboard/API integration.
     """
 
     def __init__(self, output_root: str = "outputs"):
@@ -40,6 +45,8 @@ class TesterAgent:
         self.test_generator = PytestTestGenerator()
         self.runner = PytestRunner()
         self.traceability_mapper = TestTraceabilityMapper()
+        self.summary_pack_builder = TestSummaryPackBuilder()
+        self.summary_pack_renderer = TestSummaryPackRenderer()
 
     def run(
         self,
@@ -114,6 +121,29 @@ class TesterAgent:
             encoding="utf-8"
         )
 
+        summary_pack_json_path = output_dir / f"TestSummaryPack_{version}.json"
+        summary_pack_md_path = output_dir / f"TestSummaryPack_{version}.md"
+
+        summary_pack = self.summary_pack_builder.build(
+            report=report,
+            json_report_path=str(json_path),
+            markdown_report_path=str(md_path),
+            target_path=target_path
+        )
+
+        summary_pack["artifacts"]["test_summary_pack_json"] = str(summary_pack_json_path)
+        summary_pack["artifacts"]["test_summary_pack_markdown"] = str(summary_pack_md_path)
+
+        summary_pack_json_path.write_text(
+            json.dumps(summary_pack, indent=2),
+            encoding="utf-8"
+        )
+
+        summary_pack_md_path.write_text(
+            self.summary_pack_renderer.render_markdown(summary_pack),
+            encoding="utf-8"
+        )
+
         artifacts = [
             {
                 "stage": "testing",
@@ -130,6 +160,22 @@ class TesterAgent:
                 "format": "md",
                 "path": str(md_path),
                 "description": "Human-readable Testing Agent report."
+            },
+            {
+                "stage": "testing",
+                "version": version,
+                "type": "test_summary_pack_json",
+                "format": "json",
+                "path": str(summary_pack_json_path),
+                "description": "Compact dashboard/API Testing Summary Pack."
+            },
+            {
+                "stage": "testing",
+                "version": version,
+                "type": "test_summary_pack_markdown",
+                "format": "md",
+                "path": str(summary_pack_md_path),
+                "description": "Human-readable Testing Summary Pack."
             },
             {
                 "stage": "testing",
@@ -203,6 +249,8 @@ class TesterAgent:
             "target_path": target_path,
             "json_path": str(json_path),
             "markdown_path": str(md_path),
+            "summary_pack_json_path": str(summary_pack_json_path),
+            "summary_pack_markdown_path": str(summary_pack_md_path),
             "metadata_path": metadata_path,
             "generated_tests_path": str(generated_tests_path),
             "generated_test_files_count": len(generated_test_files),
@@ -210,7 +258,8 @@ class TesterAgent:
             "pytest_exit_code": pytest_result.exit_code,
             "summary": report.summary.model_dump(),
             "metrics": report.metrics.model_dump(),
-            "traceability_summary": report.traceability_summary.model_dump()
+            "traceability_summary": report.traceability_summary.model_dump(),
+            "quality_gate": summary_pack["quality_gate"]
         }
 
     def create_report(
@@ -338,7 +387,8 @@ class TesterAgent:
             "Validation and edge-case tests were generated for common e-commerce failure cases.",
             "Regression tests were generated to prevent known bugs from returning.",
             "Security validation tests were generated using SecurityReport_v1.json.",
-            "Test traceability mapping was added for requirement, API, module, and security validation coverage."
+            "Test traceability mapping was added for requirement, API, module, and security validation coverage.",
+            "Testing Summary Pack was generated for dashboard and API integration."
         ]
 
         if summary.failed > 0:

@@ -120,6 +120,8 @@ class TestingRunResponse(BaseModel):
 
     json_path: str
     markdown_path: str
+    summary_pack_json_path: str
+    summary_pack_markdown_path: str
     metadata_path: str
 
     generated_tests_path: str
@@ -132,6 +134,8 @@ class TestingRunResponse(BaseModel):
     metrics: dict
 
     traceability_summary: dict
+
+    quality_gate: dict
 
 
 # ---------------------------------------------------------
