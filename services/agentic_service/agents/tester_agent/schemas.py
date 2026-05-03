@@ -21,7 +21,12 @@ class TestCase(BaseModel):
     ]
     target_module: str
     target_file: str
+
     related_requirement_id: str = ""
+    api_endpoint: str = ""
+    related_security_finding_id: str = ""
+    traceability_status: Literal["mapped", "partial", "unmapped"] = "unmapped"
+
     expected_result: str
 
 
@@ -70,8 +75,6 @@ class RegressionTestCase(BaseModel):
 class SecurityValidationCase(BaseModel):
     """
     Represents one security validation scenario.
-
-    These scenarios are generated from or aligned with SecurityReport_v1.json.
     """
 
     validation_id: str
@@ -79,6 +82,18 @@ class SecurityValidationCase(BaseModel):
     description: str
     related_security_artifact: str
     expected_behavior: str
+
+
+class TestTraceabilitySummary(BaseModel):
+    """
+    Summary of test traceability coverage.
+    """
+
+    total_test_cases: int = 0
+    mapped_test_cases: int = 0
+    partially_mapped_test_cases: int = 0
+    unmapped_test_cases: int = 0
+    coverage_percentage: float = 0.0
 
 
 class PytestRunResult(BaseModel):
@@ -134,6 +149,8 @@ class TestReport(BaseModel):
 
     security_validation_tests_path: str = ""
     security_validation_cases: List[SecurityValidationCase] = []
+
+    traceability_summary: TestTraceabilitySummary = TestTraceabilitySummary()
 
     pytest_run: PytestRunResult | None = None
 

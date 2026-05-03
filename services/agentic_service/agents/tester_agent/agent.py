@@ -11,11 +11,13 @@ from agents.tester_agent.schemas import (
     GeneratedTestFile,
     PytestRunResult,
     RegressionTestCase,
-    SecurityValidationCase
+    SecurityValidationCase,
+    TestTraceabilitySummary
 )
 from agents.tester_agent.renderer import render_test_report_markdown
 from agents.tester_agent.test_generator import PytestTestGenerator
 from agents.tester_agent.runner import PytestRunner
+from agents.tester_agent.traceability import TestTraceabilityMapper
 from tools.artifact_registry import ArtifactRegistry
 
 
@@ -23,12 +25,13 @@ class TesterAgent:
     """
     Testing / QA Agent for AutoForge.
 
-    Step 9:
+    Step 10:
     - Generates pytest files.
     - Executes generated pytest files.
     - Captures individual pytest test results.
     - Adds regression tests.
-    - Adds security validation tests using SecurityReport_v1.json.
+    - Adds security validation tests.
+    - Adds traceability mapping for test cases.
     """
 
     def __init__(self, output_root: str = "outputs"):
@@ -36,6 +39,7 @@ class TesterAgent:
         self.artifact_registry = ArtifactRegistry(output_root=output_root)
         self.test_generator = PytestTestGenerator()
         self.runner = PytestRunner()
+        self.traceability_mapper = TestTraceabilityMapper()
 
     def run(
         self,
@@ -205,7 +209,8 @@ class TesterAgent:
             "pytest_status": pytest_result.status,
             "pytest_exit_code": pytest_result.exit_code,
             "summary": report.summary.model_dump(),
-            "metrics": report.metrics.model_dump()
+            "metrics": report.metrics.model_dump(),
+            "traceability_summary": report.traceability_summary.model_dump()
         }
 
     def create_report(
@@ -235,7 +240,6 @@ class TesterAgent:
                 test_type="smoke",
                 target_module="project",
                 target_file=target_path,
-                related_requirement_id="NFR-TEST-001",
                 expected_result="Target project folder should exist and contain source files."
             ),
             TestCase(
@@ -245,7 +249,6 @@ class TesterAgent:
                 test_type="unit",
                 target_module="backend",
                 target_file=target_path,
-                related_requirement_id="NFR-TEST-002",
                 expected_result="All Python files should compile without syntax errors."
             ),
             TestCase(
@@ -255,7 +258,6 @@ class TesterAgent:
                 test_type="integration",
                 target_module="ecommerce",
                 target_file=target_path,
-                related_requirement_id="FR-001",
                 expected_result="Generated code should include catalog/product, cart, and checkout/order features."
             ),
             TestCase(
@@ -265,7 +267,6 @@ class TesterAgent:
                 test_type="api",
                 target_module="ecommerce_api",
                 target_file=target_path,
-                related_requirement_id="FR-API-001",
                 expected_result="Generated code should include API/function contracts for catalog, cart, checkout, and order."
             ),
             TestCase(
@@ -275,7 +276,6 @@ class TesterAgent:
                 test_type="integration",
                 target_module="ecommerce_workflow",
                 target_file=target_path,
-                related_requirement_id="FR-WORKFLOW-001",
                 expected_result="Generated code should support Product -> Cart -> Checkout -> Order workflow."
             ),
             TestCase(
@@ -285,7 +285,6 @@ class TesterAgent:
                 test_type="integration",
                 target_module="validation",
                 target_file=target_path,
-                related_requirement_id="NFR-VALIDATION-001",
                 expected_result="Generated code should include validation for invalid product IDs, quantities, empty carts, payment/customer data, prices, and stock."
             ),
             TestCase(
@@ -295,7 +294,6 @@ class TesterAgent:
                 test_type="regression",
                 target_module="regression",
                 target_file=target_path,
-                related_requirement_id="NFR-REGRESSION-001",
                 expected_result="Generated code should prevent known bugs from returning."
             ),
             TestCase(
@@ -305,10 +303,14 @@ class TesterAgent:
                 test_type="security_validation",
                 target_module="security_validation",
                 target_file="SecurityReport_v1.json",
-                related_requirement_id="NFR-SEC-VALIDATION-001",
                 expected_result="Security report should be structurally valid and useful for downstream fixing."
             )
         ]
+
+        test_cases = self.traceability_mapper.map_test_cases(test_cases)
+        traceability_summary: TestTraceabilitySummary = (
+            self.traceability_mapper.summarize_traceability(test_cases)
+        )
 
         summary = TestSummary(
             total_tests=counts["total"],
@@ -335,7 +337,8 @@ class TesterAgent:
             "Integration workflow tests were generated for Product -> Cart -> Checkout -> Order.",
             "Validation and edge-case tests were generated for common e-commerce failure cases.",
             "Regression tests were generated to prevent known bugs from returning.",
-            "Security validation tests were generated using SecurityReport_v1.json."
+            "Security validation tests were generated using SecurityReport_v1.json.",
+            "Test traceability mapping was added for requirement, API, module, and security validation coverage."
         ]
 
         if summary.failed > 0:
@@ -360,6 +363,7 @@ class TesterAgent:
             regression_test_cases=regression_test_cases,
             security_validation_tests_path=security_validation_tests_path,
             security_validation_cases=security_validation_cases,
+            traceability_summary=traceability_summary,
             pytest_run=pytest_result,
             summary=summary,
             test_cases=test_cases,

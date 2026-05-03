@@ -131,6 +131,8 @@ class TestingRunResponse(BaseModel):
     summary: dict
     metrics: dict
 
+    traceability_summary: dict
+
 
 # ---------------------------------------------------------
 # Health Endpoint

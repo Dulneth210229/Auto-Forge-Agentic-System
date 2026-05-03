@@ -22,7 +22,19 @@
 
 ---
 
-## 2. Pytest Run
+## 2. Traceability Summary
+
+| Metric | Value |
+|---|---:|
+| Total Test Cases | {{ report.traceability_summary.total_test_cases }} |
+| Mapped Test Cases | {{ report.traceability_summary.mapped_test_cases }} |
+| Partially Mapped Test Cases | {{ report.traceability_summary.partially_mapped_test_cases }} |
+| Unmapped Test Cases | {{ report.traceability_summary.unmapped_test_cases }} |
+| Coverage Percentage | {{ report.traceability_summary.coverage_percentage }}% |
+
+---
+
+## 3. Pytest Run
 
 {% if report.pytest_run %}
 | Field | Value |
@@ -49,7 +61,7 @@ Pytest was not executed.
 
 ---
 
-## 3. Generated Test Files
+## 4. Generated Test Files
 
 {% if report.generated_test_files %}
 | File Name | Type | Path | Description |
@@ -63,7 +75,7 @@ No pytest files were generated.
 
 ---
 
-## 4. Regression Test Cases
+## 5. Regression Test Cases
 
 {% if report.regression_test_cases %}
 | Regression ID | Title | Module | Requirement | Expected Behavior |
@@ -77,7 +89,7 @@ No regression test cases were generated.
 
 ---
 
-## 5. Security Validation Cases
+## 6. Security Validation Cases
 
 {% if report.security_validation_cases %}
 | Validation ID | Title | Security Artifact | Expected Behavior |
@@ -91,13 +103,13 @@ No security validation cases were generated.
 
 ---
 
-## 6. Test Cases
+## 7. Test Cases
 
 {% if report.test_cases %}
-| Test ID | Title | Type | Module | Target File | Requirement |
-|---|---|---|---|---|---|
+| Test ID | Title | Type | Module | Requirement | API / Artifact | Security Finding | Traceability |
+|---|---|---|---|---|---|---|---|
 {% for test in report.test_cases %}
-| {{ test.test_id }} | {{ test.title }} | {{ test.test_type }} | {{ test.target_module }} | {{ test.target_file }} | {{ test.related_requirement_id }} |
+| {{ test.test_id }} | {{ test.title }} | {{ test.test_type }} | {{ test.target_module }} | {{ test.related_requirement_id }} | {{ test.api_endpoint }} | {{ test.related_security_finding_id }} | {{ test.traceability_status }} |
 {% endfor %}
 {% else %}
 No test cases were generated.
@@ -105,7 +117,7 @@ No test cases were generated.
 
 ---
 
-## 7. Test Case Details
+## 8. Test Case Details
 
 {% if report.test_cases %}
 {% for test in report.test_cases %}
@@ -114,7 +126,10 @@ No test cases were generated.
 **Type:** {{ test.test_type }}  
 **Target Module:** {{ test.target_module }}  
 **Target File:** {{ test.target_file }}  
-**Related Requirement:** {{ test.related_requirement_id }}
+**Related Requirement:** {{ test.related_requirement_id }}  
+**API / Artifact:** {{ test.api_endpoint }}  
+**Related Security Finding:** {{ test.related_security_finding_id }}  
+**Traceability Status:** {{ test.traceability_status }}
 
 **Description:**  
 {{ test.description }}
@@ -129,7 +144,7 @@ No test case details available.
 
 ---
 
-## 8. Execution Results
+## 9. Execution Results
 
 {% if report.execution_results %}
 | Test ID | Status | Duration | Message |
@@ -143,7 +158,7 @@ No tests were executed yet.
 
 ---
 
-## 9. Metrics
+## 10. Metrics
 
 | Metric | Value |
 |---|---:|
@@ -153,7 +168,7 @@ No tests were executed yet.
 
 ---
 
-## 10. Recommendations
+## 11. Recommendations
 
 {% if report.recommendations %}
 {% for recommendation in report.recommendations %}

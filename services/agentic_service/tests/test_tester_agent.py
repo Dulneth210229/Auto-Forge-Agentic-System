@@ -4,7 +4,7 @@ from pathlib import Path
 from agents.tester_agent.agent import TesterAgent
 
 
-def test_tester_agent_generates_security_validation_tests(tmp_path: Path):
+def test_tester_agent_generates_traceability_mapping(tmp_path: Path):
     """
     Test whether TesterAgent:
     - generates pytest files
@@ -12,6 +12,7 @@ def test_tester_agent_generates_security_validation_tests(tmp_path: Path):
     - includes security validation tests
     - validates SecurityReport_v1.json
     - executes individual pytest results
+    - adds traceability mapping to test cases
     """
 
     target = tmp_path / "sample_ecommerce_app"
@@ -170,6 +171,12 @@ def check_stock(product_id, quantity):
     assert result["summary"]["failed"] == 0
     assert result["summary"]["not_run"] == 0
 
+    assert "traceability_summary" in result
+    assert result["traceability_summary"]["total_test_cases"] == 8
+    assert result["traceability_summary"]["mapped_test_cases"] == 8
+    assert result["traceability_summary"]["unmapped_test_cases"] == 0
+    assert result["traceability_summary"]["coverage_percentage"] == 100.0
+
     assert result["json_path"].endswith("TestReport_v1.json")
     assert result["markdown_path"].endswith("TestReport_v1.md")
     assert result["metadata_path"].endswith("run_metadata.json")
@@ -196,3 +203,13 @@ def check_stock(product_id, quantity):
 
     assert security_validation_tests_path.exists()
     assert (security_validation_tests_path / "security_validation_cases.json").exists()
+
+    report_data = json.loads(Path(result["json_path"]).read_text(encoding="utf-8"))
+
+    assert "traceability_summary" in report_data
+    assert report_data["traceability_summary"]["coverage_percentage"] == 100.0
+
+    for test_case in report_data["test_cases"]:
+        assert test_case["traceability_status"] == "mapped"
+        assert test_case["related_requirement_id"]
+        assert test_case["api_endpoint"]

@@ -22,20 +22,32 @@
 
 ---
 
-## 2. Pytest Run
+## 2. Traceability Summary
+
+| Metric | Value |
+|---|---:|
+| Total Test Cases | 8 |
+| Mapped Test Cases | 8 |
+| Partially Mapped Test Cases | 0 |
+| Unmapped Test Cases | 0 |
+| Coverage Percentage | 100.0% |
+
+---
+
+## 3. Pytest Run
 
 
 | Field | Value |
 |---|---|
 | Status | passed |
 | Exit Code | 0 |
-| Duration | 473 ms |
+| Duration | 414 ms |
 
 ### Pytest Stdout
 
 ```txt
 .................................                                        [100%]
-33 passed in 0.07s
+33 passed in 0.06s
 
 ```
 
@@ -49,7 +61,7 @@
 
 ---
 
-## 3. Generated Test Files
+## 4. Generated Test Files
 
 
 | File Name | Type | Path | Description |
@@ -75,7 +87,7 @@
 
 ---
 
-## 4. Regression Test Cases
+## 5. Regression Test Cases
 
 
 | Regression ID | Title | Module | Requirement | Expected Behavior |
@@ -95,7 +107,7 @@
 
 ---
 
-## 5. Security Validation Cases
+## 6. Security Validation Cases
 
 
 | Validation ID | Title | Security Artifact | Expected Behavior |
@@ -113,33 +125,33 @@
 
 ---
 
-## 6. Test Cases
+## 7. Test Cases
 
 
-| Test ID | Title | Type | Module | Target File | Requirement |
-|---|---|---|---|---|---|
+| Test ID | Title | Type | Module | Requirement | API / Artifact | Security Finding | Traceability |
+|---|---|---|---|---|---|---|---|
 
-| TC-001 | Validate generated project structure | smoke | project | ./sample_ecommerce_app | NFR-TEST-001 |
+| TC-001 | Validate generated project structure | smoke | project | NFR-TEST-001 | N/A |  | mapped |
 
-| TC-002 | Validate Python source syntax | unit | backend | ./sample_ecommerce_app | NFR-TEST-002 |
+| TC-002 | Validate Python source syntax | unit | backend | NFR-TEST-002 | N/A |  | mapped |
 
-| TC-003 | Validate minimum e-commerce feature representation | integration | ecommerce | ./sample_ecommerce_app | FR-001 |
+| TC-003 | Validate minimum e-commerce feature representation | integration | ecommerce | FR-001 | /products, /cart, /checkout, /orders |  | mapped |
 
-| TC-004 | Validate e-commerce API/function contracts | api | ecommerce_api | ./sample_ecommerce_app | FR-API-001 |
+| TC-004 | Validate e-commerce API/function contracts | api | ecommerce_api | FR-API-001 | /products, /cart, /checkout, /orders |  | mapped |
 
-| TC-005 | Validate full e-commerce integration workflow | integration | ecommerce_workflow | ./sample_ecommerce_app | FR-WORKFLOW-001 |
+| TC-005 | Validate full e-commerce integration workflow | integration | ecommerce_workflow | FR-WORKFLOW-001 | /products → /cart → /checkout → /orders |  | mapped |
 
-| TC-006 | Validate e-commerce edge cases and input validation | integration | validation | ./sample_ecommerce_app | NFR-VALIDATION-001 |
+| TC-006 | Validate e-commerce edge cases and input validation | integration | validation | NFR-VALIDATION-001 | /products, /cart, /checkout |  | mapped |
 
-| TC-007 | Validate regression cases | regression | regression | ./sample_ecommerce_app | NFR-REGRESSION-001 |
+| TC-007 | Validate regression cases | regression | regression | NFR-REGRESSION-001 | /cart, /checkout, /orders |  | mapped |
 
-| TC-008 | Validate Security Agent report consistency | security_validation | security_validation | SecurityReport_v1.json | NFR-SEC-VALIDATION-001 |
+| TC-008 | Validate Security Agent report consistency | security_validation | security_validation | NFR-SEC-VALIDATION-001 | SecurityReport_v1.json | ALL | mapped |
 
 
 
 ---
 
-## 7. Test Case Details
+## 8. Test Case Details
 
 
 
@@ -148,7 +160,10 @@
 **Type:** smoke  
 **Target Module:** project  
 **Target File:** ./sample_ecommerce_app  
-**Related Requirement:** NFR-TEST-001
+**Related Requirement:** NFR-TEST-001  
+**API / Artifact:** N/A  
+**Related Security Finding:**   
+**Traceability Status:** mapped
 
 **Description:**  
 Checks whether the generated project folder exists and contains source files.
@@ -162,7 +177,10 @@ Target project folder should exist and contain source files.
 **Type:** unit  
 **Target Module:** backend  
 **Target File:** ./sample_ecommerce_app  
-**Related Requirement:** NFR-TEST-002
+**Related Requirement:** NFR-TEST-002  
+**API / Artifact:** N/A  
+**Related Security Finding:**   
+**Traceability Status:** mapped
 
 **Description:**  
 Checks whether Python files in the generated project compile successfully.
@@ -176,7 +194,10 @@ All Python files should compile without syntax errors.
 **Type:** integration  
 **Target Module:** ecommerce  
 **Target File:** ./sample_ecommerce_app  
-**Related Requirement:** FR-001
+**Related Requirement:** FR-001  
+**API / Artifact:** /products, /cart, /checkout, /orders  
+**Related Security Finding:**   
+**Traceability Status:** mapped
 
 **Description:**  
 Checks whether catalog/product, cart, checkout/order concepts exist in generated code.
@@ -190,7 +211,10 @@ Generated code should include catalog/product, cart, and checkout/order features
 **Type:** api  
 **Target Module:** ecommerce_api  
 **Target File:** ./sample_ecommerce_app  
-**Related Requirement:** FR-API-001
+**Related Requirement:** FR-API-001  
+**API / Artifact:** /products, /cart, /checkout, /orders  
+**Related Security Finding:**   
+**Traceability Status:** mapped
 
 **Description:**  
 Checks whether generated code includes API or function contracts for catalog, cart, checkout, and order.
@@ -204,7 +228,10 @@ Generated code should include API/function contracts for catalog, cart, checkout
 **Type:** integration  
 **Target Module:** ecommerce_workflow  
 **Target File:** ./sample_ecommerce_app  
-**Related Requirement:** FR-WORKFLOW-001
+**Related Requirement:** FR-WORKFLOW-001  
+**API / Artifact:** /products → /cart → /checkout → /orders  
+**Related Security Finding:**   
+**Traceability Status:** mapped
 
 **Description:**  
 Checks whether generated code supports product browsing, cart, checkout, and order workflow concepts.
@@ -218,7 +245,10 @@ Generated code should support Product -> Cart -> Checkout -> Order workflow.
 **Type:** integration  
 **Target Module:** validation  
 **Target File:** ./sample_ecommerce_app  
-**Related Requirement:** NFR-VALIDATION-001
+**Related Requirement:** NFR-VALIDATION-001  
+**API / Artifact:** /products, /cart, /checkout  
+**Related Security Finding:**   
+**Traceability Status:** mapped
 
 **Description:**  
 Checks whether generated code includes common validation rules and edge-case handling.
@@ -232,7 +262,10 @@ Generated code should include validation for invalid product IDs, quantities, em
 **Type:** regression  
 **Target Module:** regression  
 **Target File:** ./sample_ecommerce_app  
-**Related Requirement:** NFR-REGRESSION-001
+**Related Requirement:** NFR-REGRESSION-001  
+**API / Artifact:** /cart, /checkout, /orders  
+**Related Security Finding:**   
+**Traceability Status:** mapped
 
 **Description:**  
 Checks whether known e-commerce bug patterns are prevented.
@@ -246,7 +279,10 @@ Generated code should prevent known bugs from returning.
 **Type:** security_validation  
 **Target Module:** security_validation  
 **Target File:** SecurityReport_v1.json  
-**Related Requirement:** NFR-SEC-VALIDATION-001
+**Related Requirement:** NFR-SEC-VALIDATION-001  
+**API / Artifact:** SecurityReport_v1.json  
+**Related Security Finding:** ALL  
+**Traceability Status:** mapped
 
 **Description:**  
 Checks whether SecurityReport_v1.json contains valid security gate, findings, fix suggestions, and traceability.
@@ -259,93 +295,93 @@ Security report should be structurally valid and useful for downstream fixing.
 
 ---
 
-## 8. Execution Results
+## 9. Execution Results
 
 
 | Test ID | Status | Duration | Message |
 |---|---|---:|---|
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_ecommerce_keywords.py::test_catalog_or_product_feature_exists | passed | 14 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_ecommerce_keywords.py::test_catalog_or_product_feature_exists | passed | 12 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_ecommerce_keywords.py::test_cart_feature_exists | passed | 14 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_ecommerce_keywords.py::test_cart_feature_exists | passed | 12 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_ecommerce_keywords.py::test_checkout_or_order_feature_exists | passed | 14 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_ecommerce_keywords.py::test_checkout_or_order_feature_exists | passed | 12 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_ecommerce_workflow.py::test_product_to_cart_workflow_is_supported | passed | 14 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_ecommerce_workflow.py::test_product_to_cart_workflow_is_supported | passed | 12 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_ecommerce_workflow.py::test_cart_to_checkout_workflow_is_supported | passed | 14 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_ecommerce_workflow.py::test_cart_to_checkout_workflow_is_supported | passed | 12 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_ecommerce_workflow.py::test_checkout_to_order_workflow_is_supported | passed | 14 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_ecommerce_workflow.py::test_checkout_to_order_workflow_is_supported | passed | 12 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_ecommerce_workflow.py::test_full_ecommerce_workflow_keywords_exist | passed | 14 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_ecommerce_workflow.py::test_full_ecommerce_workflow_keywords_exist | passed | 12 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_functional_api_contract.py::test_catalog_api_or_function_contract_exists | passed | 14 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_functional_api_contract.py::test_catalog_api_or_function_contract_exists | passed | 12 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_functional_api_contract.py::test_cart_api_or_function_contract_exists | passed | 14 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_functional_api_contract.py::test_cart_api_or_function_contract_exists | passed | 12 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_functional_api_contract.py::test_checkout_api_or_function_contract_exists | passed | 14 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_functional_api_contract.py::test_checkout_api_or_function_contract_exists | passed | 12 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_functional_api_contract.py::test_order_api_or_function_contract_exists | passed | 14 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_functional_api_contract.py::test_order_api_or_function_contract_exists | passed | 12 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_project_structure.py::test_target_project_folder_exists | passed | 14 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_project_structure.py::test_target_project_folder_exists | passed | 12 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_project_structure.py::test_target_project_contains_source_files | passed | 14 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_project_structure.py::test_target_project_contains_source_files | passed | 12 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_project_structure.py::test_target_project_has_ecommerce_related_files_or_content | passed | 14 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_project_structure.py::test_target_project_has_ecommerce_related_files_or_content | passed | 12 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_python_syntax.py::test_python_files_have_valid_syntax | passed | 14 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_python_syntax.py::test_python_files_have_valid_syntax | passed | 12 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_regression_cases.py::test_regression_empty_cart_checkout_is_prevented | passed | 14 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_regression_cases.py::test_regression_empty_cart_checkout_is_prevented | passed | 12 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_regression_cases.py::test_regression_negative_quantity_is_rejected | passed | 14 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_regression_cases.py::test_regression_negative_quantity_is_rejected | passed | 12 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_regression_cases.py::test_regression_invalid_product_id_is_handled | passed | 14 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_regression_cases.py::test_regression_invalid_product_id_is_handled | passed | 12 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_regression_cases.py::test_regression_missing_payment_or_customer_is_rejected | passed | 14 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_regression_cases.py::test_regression_missing_payment_or_customer_is_rejected | passed | 12 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_regression_cases.py::test_regression_order_creation_depends_on_checkout_or_cart | passed | 14 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_regression_cases.py::test_regression_order_creation_depends_on_checkout_or_cart | passed | 12 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_security_validation.py::test_security_report_json_exists | passed | 14 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_security_validation.py::test_security_report_json_exists | passed | 12 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_security_validation.py::test_security_report_has_required_top_level_sections | passed | 14 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_security_validation.py::test_security_report_has_required_top_level_sections | passed | 12 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_security_validation.py::test_security_gate_has_valid_structure | passed | 14 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_security_validation.py::test_security_gate_has_valid_structure | passed | 12 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_security_validation.py::test_security_findings_have_required_fields | passed | 14 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_security_validation.py::test_security_findings_have_required_fields | passed | 12 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_security_validation.py::test_security_fix_suggestions_reference_existing_findings | passed | 14 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_security_validation.py::test_security_fix_suggestions_reference_existing_findings | passed | 12 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_security_validation.py::test_security_findings_have_traceability_fields | passed | 14 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_security_validation.py::test_security_findings_have_traceability_fields | passed | 12 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_security_validation.py::test_security_summary_matches_findings_count | passed | 14 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_security_validation.py::test_security_summary_matches_findings_count | passed | 12 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_validation_edge_cases.py::test_invalid_product_id_validation_exists | passed | 14 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_validation_edge_cases.py::test_invalid_product_id_validation_exists | passed | 12 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_validation_edge_cases.py::test_negative_or_zero_quantity_validation_exists | passed | 14 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_validation_edge_cases.py::test_negative_or_zero_quantity_validation_exists | passed | 12 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_validation_edge_cases.py::test_empty_cart_checkout_validation_exists | passed | 14 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_validation_edge_cases.py::test_empty_cart_checkout_validation_exists | passed | 12 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_validation_edge_cases.py::test_customer_or_payment_validation_exists | passed | 14 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_validation_edge_cases.py::test_customer_or_payment_validation_exists | passed | 12 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_validation_edge_cases.py::test_price_validation_exists | passed | 14 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_validation_edge_cases.py::test_price_validation_exists | passed | 12 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_validation_edge_cases.py::test_out_of_stock_handling_exists | passed | 14 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_validation_edge_cases.py::test_out_of_stock_handling_exists | passed | 12 ms | Test passed. |
 
 
 
 ---
 
-## 9. Metrics
+## 10. Metrics
 
 | Metric | Value |
 |---|---:|
 | Test Coverage | 1.0 |
 | Pass Rate | 1.0 |
-| Execution Efficiency | 473.0 ms |
+| Execution Efficiency | 414.0 ms |
 
 ---
 
-## 10. Recommendations
+## 11. Recommendations
 
 
 
@@ -360,4 +396,6 @@ Security report should be structurally valid and useful for downstream fixing.
 - Regression tests were generated to prevent known bugs from returning.
 
 - Security validation tests were generated using SecurityReport_v1.json.
+
+- Test traceability mapping was added for requirement, API, module, and security validation coverage.
 
