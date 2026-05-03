@@ -7,6 +7,7 @@ from agents.requirement_agent.agent import RequirementAgent
 from agents.domain_agent.agent import DomainAgent
 from agents.security_agent.agent import SecurityAgent
 from agents.tester_agent.agent import TesterAgent
+from agents.coder_agent.agent import CoderAgent
 from tools.llm.provider import OllamaProvider
 from agents.architect_agent.agent import ArchitectAgent
 
@@ -27,6 +28,7 @@ domain_agent = DomainAgent(llm_provider=OllamaProvider())
 security_agent = SecurityAgent(output_root="outputs")
 tester_agent = TesterAgent(output_root="outputs")
 architect_agent = ArchitectAgent()
+coder_agent = CoderAgent()
 
 
 # ---------------------------------------------------------
@@ -126,7 +128,8 @@ class TestingRunResponse(BaseModel):
 
 # ---------------------------------------------------------
 # Health Endpoint
-# ---------------------------------------------------------
+# ---------------------------------------------------------coder_agent = CoderAgent()
+
 
 @app.get("/health")
 def health():
@@ -319,3 +322,12 @@ def run_testing_agent(request: TestingRunRequest):
             status_code=500,
             detail=f"Testing Agent failed: {error}"
         )
+
+@app.post("/coder/generate")
+def generate_code(payload: dict):
+    result = coder_agent.generate_code(
+        run_id=payload.get("run_id", "RUN-0001"),
+        srs_version=payload.get("srs_version", "v1"),
+        code_version=payload.get("code_version", "v1")
+    )
+    return result
