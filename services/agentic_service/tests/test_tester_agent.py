@@ -3,11 +3,12 @@ from pathlib import Path
 from agents.tester_agent.agent import TesterAgent
 
 
-def test_tester_agent_generates_functional_api_tests(tmp_path: Path):
+def test_tester_agent_generates_integration_workflow_tests(tmp_path: Path):
     """
     Test whether TesterAgent:
     - generates pytest files
     - includes functional API contract tests
+    - includes integration workflow tests
     - executes individual pytest results
     """
 
@@ -20,6 +21,9 @@ def test_tester_agent_generates_functional_api_tests(tmp_path: Path):
 def list_products():
     return [{"id": 1, "name": "Demo Product"}]
 
+def get_products():
+    return list_products()
+
 def add_to_cart(product_id, quantity):
     cart = []
     cart.append({"product_id": product_id, "quantity": quantity})
@@ -29,10 +33,16 @@ def view_cart():
     return {"cart": []}
 
 def checkout(cart):
-    return {"order_id": 1, "status": "created"}
+    return {"order_id": 1, "status": "created", "payment": "mock"}
+
+def process_checkout(cart):
+    return checkout(cart)
 
 def create_order(customer_id):
     return {"order_id": 1, "customer_id": customer_id, "status": "created"}
+
+def order_history(customer_id):
+    return [create_order(customer_id)]
 """,
         encoding="utf-8"
     )
@@ -52,13 +62,13 @@ def create_order(customer_id):
     assert result["version"] == "v1"
 
     assert result["generated_tests_path"].endswith("generated_tests")
-    assert result["generated_test_files_count"] == 4
+    assert result["generated_test_files_count"] == 5
 
     assert result["pytest_status"] == "passed"
     assert result["pytest_exit_code"] == 0
 
-    assert result["summary"]["total_tests"] >= 11
-    assert result["summary"]["passed"] >= 11
+    assert result["summary"]["total_tests"] >= 15
+    assert result["summary"]["passed"] >= 15
     assert result["summary"]["failed"] == 0
     assert result["summary"]["not_run"] == 0
 
@@ -76,3 +86,4 @@ def create_order(customer_id):
     assert (generated_tests_path / "test_python_syntax.py").exists()
     assert (generated_tests_path / "test_ecommerce_keywords.py").exists()
     assert (generated_tests_path / "test_functional_api_contract.py").exists()
+    assert (generated_tests_path / "test_ecommerce_workflow.py").exists()

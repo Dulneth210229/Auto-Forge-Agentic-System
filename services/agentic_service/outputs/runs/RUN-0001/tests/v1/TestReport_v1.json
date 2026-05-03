@@ -28,18 +28,24 @@
       "file_path": "outputs\\runs\\RUN-0001\\tests\\v1\\generated_tests\\test_functional_api_contract.py",
       "test_type": "api",
       "description": "Checks whether e-commerce API/function contracts exist for catalog, cart, checkout, and order."
+    },
+    {
+      "file_name": "test_ecommerce_workflow.py",
+      "file_path": "outputs\\runs\\RUN-0001\\tests\\v1\\generated_tests\\test_ecommerce_workflow.py",
+      "test_type": "integration",
+      "description": "Checks whether the full e-commerce workflow from product browsing to order creation is represented."
     }
   ],
   "pytest_run": {
     "exit_code": 0,
     "status": "passed",
-    "duration_ms": 440,
-    "stdout": "...........                                                              [100%]\n11 passed in 0.04s\n",
+    "duration_ms": 425,
+    "stdout": "...............                                                          [100%]\n15 passed in 0.05s\n",
     "stderr": ""
   },
   "summary": {
-    "total_tests": 11,
-    "passed": 11,
+    "total_tests": 15,
+    "passed": 15,
     "failed": 0,
     "skipped": 0,
     "not_run": 0
@@ -84,6 +90,16 @@
       "target_file": "./sample_ecommerce_app",
       "related_requirement_id": "FR-API-001",
       "expected_result": "Generated code should include API/function contracts for catalog, cart, checkout, and order."
+    },
+    {
+      "test_id": "TC-005",
+      "title": "Validate full e-commerce integration workflow",
+      "description": "Checks whether generated code supports product browsing, cart, checkout, and order workflow concepts.",
+      "test_type": "integration",
+      "target_module": "ecommerce_workflow",
+      "target_file": "./sample_ecommerce_app",
+      "related_requirement_id": "FR-WORKFLOW-001",
+      "expected_result": "Generated code should support Product -> Cart -> Checkout -> Order workflow."
     }
   ],
   "execution_results": [
@@ -91,77 +107,102 @@
       "test_id": "outputs/runs/RUN-0001/tests/v1/generated_tests/test_ecommerce_keywords.py::test_catalog_or_product_feature_exists",
       "status": "passed",
       "message": "Test passed.",
-      "duration_ms": 40
+      "duration_ms": 28
     },
     {
       "test_id": "outputs/runs/RUN-0001/tests/v1/generated_tests/test_ecommerce_keywords.py::test_cart_feature_exists",
       "status": "passed",
       "message": "Test passed.",
-      "duration_ms": 40
+      "duration_ms": 28
     },
     {
       "test_id": "outputs/runs/RUN-0001/tests/v1/generated_tests/test_ecommerce_keywords.py::test_checkout_or_order_feature_exists",
       "status": "passed",
       "message": "Test passed.",
-      "duration_ms": 40
+      "duration_ms": 28
+    },
+    {
+      "test_id": "outputs/runs/RUN-0001/tests/v1/generated_tests/test_ecommerce_workflow.py::test_product_to_cart_workflow_is_supported",
+      "status": "passed",
+      "message": "Test passed.",
+      "duration_ms": 28
+    },
+    {
+      "test_id": "outputs/runs/RUN-0001/tests/v1/generated_tests/test_ecommerce_workflow.py::test_cart_to_checkout_workflow_is_supported",
+      "status": "passed",
+      "message": "Test passed.",
+      "duration_ms": 28
+    },
+    {
+      "test_id": "outputs/runs/RUN-0001/tests/v1/generated_tests/test_ecommerce_workflow.py::test_checkout_to_order_workflow_is_supported",
+      "status": "passed",
+      "message": "Test passed.",
+      "duration_ms": 28
+    },
+    {
+      "test_id": "outputs/runs/RUN-0001/tests/v1/generated_tests/test_ecommerce_workflow.py::test_full_ecommerce_workflow_keywords_exist",
+      "status": "passed",
+      "message": "Test passed.",
+      "duration_ms": 28
     },
     {
       "test_id": "outputs/runs/RUN-0001/tests/v1/generated_tests/test_functional_api_contract.py::test_catalog_api_or_function_contract_exists",
       "status": "passed",
       "message": "Test passed.",
-      "duration_ms": 40
+      "duration_ms": 28
     },
     {
       "test_id": "outputs/runs/RUN-0001/tests/v1/generated_tests/test_functional_api_contract.py::test_cart_api_or_function_contract_exists",
       "status": "passed",
       "message": "Test passed.",
-      "duration_ms": 40
+      "duration_ms": 28
     },
     {
       "test_id": "outputs/runs/RUN-0001/tests/v1/generated_tests/test_functional_api_contract.py::test_checkout_api_or_function_contract_exists",
       "status": "passed",
       "message": "Test passed.",
-      "duration_ms": 40
+      "duration_ms": 28
     },
     {
       "test_id": "outputs/runs/RUN-0001/tests/v1/generated_tests/test_functional_api_contract.py::test_order_api_or_function_contract_exists",
       "status": "passed",
       "message": "Test passed.",
-      "duration_ms": 40
+      "duration_ms": 28
     },
     {
       "test_id": "outputs/runs/RUN-0001/tests/v1/generated_tests/test_project_structure.py::test_target_project_folder_exists",
       "status": "passed",
       "message": "Test passed.",
-      "duration_ms": 40
+      "duration_ms": 28
     },
     {
       "test_id": "outputs/runs/RUN-0001/tests/v1/generated_tests/test_project_structure.py::test_target_project_contains_source_files",
       "status": "passed",
       "message": "Test passed.",
-      "duration_ms": 40
+      "duration_ms": 28
     },
     {
       "test_id": "outputs/runs/RUN-0001/tests/v1/generated_tests/test_project_structure.py::test_target_project_has_ecommerce_related_files_or_content",
       "status": "passed",
       "message": "Test passed.",
-      "duration_ms": 40
+      "duration_ms": 28
     },
     {
       "test_id": "outputs/runs/RUN-0001/tests/v1/generated_tests/test_python_syntax.py::test_python_files_have_valid_syntax",
       "status": "passed",
       "message": "Test passed.",
-      "duration_ms": 40
+      "duration_ms": 28
     }
   ],
   "metrics": {
     "test_coverage": 1.0,
     "pass_rate": 1.0,
-    "execution_efficiency": 440.0
+    "execution_efficiency": 425.0
   },
   "recommendations": [
     "Generated pytest files were executed.",
     "Functional API-style tests were generated for catalog, cart, checkout, and order.",
-    "Review failed tests before moving to integration workflow testing."
+    "Integration workflow tests were generated for Product -> Cart -> Checkout -> Order.",
+    "Next step should add validation and edge-case tests."
   ]
 }
