@@ -1,0 +1,92 @@
+# Test Report
+
+**Run ID:** {{ report.run_id }}  
+**Stage:** {{ report.stage }}  
+**Version:** {{ report.version }}  
+**Target Path:** {{ report.target_path }}
+
+---
+
+## 1. Summary
+
+| Metric | Count |
+|---|---:|
+| Total Tests | {{ report.summary.total_tests }} |
+| Passed | {{ report.summary.passed }} |
+| Failed | {{ report.summary.failed }} |
+| Skipped | {{ report.summary.skipped }} |
+| Not Run | {{ report.summary.not_run }} |
+
+---
+
+## 2. Test Cases
+
+{% if report.test_cases %}
+| Test ID | Title | Type | Module | Target File | Requirement |
+|---|---|---|---|---|---|
+{% for test in report.test_cases %}
+| {{ test.test_id }} | {{ test.title }} | {{ test.test_type }} | {{ test.target_module }} | {{ test.target_file }} | {{ test.related_requirement_id }} |
+{% endfor %}
+{% else %}
+No test cases were generated.
+{% endif %}
+
+---
+
+## 3. Test Case Details
+
+{% if report.test_cases %}
+{% for test in report.test_cases %}
+### {{ test.test_id }} — {{ test.title }}
+
+**Type:** {{ test.test_type }}  
+**Target Module:** {{ test.target_module }}  
+**Target File:** {{ test.target_file }}  
+**Related Requirement:** {{ test.related_requirement_id }}
+
+**Description:**  
+{{ test.description }}
+
+**Expected Result:**  
+{{ test.expected_result }}
+
+{% endfor %}
+{% else %}
+No test case details available.
+{% endif %}
+
+---
+
+## 4. Execution Results
+
+{% if report.execution_results %}
+| Test ID | Status | Duration | Message |
+|---|---|---:|---|
+{% for result in report.execution_results %}
+| {{ result.test_id }} | {{ result.status }} | {{ result.duration_ms }} ms | {{ result.message }} |
+{% endfor %}
+{% else %}
+No tests were executed yet.
+{% endif %}
+
+---
+
+## 5. Metrics
+
+| Metric | Value |
+|---|---:|
+| Test Coverage | {{ report.metrics.test_coverage }} |
+| Pass Rate | {{ report.metrics.pass_rate }} |
+| Execution Efficiency | {{ report.metrics.execution_efficiency }} |
+
+---
+
+## 6. Recommendations
+
+{% if report.recommendations %}
+{% for recommendation in report.recommendations %}
+- {{ recommendation }}
+{% endfor %}
+{% else %}
+No recommendations.
+{% endif %}
