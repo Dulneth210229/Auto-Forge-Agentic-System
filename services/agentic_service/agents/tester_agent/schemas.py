@@ -10,7 +10,15 @@ class TestCase(BaseModel):
     test_id: str
     title: str
     description: str
-    test_type: Literal["unit", "integration", "api", "ui", "security_validation", "smoke"]
+    test_type: Literal[
+        "unit",
+        "integration",
+        "api",
+        "ui",
+        "security_validation",
+        "smoke",
+        "regression"
+    ]
     target_module: str
     target_file: str
     related_requirement_id: str = ""
@@ -19,7 +27,7 @@ class TestCase(BaseModel):
 
 class TestExecutionResult(BaseModel):
     """
-    Represents the execution result of one test case or generated pytest file.
+    Represents the execution result of one test case or generated pytest test.
     """
 
     test_id: str
@@ -35,8 +43,31 @@ class GeneratedTestFile(BaseModel):
 
     file_name: str
     file_path: str
-    test_type: Literal["smoke", "unit", "integration", "api", "security_validation"]
+    test_type: Literal[
+        "smoke",
+        "unit",
+        "integration",
+        "api",
+        "security_validation",
+        "regression"
+    ]
     description: str
+
+
+class RegressionTestCase(BaseModel):
+    """
+    Represents one regression test scenario.
+
+    Regression tests are created from previously found bugs or expected failure cases.
+    They help verify that known issues do not return after code changes.
+    """
+
+    regression_id: str
+    title: str
+    description: str
+    related_requirement_id: str = ""
+    related_module: str
+    expected_behavior: str
 
 
 class PytestRunResult(BaseModel):
@@ -83,9 +114,15 @@ class TestReport(BaseModel):
     stage: Literal["testing"] = "testing"
     version: str
     target_path: str
+
     generated_tests_path: str = ""
     generated_test_files: List[GeneratedTestFile] = []
+
+    regression_tests_path: str = ""
+    regression_test_cases: List[RegressionTestCase] = []
+
     pytest_run: PytestRunResult | None = None
+
     summary: TestSummary
     test_cases: List[TestCase]
     execution_results: List[TestExecutionResult]

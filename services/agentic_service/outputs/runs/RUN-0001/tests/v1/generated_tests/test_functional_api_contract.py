@@ -8,15 +8,7 @@ def _read_project_text() -> str:
     combined_text = ""
 
     allowed_extensions = [
-        ".py",
-        ".js",
-        ".jsx",
-        ".ts",
-        ".tsx",
-        ".json",
-        ".md",
-        ".yaml",
-        ".yml"
+        ".py", ".js", ".jsx", ".ts", ".tsx", ".json", ".md", ".yaml", ".yml"
     ]
 
     for file_path in TARGET_PATH.rglob("*"):
@@ -34,23 +26,11 @@ def _has_any(text: str, keywords: list[str]) -> bool:
 
 
 def test_catalog_api_or_function_contract_exists():
-    """
-    Functional API test:
-    Generated project should expose catalog/product behavior through
-    an endpoint, route, function, or API contract text.
-    """
-
     text = _read_project_text()
 
     catalog_keywords = [
-        "/products",
-        "/product",
-        "/catalog",
-        "get_products",
-        "list_products",
-        "product_list",
-        "catalog",
-        "product"
+        "/products", "/product", "/catalog", "get_products",
+        "list_products", "product_list", "catalog", "product"
     ]
 
     assert _has_any(text, catalog_keywords), (
@@ -59,21 +39,11 @@ def test_catalog_api_or_function_contract_exists():
 
 
 def test_cart_api_or_function_contract_exists():
-    """
-    Functional API test:
-    Generated project should expose cart behavior through
-    an endpoint, route, function, or API contract text.
-    """
-
     text = _read_project_text()
 
     cart_keywords = [
-        "/cart",
-        "add_to_cart",
-        "remove_from_cart",
-        "view_cart",
-        "update_cart",
-        "cart"
+        "/cart", "add_to_cart", "remove_from_cart",
+        "view_cart", "update_cart", "cart"
     ]
 
     assert _has_any(text, cart_keywords), (
@@ -82,21 +52,11 @@ def test_cart_api_or_function_contract_exists():
 
 
 def test_checkout_api_or_function_contract_exists():
-    """
-    Functional API test:
-    Generated project should expose checkout behavior through
-    an endpoint, route, function, or API contract text.
-    """
-
     text = _read_project_text()
 
     checkout_keywords = [
-        "/checkout",
-        "checkout",
-        "process_checkout",
-        "place_order",
-        "payment",
-        "billing"
+        "/checkout", "checkout", "process_checkout",
+        "place_order", "payment", "billing"
     ]
 
     assert _has_any(text, checkout_keywords), (
@@ -105,22 +65,11 @@ def test_checkout_api_or_function_contract_exists():
 
 
 def test_order_api_or_function_contract_exists():
-    """
-    Functional API test:
-    Generated project should expose order behavior through
-    an endpoint, route, function, or API contract text.
-    """
-
     text = _read_project_text()
 
     order_keywords = [
-        "/orders",
-        "/order",
-        "create_order",
-        "place_order",
-        "order_history",
-        "get_orders",
-        "order"
+        "/orders", "/order", "create_order",
+        "place_order", "order_history", "get_orders", "order"
     ]
 
     assert _has_any(text, order_keywords), (

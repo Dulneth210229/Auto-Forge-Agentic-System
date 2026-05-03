@@ -9,7 +9,8 @@ from agents.tester_agent.schemas import (
     TestExecutionResult,
     TestMetrics,
     GeneratedTestFile,
-    PytestRunResult
+    PytestRunResult,
+    RegressionTestCase
 )
 from agents.tester_agent.renderer import render_test_report_markdown
 from agents.tester_agent.test_generator import PytestTestGenerator
@@ -21,13 +22,14 @@ class TesterAgent:
     """
     Testing / QA Agent for AutoForge.
 
-    Step 7:
+    Step 8:
     - Generates pytest files.
     - Executes generated pytest files.
     - Captures individual pytest test results.
     - Adds functional API-style tests.
     - Adds integration workflow tests.
     - Adds validation and edge-case tests.
+    - Adds regression test support.
     """
 
     def __init__(self, output_root: str = "outputs"):
@@ -55,6 +57,7 @@ class TesterAgent:
         )
 
         generated_tests_path = output_dir / "generated_tests"
+        regression_tests_path = output_dir / "regression_tests"
 
         collected_test_ids = self.runner.collect_test_ids(
             generated_tests_path=str(generated_tests_path)
@@ -74,12 +77,16 @@ class TesterAgent:
             execution_results=execution_results
         )
 
+        regression_test_cases = self.test_generator.get_default_regression_cases()
+
         report = self.create_report(
             run_id=run_id,
             version=version,
             target_path=target_path,
             generated_tests_path=str(generated_tests_path),
             generated_test_files=generated_test_files,
+            regression_tests_path=str(regression_tests_path),
+            regression_test_cases=regression_test_cases,
             pytest_result=pytest_result,
             execution_results=execution_results,
             counts=counts
@@ -124,6 +131,14 @@ class TesterAgent:
                 "format": "folder",
                 "path": str(generated_tests_path),
                 "description": "Folder containing generated pytest files."
+            },
+            {
+                "stage": "testing",
+                "version": version,
+                "type": "regression_tests_folder",
+                "format": "folder",
+                "path": str(regression_tests_path),
+                "description": "Folder containing regression test metadata."
             }
         ]
 
@@ -138,6 +153,17 @@ class TesterAgent:
                     "description": generated_file.description
                 }
             )
+
+        artifacts.append(
+            {
+                "stage": "testing",
+                "version": version,
+                "type": "regression_cases_json",
+                "format": "json",
+                "path": str(regression_tests_path / "regression_cases.json"),
+                "description": "Machine-readable regression test scenarios."
+            }
+        )
 
         metadata_path = self.artifact_registry.register_many(
             run_id=run_id,
@@ -167,6 +193,8 @@ class TesterAgent:
         target_path: str,
         generated_tests_path: str,
         generated_test_files: List[GeneratedTestFile],
+        regression_tests_path: str,
+        regression_test_cases: List[RegressionTestCase],
         pytest_result: PytestRunResult,
         execution_results: List[TestExecutionResult],
         counts: dict
@@ -235,6 +263,16 @@ class TesterAgent:
                 target_file=target_path,
                 related_requirement_id="NFR-VALIDATION-001",
                 expected_result="Generated code should include validation for invalid product IDs, quantities, empty carts, payment/customer data, prices, and stock."
+            ),
+            TestCase(
+                test_id="TC-007",
+                title="Validate regression cases",
+                description="Checks whether known e-commerce bug patterns are prevented.",
+                test_type="regression",
+                target_module="regression",
+                target_file=target_path,
+                related_requirement_id="NFR-REGRESSION-001",
+                expected_result="Generated code should prevent known bugs from returning."
             )
         ]
 
@@ -262,7 +300,8 @@ class TesterAgent:
             "Functional API-style tests were generated for catalog, cart, checkout, and order.",
             "Integration workflow tests were generated for Product -> Cart -> Checkout -> Order.",
             "Validation and edge-case tests were generated for common e-commerce failure cases.",
-            "Next step should add regression test support."
+            "Regression tests were generated to prevent known bugs from returning.",
+            "Next step should add security validation tests using SecurityReport_v1.json."
         ]
 
         if summary.failed > 0:
@@ -278,6 +317,8 @@ class TesterAgent:
             target_path=target_path,
             generated_tests_path=generated_tests_path,
             generated_test_files=generated_test_files,
+            regression_tests_path=regression_tests_path,
+            regression_test_cases=regression_test_cases,
             pytest_run=pytest_result,
             summary=summary,
             test_cases=test_cases,

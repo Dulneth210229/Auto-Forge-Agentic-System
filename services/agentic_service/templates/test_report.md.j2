@@ -4,7 +4,8 @@
 **Stage:** {{ report.stage }}  
 **Version:** {{ report.version }}  
 **Target Path:** {{ report.target_path }}  
-**Generated Tests Path:** {{ report.generated_tests_path }}
+**Generated Tests Path:** {{ report.generated_tests_path }}  
+**Regression Tests Path:** {{ report.regression_tests_path }}
 
 ---
 
@@ -61,7 +62,21 @@ No pytest files were generated.
 
 ---
 
-## 4. Test Cases
+## 4. Regression Test Cases
+
+{% if report.regression_test_cases %}
+| Regression ID | Title | Module | Requirement | Expected Behavior |
+|---|---|---|---|---|
+{% for regression in report.regression_test_cases %}
+| {{ regression.regression_id }} | {{ regression.title }} | {{ regression.related_module }} | {{ regression.related_requirement_id }} | {{ regression.expected_behavior }} |
+{% endfor %}
+{% else %}
+No regression test cases were generated.
+{% endif %}
+
+---
+
+## 5. Test Cases
 
 {% if report.test_cases %}
 | Test ID | Title | Type | Module | Target File | Requirement |
@@ -75,7 +90,7 @@ No test cases were generated.
 
 ---
 
-## 5. Test Case Details
+## 6. Test Case Details
 
 {% if report.test_cases %}
 {% for test in report.test_cases %}
@@ -99,7 +114,7 @@ No test case details available.
 
 ---
 
-## 6. Execution Results
+## 7. Execution Results
 
 {% if report.execution_results %}
 | Test ID | Status | Duration | Message |
@@ -113,7 +128,7 @@ No tests were executed yet.
 
 ---
 
-## 7. Metrics
+## 8. Metrics
 
 | Metric | Value |
 |---|---:|
@@ -123,7 +138,7 @@ No tests were executed yet.
 
 ---
 
-## 8. Recommendations
+## 9. Recommendations
 
 {% if report.recommendations %}
 {% for recommendation in report.recommendations %}

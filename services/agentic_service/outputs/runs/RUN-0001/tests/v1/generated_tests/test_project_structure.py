@@ -5,18 +5,10 @@ TARGET_PATH = Path(r"./sample_ecommerce_app")
 
 
 def test_target_project_folder_exists():
-    """
-    Smoke test: target generated project folder should exist.
-    """
-
     assert TARGET_PATH.exists(), f"Target project folder does not exist: {TARGET_PATH}"
 
 
 def test_target_project_contains_source_files():
-    """
-    Smoke test: generated project should contain at least one source file.
-    """
-
     source_extensions = [".py", ".js", ".jsx", ".ts", ".tsx"]
 
     source_files = [
@@ -29,10 +21,6 @@ def test_target_project_contains_source_files():
 
 
 def test_target_project_has_ecommerce_related_files_or_content():
-    """
-    Smoke test: project should contain at least some e-commerce related content.
-    """
-
     keywords = ["product", "catalog", "cart", "checkout", "order"]
 
     combined_text = ""

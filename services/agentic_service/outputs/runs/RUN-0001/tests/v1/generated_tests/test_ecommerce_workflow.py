@@ -8,15 +8,7 @@ def _read_project_text() -> str:
     combined_text = ""
 
     allowed_extensions = [
-        ".py",
-        ".js",
-        ".jsx",
-        ".ts",
-        ".tsx",
-        ".json",
-        ".md",
-        ".yaml",
-        ".yml"
+        ".py", ".js", ".jsx", ".ts", ".tsx", ".json", ".md", ".yaml", ".yml"
     ]
 
     for file_path in TARGET_PATH.rglob("*"):
@@ -34,30 +26,15 @@ def _has_any(text: str, keywords: list[str]) -> bool:
 
 
 def test_product_to_cart_workflow_is_supported():
-    """
-    Integration workflow test:
-    The generated project should support moving from product/catalog
-    selection to cart operation.
-    """
-
     text = _read_project_text()
 
     product_keywords = [
-        "product",
-        "products",
-        "catalog",
-        "list_products",
-        "get_products",
-        "/products",
-        "/catalog"
+        "product", "products", "catalog", "list_products",
+        "get_products", "/products", "/catalog"
     ]
 
     cart_keywords = [
-        "cart",
-        "add_to_cart",
-        "view_cart",
-        "update_cart",
-        "/cart"
+        "cart", "add_to_cart", "view_cart", "update_cart", "/cart"
     ]
 
     assert _has_any(text, product_keywords), "Product/catalog part of workflow was not found."
@@ -65,27 +42,14 @@ def test_product_to_cart_workflow_is_supported():
 
 
 def test_cart_to_checkout_workflow_is_supported():
-    """
-    Integration workflow test:
-    The generated project should support moving from cart to checkout.
-    """
-
     text = _read_project_text()
 
     cart_keywords = [
-        "cart",
-        "add_to_cart",
-        "view_cart",
-        "update_cart",
-        "/cart"
+        "cart", "add_to_cart", "view_cart", "update_cart", "/cart"
     ]
 
     checkout_keywords = [
-        "checkout",
-        "process_checkout",
-        "payment",
-        "billing",
-        "/checkout"
+        "checkout", "process_checkout", "payment", "billing", "/checkout"
     ]
 
     assert _has_any(text, cart_keywords), "Cart part of workflow was not found."
@@ -93,29 +57,15 @@ def test_cart_to_checkout_workflow_is_supported():
 
 
 def test_checkout_to_order_workflow_is_supported():
-    """
-    Integration workflow test:
-    The generated project should support moving from checkout to order creation.
-    """
-
     text = _read_project_text()
 
     checkout_keywords = [
-        "checkout",
-        "process_checkout",
-        "payment",
-        "billing",
-        "/checkout"
+        "checkout", "process_checkout", "payment", "billing", "/checkout"
     ]
 
     order_keywords = [
-        "order",
-        "orders",
-        "create_order",
-        "place_order",
-        "order_history",
-        "/order",
-        "/orders"
+        "order", "orders", "create_order", "place_order",
+        "order_history", "/order", "/orders"
     ]
 
     assert _has_any(text, checkout_keywords), "Checkout part of workflow was not found."
@@ -123,12 +73,6 @@ def test_checkout_to_order_workflow_is_supported():
 
 
 def test_full_ecommerce_workflow_keywords_exist():
-    """
-    Integration workflow test:
-    Minimum full workflow should include product/catalog, cart,
-    checkout, and order concepts.
-    """
-
     text = _read_project_text()
 
     workflow_groups = {

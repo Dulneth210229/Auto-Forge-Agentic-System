@@ -6,10 +6,6 @@ TARGET_PATH = Path(r"./sample_ecommerce_app")
 
 
 def test_python_files_have_valid_syntax():
-    """
-    Unit-level quality test: all Python files should compile successfully.
-    """
-
     python_files = [
         file_path
         for file_path in TARGET_PATH.rglob("*.py")

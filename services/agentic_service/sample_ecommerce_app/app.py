@@ -145,3 +145,6 @@ def check_stock(product_id, quantity):
     if quantity > available_quantity:
         return {"error": "insufficient stock / out of stock"}
     return {"status": "in stock"}
+
+def place_order(customer_id):
+    return create_order(customer_id)

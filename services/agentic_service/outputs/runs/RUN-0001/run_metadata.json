@@ -1,7 +1,7 @@
 {
   "run_id": "RUN-0001",
   "created_at": "2026-05-02T23:42:05.317389+00:00",
-  "updated_at": "2026-05-03T22:37:58.319136+00:00",
+  "updated_at": "2026-05-03T22:45:09.447740+00:00",
   "artifacts": [
     {
       "stage": "security",
@@ -119,6 +119,33 @@
       "path": "outputs\\runs\\RUN-0001\\tests\\v1\\generated_tests\\test_validation_edge_cases.py",
       "description": "Checks whether validation and edge-case handling exists for common e-commerce cases.",
       "registered_at": "2026-05-03T22:37:58.318774+00:00"
+    },
+    {
+      "stage": "testing",
+      "version": "v1",
+      "type": "regression_tests_folder",
+      "format": "folder",
+      "path": "outputs\\runs\\RUN-0001\\tests\\v1\\regression_tests",
+      "description": "Folder containing regression test metadata.",
+      "registered_at": "2026-05-03T22:45:09.255489+00:00"
+    },
+    {
+      "stage": "testing",
+      "version": "v1",
+      "type": "generated_test_file",
+      "format": "py",
+      "path": "outputs\\runs\\RUN-0001\\tests\\v1\\generated_tests\\test_regression_cases.py",
+      "description": "Checks whether known e-commerce bug patterns are prevented.",
+      "registered_at": "2026-05-03T22:45:09.422663+00:00"
+    },
+    {
+      "stage": "testing",
+      "version": "v1",
+      "type": "regression_cases_json",
+      "format": "json",
+      "path": "outputs\\runs\\RUN-0001\\tests\\v1\\regression_tests\\regression_cases.json",
+      "description": "Machine-readable regression test scenarios.",
+      "registered_at": "2026-05-03T22:45:09.447420+00:00"
     }
   ]
 }
