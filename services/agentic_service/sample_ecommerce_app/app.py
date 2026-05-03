@@ -108,3 +108,40 @@ def create_order(customer_id: int):
         "status": "created",
         "items": cart
     }
+
+def get_product(product_id):
+    if product_id is None:
+        return {"error": "missing product id"}
+    if product_id <= 0:
+        return {"error": "invalid product id"}
+    return {"id": product_id, "name": "Demo Product", "price": 100, "stock": 10}
+
+
+def validate_quantity(quantity):
+    if quantity <= 0:
+        return {"error": "invalid quantity, quantity must be positive and greater than 0"}
+    return {"quantity": quantity}
+
+
+def checkout(cart, customer=None, payment=None):
+    if not cart:
+        return {"error": "cannot checkout with an empty cart"}
+    if customer is None:
+        return {"error": "missing customer required"}
+    if payment is None:
+        return {"error": "missing payment required"}
+
+    return {"order_id": 1, "status": "created", "payment": "mock"}
+
+
+def validate_price(price):
+    if price <= 0:
+        return {"error": "invalid price"}
+    return {"price": price}
+
+
+def check_stock(product_id, quantity):
+    available_quantity = 10
+    if quantity > available_quantity:
+        return {"error": "insufficient stock / out of stock"}
+    return {"status": "in stock"}

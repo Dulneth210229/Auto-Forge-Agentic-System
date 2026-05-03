@@ -21,12 +21,13 @@ class TesterAgent:
     """
     Testing / QA Agent for AutoForge.
 
-    Step 6:
+    Step 7:
     - Generates pytest files.
     - Executes generated pytest files.
     - Captures individual pytest test results.
     - Adds functional API-style tests.
-    - Adds integration workflow tests for Product -> Cart -> Checkout -> Order.
+    - Adds integration workflow tests.
+    - Adds validation and edge-case tests.
     """
 
     def __init__(self, output_root: str = "outputs"):
@@ -224,6 +225,16 @@ class TesterAgent:
                 target_file=target_path,
                 related_requirement_id="FR-WORKFLOW-001",
                 expected_result="Generated code should support Product -> Cart -> Checkout -> Order workflow."
+            ),
+            TestCase(
+                test_id="TC-006",
+                title="Validate e-commerce edge cases and input validation",
+                description="Checks whether generated code includes common validation rules and edge-case handling.",
+                test_type="integration",
+                target_module="validation",
+                target_file=target_path,
+                related_requirement_id="NFR-VALIDATION-001",
+                expected_result="Generated code should include validation for invalid product IDs, quantities, empty carts, payment/customer data, prices, and stock."
             )
         ]
 
@@ -250,7 +261,8 @@ class TesterAgent:
             "Generated pytest files were executed.",
             "Functional API-style tests were generated for catalog, cart, checkout, and order.",
             "Integration workflow tests were generated for Product -> Cart -> Checkout -> Order.",
-            "Next step should add validation and edge-case tests."
+            "Validation and edge-case tests were generated for common e-commerce failure cases.",
+            "Next step should add regression test support."
         ]
 
         if summary.failed > 0:
