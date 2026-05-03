@@ -28,6 +28,7 @@ domain_agent = DomainAgent(llm_provider=OllamaProvider())
 security_agent = SecurityAgent(output_root="outputs")
 tester_agent = TesterAgent(output_root="outputs")
 architect_agent = ArchitectAgent()
+coder_agent = CoderAgent()
 
 
 # ---------------------------------------------------------

@@ -1,7 +1,7 @@
 {
   "run_id": "RUN-0001",
   "code_version": "v1",
-  "source_srs_version": "v1",
+  "source_srs_version": "v2",
   "output_dir": "outputs\\runs\\RUN-0001\\code\\v1\\generated_app",
   "generated_files": [
     {

@@ -6,7 +6,7 @@ import json
 import os
 from pathlib import Path
 
-app = FastAPI(title="Generated App API", version="1.0.0")
+app = FastAPI(title="E-Commerce App API", version="1.0.0")
 
 app.add_middleware(
     CORSMiddleware,
