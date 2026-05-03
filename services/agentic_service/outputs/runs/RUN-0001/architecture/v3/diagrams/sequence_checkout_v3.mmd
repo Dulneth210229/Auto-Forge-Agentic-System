@@ -1,0 +1,28 @@
+sequenceDiagram
+    actor Customer
+    participant Frontend
+    participant CartAPI as Cart API
+    participant CheckoutAPI as Checkout API
+    participant PaymentService as Mock Payment Service
+    participant OrderAPI as Order API
+    participant Database
+
+    Customer->>Frontend: Click Checkout
+    Frontend->>CartAPI: GET /cart
+    CartAPI->>Database: Load cart and cart items
+    Database-->>CartAPI: Cart data
+    CartAPI-->>Frontend: Cart response
+
+    Frontend->>CheckoutAPI: POST /checkout
+    CheckoutAPI->>Database: Validate stock and pricing
+    Database-->>CheckoutAPI: Validation result
+
+    CheckoutAPI->>PaymentService: Process mock payment
+    PaymentService-->>CheckoutAPI: Payment success
+
+    CheckoutAPI->>OrderAPI: Create order request
+    OrderAPI->>Database: Save order and order items
+    Database-->>OrderAPI: Order saved
+    OrderAPI-->>CheckoutAPI: Order response
+    CheckoutAPI-->>Frontend: Checkout success
+    Frontend-->>Customer: Show order confirmation

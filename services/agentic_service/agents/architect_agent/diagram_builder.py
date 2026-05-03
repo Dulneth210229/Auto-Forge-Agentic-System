@@ -42,20 +42,41 @@ flowchart LR
 
 def build_class_diagram(db_pack: DBPack) -> str:
     """
-    Generates a Mermaid class diagram from DBPack.
+    Generates a valid Mermaid class diagram from DBPack.
 
-    This keeps class diagram consistent with the DB design.
+    Important Mermaid syntax rule:
+    Class fields should be written without putting braces on the same line
+    as the class declaration in some Mermaid CLI versions.
+
+    Safer format:
+        class User
+        User : uuid id
+        User : string email
+
+    This avoids parse errors like:
+        class Category { uuid id }
     """
+
     lines = ["classDiagram"]
 
+    # Create class attributes
     for entity in db_pack.entities:
-        lines.append(f"    class {entity.name} {{")
-        for attribute in entity.attributes:
-            # Mermaid class fields are simple text lines.
-            required_marker = "" if attribute.required else "?"
-            lines.append(f"        {attribute.type} {attribute.name}{required_marker}")
-        lines.append("    ")
+        class_name = entity.name.replace(" ", "")
 
+        lines.append(f"    class {class_name}")
+
+        for attribute in entity.attributes:
+            required_marker = "" if attribute.required else "?"
+            attribute_type = attribute.type.replace(" ", "_")
+            attribute_name = attribute.name.replace(" ", "_")
+
+            lines.append(
+                f"    {class_name} : {attribute_type} {attribute_name}{required_marker}"
+            )
+
+    lines.append("")
+
+    # Create relationships
     relationship_map = {
         "1 to 1": '"1" --> "1"',
         "1 to many": '"1" --> "*"',
@@ -63,9 +84,15 @@ def build_class_diagram(db_pack: DBPack) -> str:
     }
 
     for relationship in db_pack.relationships:
+        source = relationship.source.replace(" ", "")
+        target = relationship.target.replace(" ", "")
         mermaid_relation = relationship_map.get(relationship.relationship, "-->")
+
+        # Keep relationship labels short to avoid Mermaid parsing issues.
+        label = relationship.relationship.replace(" ", "_")
+
         lines.append(
-            f"    {relationship.source} {mermaid_relation} {relationship.target} : {relationship.description}"
+            f"    {source} {mermaid_relation} {target} : {label}"
         )
 
     return "\n".join(lines)
