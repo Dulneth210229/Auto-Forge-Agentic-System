@@ -1,7 +1,7 @@
 {
   "run_id": "RUN-0001",
   "created_at": "2026-05-02T23:42:05.317389+00:00",
-  "updated_at": "2026-05-02T23:42:05.343964+00:00",
+  "updated_at": "2026-05-03T00:23:10.599405+00:00",
   "artifacts": [
     {
       "stage": "security",
@@ -38,6 +38,24 @@
       "path": "outputs\\runs\\RUN-0001\\security\\v1\\SecuritySummaryPack_v1.md",
       "description": "Human-readable Security Summary Pack.",
       "registered_at": "2026-05-02T23:42:05.343753+00:00"
+    },
+    {
+      "stage": "testing",
+      "version": "v1",
+      "type": "test_report_json",
+      "format": "json",
+      "path": "outputs\\runs\\RUN-0001\\tests\\v1\\TestReport_v1.json",
+      "description": "Machine-readable Testing Agent report.",
+      "registered_at": "2026-05-03T00:17:12.346627+00:00"
+    },
+    {
+      "stage": "testing",
+      "version": "v1",
+      "type": "test_report_markdown",
+      "format": "md",
+      "path": "outputs\\runs\\RUN-0001\\tests\\v1\\TestReport_v1.md",
+      "description": "Human-readable Testing Agent report.",
+      "registered_at": "2026-05-03T00:17:12.359469+00:00"
     }
   ]
 }

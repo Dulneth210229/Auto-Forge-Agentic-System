@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field
 from agents.requirement_agent.agent import RequirementAgent
 from agents.domain_agent.agent import DomainAgent
 from agents.security_agent.agent import SecurityAgent
+from agents.tester_agent.agent import TesterAgent
 from tools.llm.provider import OllamaProvider
 
 
@@ -23,6 +24,7 @@ app = FastAPI(
 requirement_agent = RequirementAgent(llm_provider=OllamaProvider())
 domain_agent = DomainAgent(llm_provider=OllamaProvider())
 security_agent = SecurityAgent(output_root="outputs")
+tester_agent = TesterAgent(output_root="outputs")
 
 
 # ---------------------------------------------------------
@@ -79,6 +81,45 @@ class SecurityRunResponse(BaseModel):
     security_gate: dict
     traceability_mapped: bool
     fix_suggestions_count: int
+
+
+class TestingRunRequest(BaseModel):
+    """
+    Request body for running the Testing / QA Agent.
+    """
+
+    run_id: str = Field(
+        default="RUN-0001",
+        description="AutoForge run ID"
+    )
+
+    version: str = Field(
+        default="v1",
+        description="Artifact version"
+    )
+
+    target_path: str = Field(
+        default="./sample_ecommerce_app",
+        description="Target source code folder to test"
+    )
+
+
+class TestingRunResponse(BaseModel):
+    """
+    Response body after running the Testing / QA Agent.
+    """
+
+    run_id: str
+    stage: str
+    version: str
+    target_path: str
+
+    json_path: str
+    markdown_path: str
+    metadata_path: str
+
+    summary: dict
+    metrics: dict
 
 
 # ---------------------------------------------------------
@@ -189,6 +230,7 @@ def run_security_agent(request: SecurityRunRequest):
     - generates SecurityReport_v1.md
     - generates SecuritySummaryPack_v1.json
     - generates SecuritySummaryPack_v1.md
+    - updates run_metadata.json
     - returns the summary, security gate, and artifact paths
     """
 
@@ -212,4 +254,42 @@ def run_security_agent(request: SecurityRunRequest):
         raise HTTPException(
             status_code=500,
             detail=f"Security Agent failed: {error}"
+        )
+
+
+# ---------------------------------------------------------
+# Testing / QA Agent Endpoints
+# ---------------------------------------------------------
+
+@app.post("/testing/run", response_model=TestingRunResponse)
+def run_testing_agent(request: TestingRunRequest):
+    """
+    Run the Testing / QA Agent through FastAPI.
+
+    This endpoint:
+    - generates TestReport_v1.json
+    - generates TestReport_v1.md
+    - updates run_metadata.json
+    - returns the test summary and artifact paths
+    """
+
+    try:
+        result = tester_agent.run(
+            run_id=request.run_id,
+            version=request.version,
+            target_path=request.target_path
+        )
+
+        return result
+
+    except FileNotFoundError as error:
+        raise HTTPException(
+            status_code=404,
+            detail=str(error)
+        )
+
+    except Exception as error:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Testing Agent failed: {error}"
         )

@@ -36,8 +36,8 @@
 
 | ID | Title | Severity | File | Line | Method | CWE |
 |---|---|---|---|---:|---|---|
-| SEC-001 | Hardcoded secret detected | High | C:\Users\ASUS VivoBOOK\AppData\Local\Temp\pytest-of-ASUS VivoBOOK\pytest-16\test_security_run_endpoint_wit0\sample_app\app.py | 2 | AST | CWE-798 |
-| SEC-002 | Use of eval() detected | Critical | C:\Users\ASUS VivoBOOK\AppData\Local\Temp\pytest-of-ASUS VivoBOOK\pytest-16\test_security_run_endpoint_wit0\sample_app\app.py | 5 | AST | CWE-95 |
+| SEC-001 | Hardcoded secret detected | High | C:\Users\ASUS VivoBOOK\AppData\Local\Temp\pytest-of-ASUS VivoBOOK\pytest-17\test_security_run_endpoint_wit0\sample_app\app.py | 2 | AST | CWE-798 |
+| SEC-002 | Use of eval() detected | Critical | C:\Users\ASUS VivoBOOK\AppData\Local\Temp\pytest-of-ASUS VivoBOOK\pytest-17\test_security_run_endpoint_wit0\sample_app\app.py | 5 | AST | CWE-95 |
 
 ---
 
@@ -47,7 +47,7 @@
 
 **Severity:** High  
 **Detection Method:** AST  
-**File:** C:\Users\ASUS VivoBOOK\AppData\Local\Temp\pytest-of-ASUS VivoBOOK\pytest-16\test_security_run_endpoint_wit0\sample_app\app.py  
+**File:** C:\Users\ASUS VivoBOOK\AppData\Local\Temp\pytest-of-ASUS VivoBOOK\pytest-17\test_security_run_endpoint_wit0\sample_app\app.py  
 **Line:** 2  
 **CWE:** CWE-798
 
@@ -66,7 +66,7 @@ Move secrets to environment variables or a secure secret manager.
 
 **Severity:** Critical  
 **Detection Method:** AST  
-**File:** C:\Users\ASUS VivoBOOK\AppData\Local\Temp\pytest-of-ASUS VivoBOOK\pytest-16\test_security_run_endpoint_wit0\sample_app\app.py  
+**File:** C:\Users\ASUS VivoBOOK\AppData\Local\Temp\pytest-of-ASUS VivoBOOK\pytest-17\test_security_run_endpoint_wit0\sample_app\app.py  
 **Line:** 5  
 **CWE:** CWE-95
 
@@ -94,7 +94,7 @@ Avoid eval(). Use safe parsing or explicit logic instead.
 ### SEC-001 — Hardcoded secret detected
 
 **Severity:** High  
-**File:** C:\Users\ASUS VivoBOOK\AppData\Local\Temp\pytest-of-ASUS VivoBOOK\pytest-16\test_security_run_endpoint_wit0\sample_app\app.py  
+**File:** C:\Users\ASUS VivoBOOK\AppData\Local\Temp\pytest-of-ASUS VivoBOOK\pytest-17\test_security_run_endpoint_wit0\sample_app\app.py  
 **Priority:** High  
 **Estimated Effort:** Low
 
@@ -111,7 +111,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 ### SEC-002 — Use of eval() detected
 
 **Severity:** Critical  
-**File:** C:\Users\ASUS VivoBOOK\AppData\Local\Temp\pytest-of-ASUS VivoBOOK\pytest-16\test_security_run_endpoint_wit0\sample_app\app.py  
+**File:** C:\Users\ASUS VivoBOOK\AppData\Local\Temp\pytest-of-ASUS VivoBOOK\pytest-17\test_security_run_endpoint_wit0\sample_app\app.py  
 **Priority:** Immediate  
 **Estimated Effort:** Medium
 
