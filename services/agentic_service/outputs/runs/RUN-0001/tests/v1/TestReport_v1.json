@@ -1,0 +1,75 @@
+{
+  "run_id": "RUN-0001",
+  "stage": "testing",
+  "version": "v1",
+  "target_path": "./sample_ecommerce_app",
+  "summary": {
+    "total_tests": 3,
+    "passed": 0,
+    "failed": 0,
+    "skipped": 0,
+    "not_run": 3
+  },
+  "test_cases": [
+    {
+      "test_id": "TC-001",
+      "title": "Validate product catalog workflow",
+      "description": "Check whether product catalog behavior can be tested.",
+      "test_type": "api",
+      "target_module": "catalog",
+      "target_file": "./sample_ecommerce_app/app.py",
+      "related_requirement_id": "FR-001",
+      "expected_result": "Catalog should return valid product data."
+    },
+    {
+      "test_id": "TC-002",
+      "title": "Validate cart operation workflow",
+      "description": "Check whether cart add/remove behavior can be tested.",
+      "test_type": "integration",
+      "target_module": "cart",
+      "target_file": "./sample_ecommerce_app/app.py",
+      "related_requirement_id": "FR-002",
+      "expected_result": "Cart should update correctly when items are added or removed."
+    },
+    {
+      "test_id": "TC-003",
+      "title": "Validate checkout workflow",
+      "description": "Check whether checkout input handling can be tested.",
+      "test_type": "api",
+      "target_module": "checkout",
+      "target_file": "./sample_ecommerce_app/app.py",
+      "related_requirement_id": "FR-003",
+      "expected_result": "Checkout should accept valid data and reject invalid data."
+    }
+  ],
+  "execution_results": [
+    {
+      "test_id": "TC-001",
+      "status": "not_run",
+      "message": "Skeleton stage only. Test execution will be added in the next step.",
+      "duration_ms": 0
+    },
+    {
+      "test_id": "TC-002",
+      "status": "not_run",
+      "message": "Skeleton stage only. Test execution will be added in the next step.",
+      "duration_ms": 0
+    },
+    {
+      "test_id": "TC-003",
+      "status": "not_run",
+      "message": "Skeleton stage only. Test execution will be added in the next step.",
+      "duration_ms": 0
+    }
+  ],
+  "metrics": {
+    "test_coverage": 0.0,
+    "pass_rate": 0.0,
+    "execution_efficiency": 0.0
+  },
+  "recommendations": [
+    "Add pytest test generation in the next step.",
+    "Connect generated tests to functional requirements.",
+    "Later use Testing Agent results to validate fixes after Coder Agent changes."
+  ]
+}
