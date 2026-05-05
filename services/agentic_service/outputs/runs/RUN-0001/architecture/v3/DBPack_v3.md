@@ -1,6 +1,6 @@
 # Database Design Pack: AutoForge Shop
 
-**Version:** v2  
+**Version:** v3  
 **Database Type:** relational
 
 ---
@@ -117,6 +117,18 @@ Represents customer shipping or billing address.
 | postal_code | string | True | Postal code. |
 | country | string | True | Country. |
 
+### DE-010 — Review
+
+Represents product reviews submitted by customers.
+
+| Attribute | Type | Required | Description |
+|---|---|---:|---|
+| id | uuid | True | Unique review ID. |
+| user_id | uuid | True | Reviewer user ID. |
+| product_id | uuid | True | Reviewed product ID. |
+| rating | integer | True | Rating score. |
+| comment | text | False | Review text. |
+
 
 ---
 
@@ -131,6 +143,8 @@ Represents customer shipping or billing address.
 - **Order → Payment**: 1 to 1 — One order has one payment record.
 - **Category → Product**: 1 to many — One category contains many products.
 - **User → Address**: 1 to many — One user can have many addresses.
+- **User → Review**: 1 to many — One user can write many reviews.
+- **Product → Review**: 1 to many — One product can have many reviews.
 
 ---
 

@@ -1,6 +1,6 @@
 # Software Design Specification: AutoForge Shop
 
-**Version:** v2  
+**Version:** v3  
 **Architecture Style:** modular_monolith
 
 ---
@@ -183,6 +183,16 @@ Allows admin to create a product.
 **Request Schema:** ProductCreateRequest  
 **Response Schema:** ProductResponse  
 **Related Requirements:** FR-001
+
+### API-013 — GET /products/search
+
+**Tag:** Catalog
+
+Searches products using keyword, category, and price range filters.
+
+**Request Schema:** None  
+**Response Schema:** ProductListResponse  
+**Related Requirements:** FR-SEARCH
 
 
 ---

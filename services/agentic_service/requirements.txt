@@ -21,3 +21,6 @@ chromadb
 pyyaml
 openapi-spec-validator
 pillow
+
+playwright
+pyyaml

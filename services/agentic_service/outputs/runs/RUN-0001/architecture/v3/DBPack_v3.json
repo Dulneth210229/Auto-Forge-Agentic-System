@@ -1,6 +1,6 @@
 {
   "project_name": "AutoForge Shop",
-  "version": "v2",
+  "version": "v3",
   "database_type": "relational",
   "entities": [
     {
@@ -347,6 +347,43 @@
           "description": "Country."
         }
       ]
+    },
+    {
+      "id": "DE-010",
+      "name": "Review",
+      "description": "Represents product reviews submitted by customers.",
+      "attributes": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "description": "Unique review ID."
+        },
+        {
+          "name": "user_id",
+          "type": "uuid",
+          "required": true,
+          "description": "Reviewer user ID."
+        },
+        {
+          "name": "product_id",
+          "type": "uuid",
+          "required": true,
+          "description": "Reviewed product ID."
+        },
+        {
+          "name": "rating",
+          "type": "integer",
+          "required": true,
+          "description": "Rating score."
+        },
+        {
+          "name": "comment",
+          "type": "text",
+          "required": false,
+          "description": "Review text."
+        }
+      ]
     }
   ],
   "relationships": [
@@ -403,6 +440,18 @@
       "target": "Address",
       "relationship": "1 to many",
       "description": "One user can have many addresses."
+    },
+    {
+      "source": "User",
+      "target": "Review",
+      "relationship": "1 to many",
+      "description": "One user can write many reviews."
+    },
+    {
+      "source": "Product",
+      "target": "Review",
+      "relationship": "1 to many",
+      "description": "One product can have many reviews."
     }
   ],
   "indexes": [
