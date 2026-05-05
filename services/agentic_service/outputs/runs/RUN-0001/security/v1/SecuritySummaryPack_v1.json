@@ -2,7 +2,7 @@
   "run_id": "RUN-0001",
   "stage": "security",
   "version": "v1",
-  "generated_at": "2026-05-03T00:23:10.529568+00:00",
+  "generated_at": "2026-05-03T22:52:27.979366+00:00",
   "target_path": "./sample_ecommerce_app",
   "security_gate": {
     "status": "FAIL",
@@ -18,32 +18,32 @@
     ]
   },
   "summary": {
-    "total_findings": 36,
+    "total_findings": 34,
     "critical": 6,
     "high": 15,
     "medium": 12,
-    "low": 3
+    "low": 1
   },
   "metrics": {
     "coverage": 1.0,
-    "confidence": 0.85
+    "confidence": 0.8
   },
   "deduplication": {
-    "findings_before_deduplication": 50,
-    "findings_after_deduplication": 36,
+    "findings_before_deduplication": 48,
+    "findings_after_deduplication": 34,
     "duplicates_removed": 14
   },
   "counts": {
-    "total_findings": 36,
+    "total_findings": 34,
     "dependency_vulnerabilities": 27,
-    "llm_findings": 2,
-    "fix_suggestions": 36,
+    "llm_findings": 0,
+    "fix_suggestions": 34,
     "top_blocking_findings": 10
   },
   "traceability": {
     "coverage_percentage": 100.0,
-    "mapped_findings": 36,
-    "total_findings": 36
+    "mapped_findings": 34,
+    "total_findings": 34
   },
   "top_blocking_findings": [
     {

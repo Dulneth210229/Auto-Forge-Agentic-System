@@ -10,22 +10,102 @@ class TestCase(BaseModel):
     test_id: str
     title: str
     description: str
-    test_type: Literal["unit", "integration", "api", "ui", "security_validation"]
+    test_type: Literal[
+        "unit",
+        "integration",
+        "api",
+        "ui",
+        "security_validation",
+        "smoke",
+        "regression"
+    ]
     target_module: str
     target_file: str
+
     related_requirement_id: str = ""
+    api_endpoint: str = ""
+    related_security_finding_id: str = ""
+    traceability_status: Literal["mapped", "partial", "unmapped"] = "unmapped"
+
     expected_result: str
 
 
 class TestExecutionResult(BaseModel):
     """
-    Represents the execution result of one test case.
+    Represents the execution result of one test case or generated pytest test.
     """
 
     test_id: str
     status: Literal["passed", "failed", "skipped", "not_run"]
     message: str = ""
     duration_ms: int = Field(default=0, ge=0)
+
+
+class GeneratedTestFile(BaseModel):
+    """
+    Represents one generated pytest file.
+    """
+
+    file_name: str
+    file_path: str
+    test_type: Literal[
+        "smoke",
+        "unit",
+        "integration",
+        "api",
+        "security_validation",
+        "regression"
+    ]
+    description: str
+
+
+class RegressionTestCase(BaseModel):
+    """
+    Represents one regression test scenario.
+    """
+
+    regression_id: str
+    title: str
+    description: str
+    related_requirement_id: str = ""
+    related_module: str
+    expected_behavior: str
+
+
+class SecurityValidationCase(BaseModel):
+    """
+    Represents one security validation scenario.
+    """
+
+    validation_id: str
+    title: str
+    description: str
+    related_security_artifact: str
+    expected_behavior: str
+
+
+class TestTraceabilitySummary(BaseModel):
+    """
+    Summary of test traceability coverage.
+    """
+
+    total_test_cases: int = 0
+    mapped_test_cases: int = 0
+    partially_mapped_test_cases: int = 0
+    unmapped_test_cases: int = 0
+    coverage_percentage: float = 0.0
+
+
+class PytestRunResult(BaseModel):
+    """
+    Represents the overall pytest execution result.
+    """
+
+    exit_code: int
+    status: Literal["passed", "failed", "error"]
+    duration_ms: int = Field(default=0, ge=0)
+    stdout: str = ""
+    stderr: str = ""
 
 
 class TestSummary(BaseModel):
@@ -60,6 +140,20 @@ class TestReport(BaseModel):
     stage: Literal["testing"] = "testing"
     version: str
     target_path: str
+
+    generated_tests_path: str = ""
+    generated_test_files: List[GeneratedTestFile] = []
+
+    regression_tests_path: str = ""
+    regression_test_cases: List[RegressionTestCase] = []
+
+    security_validation_tests_path: str = ""
+    security_validation_cases: List[SecurityValidationCase] = []
+
+    traceability_summary: TestTraceabilitySummary = TestTraceabilitySummary()
+
+    pytest_run: PytestRunResult | None = None
+
     summary: TestSummary
     test_cases: List[TestCase]
     execution_results: List[TestExecutionResult]
