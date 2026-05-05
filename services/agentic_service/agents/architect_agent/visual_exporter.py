@@ -1,184 +1,87 @@
-# from pathlib import Path
-# import shutil
-# import subprocess
-# from PIL import Image
-
-
-# def find_mermaid_command() -> str | None:
-#     """
-#     Finds the Mermaid CLI command.
-
-#     On Windows, npm global commands are usually available as mmdc.cmd.
-#     On macOS/Linux, the command is usually mmdc.
-#     """
-
-#     command = shutil.which("mmdc") or shutil.which("mmdc.cmd")
-
-#     return command
-
-
-# def is_mermaid_cli_available() -> bool:
-#     """
-#     Checks whether Mermaid CLI is available.
-#     """
-#     return find_mermaid_command() is not None
-
-
-# def run_mmdc(input_file: Path, output_file: Path) -> bool:
-#     """
-#     Runs Mermaid CLI safely.
-
-#     Returns True if the export is successful.
-#     Returns False if the export fails.
-
-#     Important:
-#     This function does not crash the whole Architect Agent.
-#     """
-
-#     mmdc_command = find_mermaid_command()
-
-#     if not mmdc_command:
-#         print("[WARN] Mermaid CLI not found in PATH.")
-#         return False
-
-#     command = [
-#         mmdc_command,
-#         "-i",
-#         str(input_file),
-#         "-o",
-#         str(output_file),
-#         "-b",
-#         "white",
-#     ]
-
-#     try:
-#         result = subprocess.run(
-#             command,
-#             capture_output=True,
-#             text=True,
-#             shell=False,
-#         )
-
-#         if result.returncode != 0:
-#             print(f"[WARN] Mermaid export failed for {input_file.name} -> {output_file.name}")
-#             print(result.stderr)
-#             return False
-
-#         return True
-
-#     except FileNotFoundError:
-#         print(f"[WARN] Mermaid command not found: {mmdc_command}")
-#         return False
-
-#     except Exception as error:
-#         print(f"[WARN] Mermaid export crashed for {input_file.name}: {error}")
-#         return False
-
-
-# def export_mermaid_to_visuals(mmd_file: Path) -> list[str]:
-#     """
-#     Converts a Mermaid .mmd file into PNG, PDF, and JPG.
-
-#     Always returns the .mmd path.
-#     Adds PNG/PDF/JPG paths only if export succeeds.
-#     """
-
-#     exported_paths = [str(mmd_file)]
-
-#     if not is_mermaid_cli_available():
-#         print(
-#             f"[WARN] Mermaid CLI not found. Skipping PNG/PDF/JPG export for {mmd_file.name}."
-#         )
-#         return exported_paths
-
-#     png_file = mmd_file.with_suffix(".png")
-#     pdf_file = mmd_file.with_suffix(".pdf")
-#     jpg_file = mmd_file.with_suffix(".jpg")
-
-#     png_success = run_mmdc(mmd_file, png_file)
-#     if png_success and png_file.exists():
-#         exported_paths.append(str(png_file))
-
-#     pdf_success = run_mmdc(mmd_file, pdf_file)
-#     if pdf_success and pdf_file.exists():
-#         exported_paths.append(str(pdf_file))
-
-#     if png_file.exists():
-#         try:
-#             image = Image.open(png_file).convert("RGB")
-#             image.save(jpg_file, "JPEG", quality=95)
-#             exported_paths.append(str(jpg_file))
-#         except Exception as error:
-#             print(f"[WARN] JPG conversion failed for {png_file.name}: {error}")
-
-#     return exported_paths
-
 from pathlib import Path
 import os
 import shutil
 import subprocess
-from PIL import Image
 
 
-def find_mermaid_command() -> str | None:
+def find_java() -> str | None:
     """
-    Finds Mermaid CLI on Windows/macOS/Linux.
-
-    Windows global npm commands usually exist as:
-    C:/Users/<user>/AppData/Roaming/npm/mmdc.cmd
-
-    This function checks:
-    1. System PATH
-    2. Common npm global folder
+    Finds Java executable in system PATH.
     """
+    return shutil.which("java")
 
-    command = shutil.which("mmdc") or shutil.which("mmdc.cmd")
 
-    if command:
-        return command
+def find_graphviz_dot() -> str | None:
+    """
+    Finds Graphviz dot executable in system PATH.
+    """
+    return shutil.which("dot")
 
-    npm_prefix = os.popen("npm config get prefix").read().strip()
 
-    if npm_prefix:
-        possible_cmd = Path(npm_prefix) / "mmdc.cmd"
-        possible_plain = Path(npm_prefix) / "mmdc"
+def find_plantuml_jar() -> Path | None:
+    """
+    Finds PlantUML jar from a known project location.
 
-        if possible_cmd.exists():
-            return str(possible_cmd)
+    Expected default location:
+    tools/plantuml/plantuml.jar
+    """
+    candidate = Path("tools") / "plantuml" / "plantuml.jar"
 
-        if possible_plain.exists():
-            return str(possible_plain)
+    if candidate.exists():
+        return candidate.resolve()
 
     return None
 
 
-def run_mmdc(input_file: Path, output_file: Path) -> bool:
+def is_plantuml_ready() -> tuple[bool, list[str]]:
     """
-    Runs Mermaid CLI to export one diagram.
-
-    Returns True if export succeeds.
-    Returns False if export fails.
-
-    This function prints useful error logs instead of crashing the API.
+    Checks whether Java, Graphviz, and PlantUML jar are ready.
     """
+    issues = []
 
-    mmdc_command = find_mermaid_command()
+    if not find_java():
+        issues.append("Java not found in PATH.")
 
-    if not mmdc_command:
-        print("[WARN] Mermaid CLI command not found.")
-        return False
+    if not find_graphviz_dot():
+        issues.append("Graphviz 'dot' not found in PATH.")
+
+    if not find_plantuml_jar():
+        issues.append("PlantUML jar not found at tools/plantuml/plantuml.jar")
+
+    return len(issues) == 0, issues
+
+
+def export_puml_to_png(puml_file: Path) -> list[str]:
+    """
+    Converts one .puml diagram into PNG using PlantUML.
+
+    Output:
+        same folder / same base filename .png
+
+    Returns list of successfully generated file paths.
+    """
+    exported = [str(puml_file)]
+
+    ready, issues = is_plantuml_ready()
+
+    if not ready:
+        print("[WARN] PlantUML export skipped.")
+        for issue in issues:
+            print(f"[WARN] {issue}")
+        return exported
+
+    java_cmd = find_java()
+    plantuml_jar = find_plantuml_jar()
 
     command = [
-        mmdc_command,
-        "-i",
-        str(input_file.resolve()),
-        "-o",
-        str(output_file.resolve()),
-        "-b",
-        "white",
+        java_cmd,
+        "-jar",
+        str(plantuml_jar),
+        "-tpng",
+        str(puml_file.resolve()),
     ]
 
-    print(f"[INFO] Exporting Mermaid diagram: {input_file.name} -> {output_file.name}")
+    print(f"[INFO] Running PlantUML export for: {puml_file.name}")
     print(f"[INFO] Command: {' '.join(command)}")
 
     result = subprocess.run(
@@ -189,59 +92,14 @@ def run_mmdc(input_file: Path, output_file: Path) -> bool:
     )
 
     if result.returncode != 0:
-        print(f"[WARN] Mermaid export failed for {input_file.name}")
+        print(f"[WARN] PlantUML export failed for {puml_file.name}")
         print("[STDOUT]", result.stdout)
         print("[STDERR]", result.stderr)
-        return False
+        return exported
 
-    return output_file.exists()
+    png_file = puml_file.with_suffix(".png")
 
+    if png_file.exists():
+        exported.append(str(png_file))
 
-def convert_png_to_jpg(png_file: Path, jpg_file: Path) -> bool:
-    """
-    Converts PNG diagram to JPG using Pillow.
-    """
-
-    if not png_file.exists():
-        print(f"[WARN] Cannot create JPG because PNG missing: {png_file}")
-        return False
-
-    try:
-        image = Image.open(png_file).convert("RGB")
-        image.save(jpg_file, "JPEG", quality=95)
-        return jpg_file.exists()
-    except Exception as error:
-        print(f"[WARN] JPG conversion failed: {error}")
-        return False
-
-
-def export_mermaid_to_visuals(mmd_file: Path) -> list[str]:
-    """
-    Converts one .mmd file into:
-    - .png
-    - .pdf
-    - .jpg
-
-    Always returns the .mmd path.
-    Adds image/pdf paths only if generated successfully.
-    """
-
-    exported_paths = [str(mmd_file)]
-
-    png_file = mmd_file.with_suffix(".png")
-    pdf_file = mmd_file.with_suffix(".pdf")
-    jpg_file = mmd_file.with_suffix(".jpg")
-
-    png_success = run_mmdc(mmd_file, png_file)
-    if png_success:
-        exported_paths.append(str(png_file))
-
-    pdf_success = run_mmdc(mmd_file, pdf_file)
-    if pdf_success:
-        exported_paths.append(str(pdf_file))
-
-    jpg_success = convert_png_to_jpg(png_file, jpg_file)
-    if jpg_success:
-        exported_paths.append(str(jpg_file))
-
-    return exported_paths
+    return exported

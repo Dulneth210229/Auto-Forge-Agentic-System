@@ -5,10 +5,11 @@ from pydantic import BaseModel, Field
 
 from agents.requirement_agent.agent import RequirementAgent
 from agents.domain_agent.agent import DomainAgent
+from agents.architect_agent.agent import ArchitectAgent
+from agents.coder_agent.agent import CoderAgent
 from agents.security_agent.agent import SecurityAgent
 from agents.tester_agent.agent import TesterAgent
 from tools.llm.provider import OllamaProvider
-from agents.architect_agent.agent import ArchitectAgent
 
 
 app = FastAPI(
@@ -24,9 +25,10 @@ app = FastAPI(
 
 requirement_agent = RequirementAgent(llm_provider=OllamaProvider())
 domain_agent = DomainAgent(llm_provider=OllamaProvider())
+architect_agent = ArchitectAgent()
+coder_agent = CoderAgent()
 security_agent = SecurityAgent(output_root="outputs")
 tester_agent = TesterAgent(output_root="outputs")
-architect_agent = ArchitectAgent()
 
 
 # ---------------------------------------------------------
@@ -118,10 +120,22 @@ class TestingRunResponse(BaseModel):
 
     json_path: str
     markdown_path: str
+    summary_pack_json_path: str
+    summary_pack_markdown_path: str
     metadata_path: str
+
+    generated_tests_path: str
+    generated_test_files_count: int
+
+    pytest_status: str
+    pytest_exit_code: int
 
     summary: dict
     metrics: dict
+
+    traceability_summary: dict
+
+    quality_gate: dict
 
 
 # ---------------------------------------------------------
@@ -216,29 +230,97 @@ async def generate_domain_pack(payload: dict):
 
     return result
 
+
 # ---------------------------------------------------------
 # Architect Agent Endpoints
 # ---------------------------------------------------------
+# ---------------------------------------------------------
+# Architect Agent Endpoints
+# ---------------------------------------------------------
+
 @app.post("/architecture/generate")
 def generate_architecture(payload: dict):
     """
-    Generates architecture artifacts from approved SRS and DomainPack.
+    Generate architecture artifacts from approved SRS and DomainPack.
 
     Required previous files:
     - outputs/runs/{run_id}/srs/{srs_version}/SRS_{srs_version}.json
     - outputs/runs/{run_id}/domain/{domain_version}/DomainPack_{domain_version}.json
+    Generates fresh architecture artifacts from approved SRS and DomainPack.
     """
 
-    result = architect_agent.generate_architecture(
-        run_id=payload.get("run_id", "RUN-0001"),
-        srs_version=payload.get("srs_version", "v1"),
-        domain_version=payload.get("domain_version", "v1"),
-        architecture_version=payload.get("architecture_version", "v1"),
-        architecture_style=payload.get("architecture_style", "modular_monolith"),
+    try:
+        result = architect_agent.generate_architecture(
+            run_id=payload.get("run_id", "RUN-0001"),
+            srs_version=payload.get("srs_version", "v1"),
+            domain_version=payload.get("domain_version", "v1"),
+            architecture_version=payload.get("architecture_version", "v1"),
+            architecture_style=payload.get("architecture_style", "modular_monolith"),
+            export_visuals=payload.get("export_visuals", True),
+        )
+
+        return result.model_dump()
+
+    except FileNotFoundError as error:
+        raise HTTPException(
+            status_code=404,
+            detail=str(error)
+        )
+
+    except Exception as error:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Architect Agent failed: {error}"
+        )
+
+
+# ---------------------------------------------------------
+# Coder Agent Endpoints
+# ---------------------------------------------------------
+
+@app.post("/coder/generate")
+def generate_code(payload: dict):
+    """
+    Generate code artifacts using the Coder Agent.
+    """
+
+    try:
+        result = coder_agent.generate_code(
+            run_id=payload.get("run_id", "RUN-0001"),
+            srs_version=payload.get("srs_version", "v1"),
+            code_version=payload.get("code_version", "v1")
+        )
+
+        return result
+
+    except FileNotFoundError as error:
+        raise HTTPException(
+            status_code=404,
+            detail=str(error)
+        )
+
+    except Exception as error:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Coder Agent failed: {error}"
+        )
+
+
+@app.post("/architecture/revise")
+def revise_architecture(payload: dict):
+    """
+    Revises an existing architecture output version using user feedback.
+    """
+
+    result = architect_agent.revise_architecture(
+        run_id=payload["run_id"],
+        current_version=payload["current_version"],
+        new_version=payload["new_version"],
+        change_request=payload["change_request"],
         export_visuals=payload.get("export_visuals", True),
     )
 
-    return result.model_dump()
+    return result
 
 
 # ---------------------------------------------------------
@@ -293,6 +375,8 @@ def run_testing_agent(request: TestingRunRequest):
     Run the Testing / QA Agent through FastAPI.
 
     This endpoint:
+    - generates pytest files
+    - executes generated pytest files
     - generates TestReport_v1.json
     - generates TestReport_v1.md
     - updates run_metadata.json
