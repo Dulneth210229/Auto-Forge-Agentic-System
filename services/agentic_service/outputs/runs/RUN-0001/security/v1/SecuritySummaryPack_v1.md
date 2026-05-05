@@ -3,7 +3,7 @@
 **Run ID:** RUN-0001  
 **Stage:** security  
 **Version:** v1  
-**Generated At:** 2026-05-03T00:23:10.529568+00:00  
+**Generated At:** 2026-05-03T22:52:27.979366+00:00  
 **Target Path:** ./sample_ecommerce_app
 
 ---
@@ -25,8 +25,8 @@
 | Critical | 6 |
 | High | 15 |
 | Medium | 12 |
-| Low | 3 |
-| **Total** | **36** |
+| Low | 1 |
+| **Total** | **34** |
 
 ---
 
@@ -35,8 +35,8 @@
 | Metric | Count |
 |---|---:|
 | Dependency Vulnerabilities | 27 |
-| LLM Findings | 2 |
-| Fix Suggestions | 36 |
+| LLM Findings | 0 |
+| Fix Suggestions | 34 |
 | Top Blocking Findings | 10 |
 
 ---
@@ -46,8 +46,8 @@
 | Metric | Value |
 |---|---:|
 | Coverage Percentage | 100.0% |
-| Mapped Findings | 36 |
-| Total Findings | 36 |
+| Mapped Findings | 34 |
+| Total Findings | 34 |
 
 ---
 
@@ -55,8 +55,8 @@
 
 | Metric | Value |
 |---|---:|
-| Before Deduplication | 50 |
-| After Deduplication | 36 |
+| Before Deduplication | 48 |
+| After Deduplication | 34 |
 | Duplicates Removed | 14 |
 
 ---
