@@ -234,6 +234,9 @@ async def generate_domain_pack(payload: dict):
 # ---------------------------------------------------------
 # Architect Agent Endpoints
 # ---------------------------------------------------------
+# ---------------------------------------------------------
+# Architect Agent Endpoints
+# ---------------------------------------------------------
 
 @app.post("/architecture/generate")
 def generate_architecture(payload: dict):
@@ -243,6 +246,7 @@ def generate_architecture(payload: dict):
     Required previous files:
     - outputs/runs/{run_id}/srs/{srs_version}/SRS_{srs_version}.json
     - outputs/runs/{run_id}/domain/{domain_version}/DomainPack_{domain_version}.json
+    Generates fresh architecture artifacts from approved SRS and DomainPack.
     """
 
     try:
@@ -300,6 +304,23 @@ def generate_code(payload: dict):
             status_code=500,
             detail=f"Coder Agent failed: {error}"
         )
+
+
+@app.post("/architecture/revise")
+def revise_architecture(payload: dict):
+    """
+    Revises an existing architecture output version using user feedback.
+    """
+
+    result = architect_agent.revise_architecture(
+        run_id=payload["run_id"],
+        current_version=payload["current_version"],
+        new_version=payload["new_version"],
+        change_request=payload["change_request"],
+        export_visuals=payload.get("export_visuals", True),
+    )
+
+    return result
 
 
 # ---------------------------------------------------------
