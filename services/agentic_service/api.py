@@ -10,6 +10,9 @@ from agents.coder_agent.agent import CoderAgent
 from agents.security_agent.agent import SecurityAgent
 from agents.tester_agent.agent import TesterAgent
 from tools.llm.provider import OllamaProvider
+from agents.architect_agent.agent import ArchitectAgent
+from agents.uiux_agent.agent import UIUXAgent
+uiux_agent = UIUXAgent(llm_provider=OllamaProvider())
 
 
 app = FastAPI(
@@ -234,9 +237,6 @@ async def generate_domain_pack(payload: dict):
 # ---------------------------------------------------------
 # Architect Agent Endpoints
 # ---------------------------------------------------------
-# ---------------------------------------------------------
-# Architect Agent Endpoints
-# ---------------------------------------------------------
 
 @app.post("/architecture/generate")
 def generate_architecture(payload: dict):
@@ -321,6 +321,92 @@ def revise_architecture(payload: dict):
     )
 
     return result
+# ---------------------------------------------------------
+# UI/UX Agent Endpoints
+# ---------------------------------------------------------
+
+@app.post("/uiux/srs/validate")
+def validate_uiux_inputs(payload: dict):
+    srs, api_contract = uiux_agent.load_approved_inputs(
+        run_id=payload.get("run_id", "RUN-0001"),
+        srs_version=payload.get("srs_version", "v1"),
+        api_version=payload.get("api_version", "v1"),
+    )
+
+    return uiux_agent.validate_inputs(srs, api_contract)
+
+
+@app.post("/uiux/flows/generate")
+def generate_uiux_flows(payload: dict):
+    result = uiux_agent.generate_design_pack(
+        run_id=payload.get("run_id", "RUN-0001"),
+        srs_version=payload.get("srs_version", "v1"),
+        api_version=payload.get("api_version", "v1"),
+        uiux_version=payload.get("uiux_version", "v1"),
+        include_admin=payload.get("include_admin", True),
+        render_images=payload.get("render_images", True),
+        change_request=payload.get("change_request"),
+    )
+
+    return {
+        "run_id": result["run_id"],
+        "uiux_version": result["uiux_version"],
+        "change_request": result.get("change_request"),
+        "flow_json_path": result["flow_json_path"],
+        "flow_mmd_path": result["flow_mmd_path"],
+        "flow_png_path": result["flow_png_path"],
+    }
+
+
+@app.post("/uiux/wireframes/generate")
+def generate_uiux_wireframes(payload: dict):
+    result = uiux_agent.generate_design_pack(
+        run_id=payload.get("run_id", "RUN-0001"),
+        srs_version=payload.get("srs_version", "v1"),
+        api_version=payload.get("api_version", "v1"),
+        uiux_version=payload.get("uiux_version", "v1"),
+        include_admin=payload.get("include_admin", True),
+        render_images=payload.get("render_images", True),
+        change_request=payload.get("change_request"),
+    )
+
+    return {
+        "run_id": result["run_id"],
+        "uiux_version": result["uiux_version"],
+        "change_request": result.get("change_request"),
+        "wireframes_json_path": result["wireframes_json_path"],
+        "wireframe_html_paths": result["wireframe_html_paths"],
+        "wireframe_png_paths": result["wireframe_png_paths"],
+    }
+
+
+@app.post("/uiux/designpack/generate")
+def generate_uiux_design_pack(payload: dict):
+    return uiux_agent.generate_design_pack(
+        run_id=payload.get("run_id", "RUN-0001"),
+        srs_version=payload.get("srs_version", "v1"),
+        api_version=payload.get("api_version", "v1"),
+        uiux_version=payload.get("uiux_version", "v1"),
+        include_admin=payload.get("include_admin", True),
+        render_images=payload.get("render_images", True),
+        change_request=payload.get("change_request"),
+        use_llm_wireframes=payload.get("use_llm_wireframes", True),
+    )
+
+
+@app.post("/uiux/designpack/revise")
+def revise_uiux_design_pack(payload: dict):
+    return uiux_agent.revise_design_pack(
+        run_id=payload.get("run_id", "RUN-0001"),
+        current_version=payload["current_version"],
+        new_version=payload["new_version"],
+        change_request=payload["change_request"],
+        srs_version=payload.get("srs_version", "v1"),
+        api_version=payload.get("api_version", "v1"),
+        include_admin=payload.get("include_admin", True),
+        render_images=payload.get("render_images", True),
+        use_llm_wireframes=payload.get("use_llm_wireframes", True),
+    )
 
 
 # ---------------------------------------------------------
