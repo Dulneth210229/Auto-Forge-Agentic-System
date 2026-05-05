@@ -1,4 +1,0 @@
-Previous version: v11
-New version: v12
-Change request: Add a product returns screen where customers can request returns after order delivery, and update the user flow and wireframes.
-Updated artifacts: user flows + wireframes + traceability
