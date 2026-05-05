@@ -1,0 +1,296 @@
+[
+  {
+    "requirement_id": "FR-001",
+    "screen_id": "UI-SCR-01",
+    "screen_name": "Account Access",
+    "reason": "Account Access screen supports requirement FR-001."
+  },
+  {
+    "requirement_id": "FR-002",
+    "screen_id": "UI-SCR-01",
+    "screen_name": "Account Access",
+    "reason": "Account Access screen supports requirement FR-002."
+  },
+  {
+    "requirement_id": "FR-003",
+    "screen_id": "UI-SCR-01",
+    "screen_name": "Account Access",
+    "reason": "Account Access screen supports requirement FR-003."
+  },
+  {
+    "requirement_id": "FR-004",
+    "screen_id": "UI-SCR-01",
+    "screen_name": "Account Access",
+    "reason": "Account Access screen supports requirement FR-004."
+  },
+  {
+    "requirement_id": "FR-005",
+    "screen_id": "UI-SCR-01",
+    "screen_name": "Account Access",
+    "reason": "Account Access screen supports requirement FR-005."
+  },
+  {
+    "requirement_id": "FR-006",
+    "screen_id": "UI-SCR-01",
+    "screen_name": "Account Access",
+    "reason": "Account Access screen supports requirement FR-006."
+  },
+  {
+    "requirement_id": "FR-001",
+    "screen_id": "UI-SCR-02",
+    "screen_name": "Product Catalog",
+    "reason": "Product Catalog screen supports requirement FR-001."
+  },
+  {
+    "requirement_id": "FR-002",
+    "screen_id": "UI-SCR-02",
+    "screen_name": "Product Catalog",
+    "reason": "Product Catalog screen supports requirement FR-002."
+  },
+  {
+    "requirement_id": "FR-003",
+    "screen_id": "UI-SCR-02",
+    "screen_name": "Product Catalog",
+    "reason": "Product Catalog screen supports requirement FR-003."
+  },
+  {
+    "requirement_id": "FR-004",
+    "screen_id": "UI-SCR-02",
+    "screen_name": "Product Catalog",
+    "reason": "Product Catalog screen supports requirement FR-004."
+  },
+  {
+    "requirement_id": "FR-001",
+    "screen_id": "UI-SCR-03",
+    "screen_name": "Product Details",
+    "reason": "Product Details screen supports requirement FR-001."
+  },
+  {
+    "requirement_id": "FR-002",
+    "screen_id": "UI-SCR-03",
+    "screen_name": "Product Details",
+    "reason": "Product Details screen supports requirement FR-002."
+  },
+  {
+    "requirement_id": "FR-003",
+    "screen_id": "UI-SCR-03",
+    "screen_name": "Product Details",
+    "reason": "Product Details screen supports requirement FR-003."
+  },
+  {
+    "requirement_id": "FR-004",
+    "screen_id": "UI-SCR-03",
+    "screen_name": "Product Details",
+    "reason": "Product Details screen supports requirement FR-004."
+  },
+  {
+    "requirement_id": "FR-005",
+    "screen_id": "UI-SCR-03",
+    "screen_name": "Product Details",
+    "reason": "Product Details screen supports requirement FR-005."
+  },
+  {
+    "requirement_id": "FR-006",
+    "screen_id": "UI-SCR-03",
+    "screen_name": "Product Details",
+    "reason": "Product Details screen supports requirement FR-006."
+  },
+  {
+    "requirement_id": "FR-001",
+    "screen_id": "UI-SCR-04",
+    "screen_name": "Shopping Cart",
+    "reason": "Shopping Cart screen supports requirement FR-001."
+  },
+  {
+    "requirement_id": "FR-002",
+    "screen_id": "UI-SCR-04",
+    "screen_name": "Shopping Cart",
+    "reason": "Shopping Cart screen supports requirement FR-002."
+  },
+  {
+    "requirement_id": "FR-003",
+    "screen_id": "UI-SCR-04",
+    "screen_name": "Shopping Cart",
+    "reason": "Shopping Cart screen supports requirement FR-003."
+  },
+  {
+    "requirement_id": "FR-004",
+    "screen_id": "UI-SCR-04",
+    "screen_name": "Shopping Cart",
+    "reason": "Shopping Cart screen supports requirement FR-004."
+  },
+  {
+    "requirement_id": "FR-005",
+    "screen_id": "UI-SCR-04",
+    "screen_name": "Shopping Cart",
+    "reason": "Shopping Cart screen supports requirement FR-005."
+  },
+  {
+    "requirement_id": "FR-006",
+    "screen_id": "UI-SCR-04",
+    "screen_name": "Shopping Cart",
+    "reason": "Shopping Cart screen supports requirement FR-006."
+  },
+  {
+    "requirement_id": "FR-001",
+    "screen_id": "UI-SCR-05",
+    "screen_name": "Checkout",
+    "reason": "Checkout screen supports requirement FR-001."
+  },
+  {
+    "requirement_id": "FR-002",
+    "screen_id": "UI-SCR-05",
+    "screen_name": "Checkout",
+    "reason": "Checkout screen supports requirement FR-002."
+  },
+  {
+    "requirement_id": "FR-003",
+    "screen_id": "UI-SCR-05",
+    "screen_name": "Checkout",
+    "reason": "Checkout screen supports requirement FR-003."
+  },
+  {
+    "requirement_id": "FR-004",
+    "screen_id": "UI-SCR-05",
+    "screen_name": "Checkout",
+    "reason": "Checkout screen supports requirement FR-004."
+  },
+  {
+    "requirement_id": "FR-005",
+    "screen_id": "UI-SCR-05",
+    "screen_name": "Checkout",
+    "reason": "Checkout screen supports requirement FR-005."
+  },
+  {
+    "requirement_id": "FR-006",
+    "screen_id": "UI-SCR-05",
+    "screen_name": "Checkout",
+    "reason": "Checkout screen supports requirement FR-006."
+  },
+  {
+    "requirement_id": "FR-001",
+    "screen_id": "UI-SCR-06",
+    "screen_name": "Order Placement",
+    "reason": "Order Placement screen supports requirement FR-001."
+  },
+  {
+    "requirement_id": "FR-002",
+    "screen_id": "UI-SCR-06",
+    "screen_name": "Order Placement",
+    "reason": "Order Placement screen supports requirement FR-002."
+  },
+  {
+    "requirement_id": "FR-003",
+    "screen_id": "UI-SCR-06",
+    "screen_name": "Order Placement",
+    "reason": "Order Placement screen supports requirement FR-003."
+  },
+  {
+    "requirement_id": "FR-004",
+    "screen_id": "UI-SCR-06",
+    "screen_name": "Order Placement",
+    "reason": "Order Placement screen supports requirement FR-004."
+  },
+  {
+    "requirement_id": "FR-005",
+    "screen_id": "UI-SCR-06",
+    "screen_name": "Order Placement",
+    "reason": "Order Placement screen supports requirement FR-005."
+  },
+  {
+    "requirement_id": "FR-006",
+    "screen_id": "UI-SCR-06",
+    "screen_name": "Order Placement",
+    "reason": "Order Placement screen supports requirement FR-006."
+  },
+  {
+    "requirement_id": "FR-001",
+    "screen_id": "UI-SCR-07",
+    "screen_name": "Order History",
+    "reason": "Order History screen supports requirement FR-001."
+  },
+  {
+    "requirement_id": "FR-002",
+    "screen_id": "UI-SCR-07",
+    "screen_name": "Order History",
+    "reason": "Order History screen supports requirement FR-002."
+  },
+  {
+    "requirement_id": "FR-003",
+    "screen_id": "UI-SCR-07",
+    "screen_name": "Order History",
+    "reason": "Order History screen supports requirement FR-003."
+  },
+  {
+    "requirement_id": "FR-004",
+    "screen_id": "UI-SCR-07",
+    "screen_name": "Order History",
+    "reason": "Order History screen supports requirement FR-004."
+  },
+  {
+    "requirement_id": "FR-005",
+    "screen_id": "UI-SCR-07",
+    "screen_name": "Order History",
+    "reason": "Order History screen supports requirement FR-005."
+  },
+  {
+    "requirement_id": "FR-006",
+    "screen_id": "UI-SCR-07",
+    "screen_name": "Order History",
+    "reason": "Order History screen supports requirement FR-006."
+  },
+  {
+    "requirement_id": "FR-001",
+    "screen_id": "UI-SCR-08",
+    "screen_name": "Admin Admin",
+    "reason": "Admin Admin screen supports requirement FR-001."
+  },
+  {
+    "requirement_id": "FR-002",
+    "screen_id": "UI-SCR-08",
+    "screen_name": "Admin Admin",
+    "reason": "Admin Admin screen supports requirement FR-002."
+  },
+  {
+    "requirement_id": "FR-003",
+    "screen_id": "UI-SCR-08",
+    "screen_name": "Admin Admin",
+    "reason": "Admin Admin screen supports requirement FR-003."
+  },
+  {
+    "requirement_id": "FR-004",
+    "screen_id": "UI-SCR-08",
+    "screen_name": "Admin Admin",
+    "reason": "Admin Admin screen supports requirement FR-004."
+  },
+  {
+    "requirement_id": "FR-005",
+    "screen_id": "UI-SCR-08",
+    "screen_name": "Admin Admin",
+    "reason": "Admin Admin screen supports requirement FR-005."
+  },
+  {
+    "requirement_id": "FR-006",
+    "screen_id": "UI-SCR-08",
+    "screen_name": "Admin Admin",
+    "reason": "Admin Admin screen supports requirement FR-006."
+  },
+  {
+    "requirement_id": "FR-004",
+    "screen_id": "UI-SCR-09",
+    "screen_name": "Returns And Refunds",
+    "reason": "Returns And Refunds screen supports requirement FR-004."
+  },
+  {
+    "requirement_id": "FR-005",
+    "screen_id": "UI-SCR-09",
+    "screen_name": "Returns And Refunds",
+    "reason": "Returns And Refunds screen supports requirement FR-005."
+  },
+  {
+    "requirement_id": "FR-006",
+    "screen_id": "UI-SCR-09",
+    "screen_name": "Returns And Refunds",
+    "reason": "Returns And Refunds screen supports requirement FR-006."
+  }
+]
