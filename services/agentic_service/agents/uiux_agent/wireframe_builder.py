@@ -1,22 +1,12 @@
 """
 wireframe_builder.py
 
-This file is intentionally kept minimal.
+Wireframe generation is LLM-only.
 
-AutoForge UI/UX Agent now generates wireframes through the LLM only.
-No hardcoded UI screens.
-No dynamic templates.
-No fallback HTML layouts.
-
-The actual wireframe generation happens in:
-- prompt.py
-- agent.py
-- parser.py
+No predefined templates.
+No dynamic fallback HTML.
 """
 
 
-def no_template_wireframes_enabled() -> bool:
-    """
-    Helper used only for documentation/testing.
-    """
+def template_wireframes_disabled() -> bool:
     return True

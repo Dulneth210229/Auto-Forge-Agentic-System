@@ -2,58 +2,154 @@ import json
 from agents.uiux_agent.schemas import UIScreen
 
 
+def compact_openapi(api_contract: dict) -> list[dict]:
+    """
+    Converts OpenAPI into compact endpoint list for the LLM.
+    Full OpenAPI can be too large for local Ollama models.
+    """
+
+    compact = []
+
+    for path, methods in api_contract.get("paths", {}).items():
+        if not isinstance(methods, dict):
+            continue
+
+        for method, operation in methods.items():
+            if method.lower() not in ["get", "post", "put", "patch", "delete"]:
+                continue
+
+            if not isinstance(operation, dict):
+                continue
+
+            compact.append({
+                "method": method.upper(),
+                "path": path,
+                "tags": operation.get("tags", []),
+                "summary": operation.get("summary", ""),
+                "description": operation.get("description", ""),
+            })
+
+    return compact
+
+
+def compact_srs(srs: dict) -> dict:
+    """
+    Keeps only UI/UX-relevant SRS fields.
+    """
+
+    return {
+        "project_name": srs.get("project_name"),
+        "roles": srs.get("roles", []),
+        "functional_requirements": srs.get("functional_requirements", []),
+        "non_functional_requirements": srs.get("non_functional_requirements", []),
+        "workflows": srs.get("workflows", []),
+        "business_rules": srs.get("business_rules", []),
+        "constraints": srs.get("constraints", []),
+        "assumptions": srs.get("assumptions", []),
+    }
+
+
+def compact_domain_pack(domain_pack: dict) -> dict:
+    """
+    Keeps only useful DomainPack data for UI/UX.
+    Different DomainPack versions may use different keys, so we keep it flexible.
+    """
+
+    return {
+        "project_name": domain_pack.get("project_name"),
+        "version": domain_pack.get("version"),
+        "domain_summary": domain_pack.get("domain_summary")
+        or domain_pack.get("summary")
+        or domain_pack.get("overview"),
+        "business_entities": domain_pack.get("business_entities", [])
+        or domain_pack.get("entities", []),
+        "business_rules": domain_pack.get("business_rules", []),
+        "workflows": domain_pack.get("workflows", []),
+        "constraints": domain_pack.get("constraints", []),
+    }
+
+
+def compact_architecture(sds: dict, db_pack: dict) -> dict:
+    """
+    Keeps architecture details useful for UI/UX.
+    Diagrams are excluded.
+    """
+
+    return {
+        "architecture_style": sds.get("architecture_style")
+        or sds.get("style")
+        or sds.get("architecture", {}).get("style"),
+        "modules": sds.get("modules", [])
+        or sds.get("system_modules", [])
+        or sds.get("architecture", {}).get("modules", []),
+        "api_endpoints": sds.get("api_endpoints", [])
+        or sds.get("endpoints", []),
+        "data_entities": db_pack.get("entities", [])
+        or db_pack.get("tables", [])
+        or db_pack.get("models", []),
+        "relationships": db_pack.get("relationships", []),
+    }
+
+
 def build_uiux_plan_prompt(
     project_name: str,
     srs: dict,
+    domain_pack: dict,
+    sds: dict,
     api_contract: dict,
+    db_pack: dict,
     uiux_version: str,
-    change_request: str | None = None,
+    user_prompt: str | None = None,
 ) -> str:
     """
-    Builds the LLM prompt that generates:
+    LLM prompt for generating:
     - UI screens
     - user flows
-    - FR-to-UI traceability
+    - traceability
 
-    The output must be JSON only.
+    No hardcoded UI list is used.
     """
 
     return f"""
-You are the UI/UX Agent inside AutoForge.
+Return ONLY valid JSON.
 
-AutoForge is a governed SDLC automation platform.
-Your job is to generate the UI/UX design plan from the APPROVED SRS and APPROVED API CONTRACT.
+You are the UI/UX Agent in AutoForge.
 
-CRITICAL RULES:
-- Return ONLY valid JSON.
-- Do NOT include markdown.
-- Do NOT include explanations.
-- Do NOT include comments.
-- Do NOT hardcode a fixed e-commerce screen list.
-- Derive screens from the approved SRS and approved API contract.
-- Generate only screens that are justified by requirements or API endpoints.
+Generate the UI/UX plan from the approved SRS, DomainPack, Architecture, OpenAPI contract, and DBPack.
+
+STRICT RULES:
+- Return one JSON object only.
+- Do not write markdown.
+- Do not write explanation text.
+- Do not include component list diagrams.
+- Do not hardcode a fixed screen list.
+- Derive screens from approved artifacts.
 - Use stable screen IDs: UI-SCR-01, UI-SCR-02, UI-SCR-03...
 - Use stable flow node IDs: FLOW-N01, FLOW-N02, FLOW-N03...
-- Use stable flow ID: UF-001.
-- Do NOT include component list diagram outputs.
+- Create screens only for user-facing or admin-facing UI needs.
+- Each screen should link to related FR IDs when possible.
 
-You must produce this exact JSON structure:
+Your JSON MUST contain exactly these top-level keys:
+- screens
+- user_flows
+- traceability
 
+Required JSON shape:
 {{
   "screens": [
     {{
       "id": "UI-SCR-01",
-      "name": "Screen Name",
-      "file_name": "UI-SCR-01_screen_name.html",
-      "description": "What this screen is for",
-      "route": "/route-name",
+      "name": "Product Catalog",
+      "file_name": "UI-SCR-01_product_catalog.html",
+      "description": "High-fidelity product browsing screen.",
+      "route": "/products",
       "related_requirements": ["FR-001"]
     }}
   ],
   "user_flows": [
     {{
       "id": "UF-001",
-      "name": "Main User Flow",
+      "name": "Main Customer Flow",
       "actor": "Customer",
       "nodes": [
         {{
@@ -64,7 +160,7 @@ You must produce this exact JSON structure:
         }},
         {{
           "id": "FLOW-N02",
-          "label": "Screen Name",
+          "label": "Product Catalog",
           "screen_id": "UI-SCR-01",
           "related_requirements": ["FR-001"]
         }}
@@ -82,17 +178,11 @@ You must produce this exact JSON structure:
     {{
       "requirement_id": "FR-001",
       "screen_id": "UI-SCR-01",
-      "screen_name": "Screen Name",
-      "reason": "Explain why this screen satisfies the requirement"
+      "screen_name": "Product Catalog",
+      "reason": "This screen supports product browsing."
     }}
   ]
 }}
-
-Approved SRS:
-{json.dumps(srs, indent=2)}
-
-Approved API Contract:
-{json.dumps(api_contract, indent=2)}
 
 Project name:
 {project_name}
@@ -100,10 +190,53 @@ Project name:
 UI/UX version:
 {uiux_version}
 
-User change request:
-{change_request or "None"}
+Approved SRS:
+{json.dumps(compact_srs(srs), indent=2)}
 
-Now return ONLY the JSON.
+Approved DomainPack:
+{json.dumps(compact_domain_pack(domain_pack), indent=2)}
+
+Approved Architecture excluding diagrams:
+{json.dumps(compact_architecture(sds, db_pack), indent=2)}
+
+Approved API Contract:
+{json.dumps(compact_openapi(api_contract), indent=2)}
+
+User prompt / change request:
+{user_prompt or "None"}
+
+Now return ONLY valid JSON.
+""".strip()
+
+
+def build_uiux_plan_repair_prompt(
+    invalid_output: str,
+    error_message: str,
+) -> str:
+    """
+    If the LLM returns wrong JSON format, ask it to repair.
+    """
+
+    return f"""
+Your previous UI/UX plan JSON was invalid.
+
+Parser error:
+{error_message}
+
+Previous invalid output:
+{invalid_output}
+
+Repair it.
+
+Return ONLY valid JSON with exactly these top-level keys:
+- screens
+- user_flows
+- traceability
+
+Do not write markdown.
+Do not write explanation text.
+
+Return corrected JSON now.
 """.strip()
 
 
@@ -111,15 +244,15 @@ def build_high_fidelity_wireframe_prompt(
     project_name: str,
     screen: UIScreen,
     srs: dict,
+    domain_pack: dict,
+    sds: dict,
     api_contract: dict,
+    db_pack: dict,
     all_screens: list[dict],
-    change_request: str | None = None,
+    user_prompt: str | None = None,
 ) -> str:
     """
-    Builds the LLM prompt for one high-fidelity Tailwind HTML wireframe.
-
-    No fallback/template UI is used.
-    The LLM must generate the full screen.
+    LLM prompt for one high-fidelity HTML wireframe.
     """
 
     related_frs = [
@@ -127,32 +260,31 @@ def build_high_fidelity_wireframe_prompt(
         if fr.get("id") in screen.related_requirements
     ]
 
-    api_paths = list(api_contract.get("paths", {}).keys())
-
     return f"""
-You are a senior UI/UX designer and frontend engineer inside AutoForge.
+You are the UI/UX Agent in AutoForge.
 
-Generate ONE HIGH-FIDELITY HTML wireframe/prototype screen.
+Generate ONE high-fidelity HTML + Tailwind CSS wireframe for the given screen.
 
-CRITICAL OUTPUT FORMAT:
-- Return ONLY a complete HTML document.
-- Your response must start with <!DOCTYPE html>
-- Your response must end with </html>
-- Do NOT include markdown fences.
-- Do NOT include explanations.
-- Do NOT include text before or after HTML.
-- Do NOT use React.
-- Do NOT use JavaScript.
+STRICT OUTPUT RULES:
+- - Return ONLY HTML. A complete HTML document is preferred, but a <main>...</main> layout is also acceptable.
+- Start with <!DOCTYPE html>.
+- End with </html>.
+- Do not include markdown fences.
+- Do not include explanations.
+- Do not include JSON.
+- Do not include Mermaid.
+- Do not include React.
+- Do not use JavaScript.
+- Do not use external image URLs.
 - Use Tailwind CSS CDN only.
-- Do NOT use external image URLs.
-- Use high-fidelity layout: navigation, cards, forms, tables, labels, realistic sections, states, and action buttons.
-- The screen must look visually rich and understandable.
-- The design must fit a 1366x768 screenshot.
-- Do NOT include component list diagrams.
-- Do NOT output Mermaid.
-- Do NOT output JSON.
+- Do not use predefined templates.
+- Do not create component list diagrams.
+- Generate the UI dynamically from approved artifacts and the user prompt.
+- Make it high-fidelity, visually rich, and human-understandable.
+- Fit a 1366x768 screenshot.
+- Include screen ID and related FR IDs in small visible text.
 
-Required HTML skeleton:
+Required skeleton:
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -161,43 +293,80 @@ Required HTML skeleton:
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
-    <!-- high fidelity UI here -->
 </body>
 </html>
 
-Project:
+Project name:
 {project_name}
 
 Current screen:
 {json.dumps(screen.model_dump(), indent=2)}
 
-All generated screens:
+All UI screens:
 {json.dumps(all_screens, indent=2)}
 
 Related functional requirements:
 {json.dumps(related_frs, indent=2)}
 
-Approved API paths:
-{json.dumps(api_paths, indent=2)}
+Approved SRS:
+{json.dumps(compact_srs(srs), indent=2)}
 
-Business rules:
-{json.dumps(srs.get("business_rules", []), indent=2)}
+Approved DomainPack:
+{json.dumps(compact_domain_pack(domain_pack), indent=2)}
 
-Constraints:
-{json.dumps(srs.get("constraints", []), indent=2)}
+Approved Architecture excluding diagrams:
+{json.dumps(compact_architecture(sds, db_pack), indent=2)}
 
-User change request:
-{change_request or "None"}
+Approved API contract:
+{json.dumps(compact_openapi(api_contract), indent=2)}
 
-Design instructions:
-- Use a modern e-commerce SaaS/web-app style.
-- Use realistic text labels.
-- Show navigation appropriate to this screen.
-- Show key actions clearly.
-- Show empty/error/success states if relevant.
-- Use spacing, cards, shadows, rounded corners, clear hierarchy.
-- Include the screen ID and related FR IDs somewhere small but visible.
-- Generate a unique layout suitable for this specific screen.
+User wireframe prompt:
+{user_prompt or "Generate a modern high-fidelity e-commerce UI/UX wireframe that matches the approved artifacts."}
 
-Now return ONLY the final complete HTML.
+Design quality:
+- Modern e-commerce SaaS style.
+- Rich navigation.
+- Clear visual hierarchy.
+- Proper forms, cards, summaries, filters, tables, status blocks where relevant.
+- Realistic labels and microcopy.
+- Primary and secondary actions.
+- Empty/error/success states where relevant.
+- Unique layout for this screen purpose.
+
+Return ONLY the final HTML. Start directly with <!DOCTYPE html> or <main>.
+""".strip()
+
+
+def build_wireframe_repair_prompt(
+    screen: UIScreen,
+    invalid_output: str,
+    error_message: str,
+) -> str:
+    """
+    Repair prompt for invalid HTML.
+    """
+
+    return f"""
+Your previous HTML output for {screen.id} - {screen.name} was invalid.
+
+Parser error:
+{error_message}
+
+Previous invalid output:
+{invalid_output}
+
+Repair the output.
+
+Return ONLY complete HTML.
+Start with <!DOCTYPE html>.
+End with </html>.
+Use Tailwind CSS CDN:
+<script src="https://cdn.tailwindcss.com"></script>
+
+Do not write explanations.
+Do not write markdown.
+Do not write JSON.
+Do not write text outside HTML.
+
+Return corrected complete HTML now.
 """.strip()

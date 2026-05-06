@@ -1,0 +1,21 @@
+{
+  "version": "v21",
+  "screens": [
+    {
+      "id": "screen1",
+      "name": "Register Account",
+      "file_name": "screen1_register_account.html",
+      "description": "Generated UI screen for Register Account.",
+      "route": "/register-account",
+      "related_requirements": []
+    },
+    {
+      "id": "screen2",
+      "name": "Login Screen",
+      "file_name": "screen2_login_screen.html",
+      "description": "Generated UI screen for Login Screen.",
+      "route": "/login-screen",
+      "related_requirements": []
+    }
+  ]
+}

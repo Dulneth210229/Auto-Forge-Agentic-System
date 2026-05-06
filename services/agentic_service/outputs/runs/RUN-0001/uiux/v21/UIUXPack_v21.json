@@ -1,0 +1,52 @@
+{
+  "project_name": "AutoForge Shop",
+  "version": "v21",
+  "source_srs_version": "v1",
+  "source_api_version": "v1",
+  "status": "generated",
+  "screens": [
+    {
+      "id": "screen1",
+      "name": "Register Account",
+      "file_name": "screen1_register_account.html",
+      "description": "Generated UI screen for Register Account.",
+      "route": "/register-account",
+      "related_requirements": []
+    },
+    {
+      "id": "screen2",
+      "name": "Login Screen",
+      "file_name": "screen2_login_screen.html",
+      "description": "Generated UI screen for Login Screen.",
+      "route": "/login-screen",
+      "related_requirements": []
+    }
+  ],
+  "user_flows": [
+    {
+      "id": "UF-001",
+      "name": "Registration Flow",
+      "actor": "Customer",
+      "nodes": [],
+      "edges": []
+    },
+    {
+      "id": "UF-002",
+      "name": "Authentication Flow",
+      "actor": "Customer",
+      "nodes": [],
+      "edges": []
+    }
+  ],
+  "traceability": [],
+  "flow_mmd_path": "outputs\\runs\\RUN-0001\\uiux\\v21\\flows\\user_flows_v21.mmd",
+  "flow_png_path": "outputs\\runs\\RUN-0001\\uiux\\v21\\flows\\user_flows_v21.png",
+  "wireframe_html_paths": [
+    "outputs\\runs\\RUN-0001\\uiux\\v21\\wireframes\\screen1_register_account.html",
+    "outputs\\runs\\RUN-0001\\uiux\\v21\\wireframes\\screen2_login_screen.html"
+  ],
+  "wireframe_png_paths": [
+    "outputs\\runs\\RUN-0001\\uiux\\v21\\wireframes\\screen1_register_account.png",
+    "outputs\\runs\\RUN-0001\\uiux\\v21\\wireframes\\screen2_login_screen.png"
+  ]
+}
