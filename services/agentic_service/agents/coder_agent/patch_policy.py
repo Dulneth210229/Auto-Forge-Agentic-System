@@ -5,6 +5,10 @@ ALLOWED_FILE_EXTENSIONS = {
     ".css", ".js", ".yml", ".yaml", ".gitignore"
 }
 
+ALLOWED_FILENAMES = {
+    "Dockerfile", ".gitignore", "docker-compose.yml"
+}
+
 BLOCKED_PATH_PARTS = {
     ".git", "venv", "__pycache__", "node_modules", ".env"
 }
@@ -17,9 +21,9 @@ def is_safe_generated_path(path: str) -> bool:
     for part in p.parts:
         if part in BLOCKED_PATH_PARTS:
             return False
-            
-    # Allow .gitignore despite it being an extension without a name
-    if p.name == ".gitignore":
+    
+    # Allow specific filenames without extensions
+    if p.name in ALLOWED_FILENAMES:
         return True
         
     # Check if extension is allowed

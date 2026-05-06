@@ -1,3 +1,4 @@
+import logging
 from typing import Optional
 
 from fastapi import FastAPI, HTTPException
@@ -15,6 +16,9 @@ from agents.uiux_agent.agent import UIUXAgent
 uiux_agent = UIUXAgent(llm_provider=OllamaProvider())
 
 
+logger = logging.getLogger(__name__)
+
+
 app = FastAPI(
     title="AutoForge Agentic Service API",
     description="Single-service multi-agent system for E-commerce SDLC automation.",
@@ -29,7 +33,7 @@ app = FastAPI(
 requirement_agent = RequirementAgent(llm_provider=OllamaProvider())
 domain_agent = DomainAgent(llm_provider=OllamaProvider())
 architect_agent = ArchitectAgent()
-coder_agent = CoderAgent()
+coder_agent = CoderAgent(llm_provider=OllamaProvider())
 security_agent = SecurityAgent(output_root="outputs")
 tester_agent = TesterAgent(output_root="outputs")
 
@@ -139,6 +143,41 @@ class TestingRunResponse(BaseModel):
     traceability_summary: dict
 
     quality_gate: dict
+
+
+class CoderGenerateRequest(BaseModel):
+    """
+    Request body for the Coder Agent code generation.
+    """
+
+    run_id: str = Field(
+        default="RUN-0001",
+        description="AutoForge run ID"
+    )
+
+    srs_version: str = Field(
+        default="v1",
+        description="Source SRS version (e.g., v1, v2)"
+    )
+
+    code_version: str = Field(
+        default="v1",
+        description="Target code version to generate (e.g., v1, v2)"
+    )
+
+
+class CoderGenerateResponse(BaseModel):
+    """
+    Response body after code generation.
+    """
+
+    status: str
+    run_id: str
+    code_version: str
+    source_srs_version: str
+    manifest_path: str
+    output_dir: str
+    generated_file_count: int
 
 
 # ---------------------------------------------------------
@@ -278,33 +317,43 @@ def generate_architecture(payload: dict):
 # Coder Agent Endpoints
 # ---------------------------------------------------------
 
-@app.post("/coder/generate")
-def generate_code(payload: dict):
+@app.post("/coder/generate", response_model=CoderGenerateResponse)
+async def generate_code(request: CoderGenerateRequest):
     """
-    Generate code artifacts using the Coder Agent.
-    """
+    Generate runnable application code from the approved SRS using the Coder Agent.
 
+    This endpoint:
+    - reads SRS_{srs_version}.json
+    - generates code files (backend, frontend, devops)
+    - creates CodeManifest_{code_version}.json
+    - returns generated file paths and count
+    """
+    
     try:
-        result = coder_agent.generate_code(
-            run_id=payload.get("run_id", "RUN-0001"),
-            srs_version=payload.get("srs_version", "v1"),
-            code_version=payload.get("code_version", "v1")
+        logger.info(f"Coder Agent: Generating code for run_id={request.run_id}, srs_version={request.srs_version}, code_version={request.code_version}")
+        
+        result = await coder_agent.generate_code(
+            run_id=request.run_id,
+            srs_version=request.srs_version,
+            code_version=request.code_version
         )
-
+        
+        logger.info(f"Coder Agent: Successfully generated {result.get('generated_file_count', 0)} files")
         return result
-
+    
     except FileNotFoundError as error:
+        logger.error(f"Coder Agent: SRS file not found - {error}")
         raise HTTPException(
             status_code=404,
-            detail=str(error)
+            detail=f"SRS file not found: {error}"
         )
-
+    
     except Exception as error:
+        logger.error(f"Coder Agent: Unexpected error - {type(error).__name__}: {error}", exc_info=True)
         raise HTTPException(
             status_code=500,
-            detail=f"Coder Agent failed: {error}"
+            detail=f"Coder Agent failed: {type(error).__name__}: {error}"
         )
-
 
 @app.post("/architecture/revise")
 def revise_architecture(payload: dict):
