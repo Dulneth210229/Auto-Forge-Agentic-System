@@ -1,0 +1,215 @@
+{
+  "screens": [
+    {
+      "id": "UI-SCR-01",
+      "name": "Homepage",
+      "file_name": "UI-SCR-01_homepage.html",
+      "description": "Main landing page with navigation, hero section, featured products, and categories.",
+      "route": "/",
+      "related_requirements": ["FR-001"]
+    },
+    {
+      "id": "UI-SCR-02",
+      "name": "Product Catalog",
+      "file_name": "UI-SCR-02_product_catalog.html",
+      "description": "Page displaying a grid of products with filters and sorting options.",
+      "route": "/products",
+      "related_requirements": ["FR-002"]
+    },
+    {
+      "id": "UI-SCR-03",
+      "name": "Product Detail Page",
+      "file_name": "UI-SCR-03_product_detail.html",
+      "description": "Detailed view of a single product with image gallery, description, reviews, and purchase options.",
+      "route": "/product/:id",
+      "related_requirements": ["FR-003"]
+    },
+    {
+      "id": "UI-SCR-04",
+      "name": "Shopping Cart",
+      "file_name": "UI-SCR-04_shopping_cart.html",
+      "description": "Page showing items in the cart with quantity adjustment, removal, and total calculation.",
+      "route": "/cart",
+      "related_requirements": ["FR-004"]
+    },
+    {
+      "id": "UI-SCR-05",
+      "name": "Checkout Process",
+      "file_name": "UI-SCR-05_checkout.html",
+      "description": "Multi-step checkout form with shipping, billing, payment, and order summary.",
+      "route": "/checkout",
+      "related_requirements": ["FR-005"]
+    },
+    {
+      "id": "UI-SCR-06",
+      "name": "User Account Dashboard",
+      "file_name": "UI-SCR-06_account_dashboard.html",
+      "description": "User dashboard with profile info, order history, saved addresses, and preferences.",
+      "route": "/account",
+      "related_requirements": ["FR-006"]
+    },
+    {
+      "id": "UI-SCR-07",
+      "name": "Login Page",
+      "file_name": "UI-SCR-07_login.html",
+      "description": "Login form with email, password, and forgot password option.",
+      "route": "/login",
+      "related_requirements": ["FR-007"]
+    },
+    {
+      "id": "UI-SCR-08",
+      "name": "Registration Page",
+      "file_name": "UI-SCR-08_registration.html",
+      "description": "Registration form with name, email, password, and confirm password fields.",
+      "route": "/register",
+      "related_requirements": ["FR-008"]
+    },
+    {
+      "id": "UI-SCR-09",
+      "name": "Order Confirmation",
+      "file_name": "UI-SCR-09_order_confirmation.html",
+      "description": "Confirmation page showing order details, tracking number, and next steps.",
+      "route": "/confirmation",
+      "related_requirements": ["FR-009"]
+    }
+  ],
+  "user_flows": [
+    {
+      "id": "UF-001",
+      "name": "Main User Flow",
+      "actor": "Customer",
+      "nodes": [
+        {
+          "id": "FLOW-N01",
+          "label": "Start",
+          "screen_id": null,
+          "related_requirements": []
+        },
+        {
+          "id": "FLOW-N02",
+          "label": "Homepage",
+          "screen_id": "UI-SCR-01",
+          "related_requirements": ["FR-001"]
+        },
+        {
+          "id": "FLOW-N03",
+          "label": "Product Catalog",
+          "screen_id": "UI-SCR-02",
+          "related_requirements": ["FR-002"]
+        },
+        {
+          "id": "FLOW-N04",
+          "label": "Product Detail Page",
+          "screen_id": "UI-SCR-03",
+          "related_requirements": ["FR-003"]
+        },
+        {
+          "id": "FLOW-N05",
+          "label": "Shopping Cart",
+          "screen_id": "UI-SCR-04",
+          "related_requirements": ["FR-004"]
+        },
+        {
+          "id": "FLOW-N06",
+          "label": "Checkout Process",
+          "screen_id": "UI-SCR-05",
+          "related_requirements": ["FR-005"]
+        },
+        {
+          "id": "FLOW-N07",
+          "label": "Order Confirmation",
+          "screen_id": "UI-SCR-09",
+          "related_requirements": ["FR-009"]
+        }
+      ],
+      "edges": [
+        {
+          "from_node": "FLOW-N01",
+          "to_node": "FLOW-N02",
+          "condition": "User visits homepage"
+        },
+        {
+          "from_node": "FLOW-N02",
+          "to_node": "FLOW-N03",
+          "condition": "User navigates to product catalog"
+        },
+        {
+          "from_node": "FLOW-N03",
+          "to_node": "FLOW-N04",
+          "condition": "User selects a product"
+        },
+        {
+          "from_node": "FLOW-N04",
+          "to_node": "FLOW-N05",
+          "condition": "User adds product to cart"
+        },
+        {
+          "from_node": "FLOW-N05",
+          "to_node": "FLOW-N06",
+          "condition": "User proceeds to checkout"
+        },
+        {
+          "from_node": "FLOW-N06",
+          "to_node": "FLOW-N07",
+          "condition": "User completes order"
+        }
+      ]
+    }
+  ],
+  "traceability": [
+    {
+      "requirement_id": "FR-001",
+      "screen_id": "UI-SCR-01",
+      "screen_name": "Homepage",
+      "reason": "This screen satisfies the requirement for a main landing page."
+    },
+    {
+      "requirement_id": "FR-002",
+      "screen_id": "UI-SCR-02",
+      "screen_name": "Product Catalog",
+      "reason": "This screen satisfies the requirement for displaying products in a grid."
+    },
+    {
+      "requirement_id": "FR-003",
+      "screen_id": "UI-SCR-03",
+      "screen_name": "Product Detail Page",
+      "reason": "This screen satisfies the requirement for detailed product information."
+    },
+    {
+      "requirement_id": "FR-004",
+      "screen_id": "UI-SCR-04",
+      "screen_name": "Shopping Cart",
+      "reason": "This screen satisfies the requirement for managing items in the cart."
+    },
+    {
+      "requirement_id": "FR-005",
+      "screen_id": "UI-SCR-05",
+      "screen_name": "Checkout Process",
+      "reason": "This screen satisfies the requirement for completing a purchase."
+    },
+    {
+      "requirement_id": "FR-006",
+      "screen_id": "UI-SCR-06",
+      "screen_name": "User Account Dashboard",
+      "reason": "This screen satisfies the requirement for user account management."
+    },
+    {
+      "requirement_id": "FR-007",
+      "screen_id": "UI-SCR-07",
+      "screen_name": "Login Page",
+      "reason": "This screen satisfies the requirement for user authentication."
+    },
+    {
+      "requirement_id": "FR-008",
+      "screen_id": "UI-SCR-08",
+      "screen_name": "Registration Page",
+      "reason": "This screen satisfies the requirement for new user registration."
+    },
+    {
+      "requirement_id": "FR-009",
+      "screen_id": "UI-SCR-09",
+      "screen_name": "Order Confirmation",
+      "reason": "This screen satisfies the requirement for confirming completed orders."
+    }
+  ]
+}

@@ -1,0 +1,138 @@
+Here is the high-fidelity wireframe for the e-commerce UI/UX design pack:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-commerce UI/UX Design Pack</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav">
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#products">Products</a></li>
+                <li><a href="#cart">Cart</a></li>
+                <li><a href="#checkout">Checkout</a></li>
+                <li><a href="#orders">Orders</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Welcome to Our E-commerce Store!</h1>
+            <p>Discover the latest products and enjoy exclusive offers.</p>
+            <button class="btn">Shop Now</button>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section id="products" class="products">
+        <div class="container">
+            <h2>Explore Our Products</h2>
+            <ul class="product-grid">
+                <li>
+                    <img src="product1.jpg" alt="Product 1">
+                    <h3>Product 1</h3>
+                    <p>$19.99</p>
+                    <button class="btn">Add to Cart</button>
+                </li>
+                <li>
+                    <img src="product2.jpg" alt="Product 2">
+                    <h3>Product 2</h3>
+                    <p>$29.99</p>
+                    <button class="btn">Add to Cart</button>
+                </li>
+                <!-- ... -->
+            </ul>
+        </div>
+    </section>
+
+    <!-- Cart Section -->
+    <section id="cart" class="cart">
+        <div class="container">
+            <h2>Your Cart</h2>
+            <table class="cart-table">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><img src="product1.jpg" alt="Product 1"></td>
+                        <td>2</td>
+                        <td>$39.98</td>
+                    </tr>
+                    <!-- ... -->
+                </tbody>
+            </table>
+            <button class="btn">Checkout</button>
+        </div>
+    </section>
+
+    <!-- Checkout Section -->
+    <section id="checkout" class="checkout">
+        <div class="container">
+            <h2>Checkout</h2>
+            <form action="#orders" method="post">
+                <label for="shipping-address">Shipping Address:</label>
+                <input type="text" id="shipping-address" name="shipping-address">
+                <button class="btn">Place Order</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Orders Section -->
+    <section id="orders" class="orders">
+        <div class="container">
+            <h2>Your Orders</h2>
+            <table class="order-table">
+                <thead>
+                    <tr>
+                        <th>Order Date</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>2023-02-15</td>
+                        <td>$99.98</td>
+                        <td>Delivered</td>
+                    </tr>
+                    <!-- ... -->
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2023 Our E-commerce Store</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+</body>
+</html>
+```
+
+This wireframe includes the following sections:
+
+1. Header: A navigation bar with links to different pages.
+2. Hero Section: A hero section that showcases a promotional message and a call-to-action button.
+3. Products Section: A grid of products with images, names, prices, and add-to-cart buttons.
+4. Cart Section: A table that displays the items in the user's cart, along with their quantities and totals.
+5. Checkout Section: A form that allows users to enter their shipping addresses and place orders.
+6. Orders Section: A table that displays the user's past orders, including dates, totals, and statuses.
+
+The wireframe also includes a footer section with copyright information and script tags for any JavaScript files.
