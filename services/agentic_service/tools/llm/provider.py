@@ -113,7 +113,7 @@ class OllamaProvider(LLMProvider):
             }
         }
 
-        async with httpx.AsyncClient(timeout=600) as client:
+        async with httpx.AsyncClient(timeout=1600) as client:
             response = await client.post(
                 f"{self.base_url}/api/generate",
                 json=payload

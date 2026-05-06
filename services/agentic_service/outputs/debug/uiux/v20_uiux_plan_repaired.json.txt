@@ -1,0 +1,41 @@
+```json
+{
+  "apis": [
+    {
+      "method": "POST",
+      "path": "/auth/register",
+      "tags": ["Identity"],
+      "summary": "Register user.",
+      "description": "Creates a new customer account."
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "tags": ["Authentication"],
+      "summary": "Log in to the system.",
+      "description": "Allows users to log into their accounts using valid credentials."
+    }
+  ],
+  "screens": [
+    {
+      "id": "register_screen",
+      "title": "Register New Account"
+    },
+    {
+      "id": "login_screen",
+      "title": "Log In to Your Account"
+    }
+  ],
+  "user_flows": [
+    {
+      "name": "Registration Flow",
+      "steps": ["User enters registration details"]
+    },
+    {
+      "name": "Login Flow",
+      "steps": ["User logs in with credentials"]
+    }
+  ],
+  "traceability": []
+}
+```

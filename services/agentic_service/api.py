@@ -7,12 +7,13 @@ from pydantic import BaseModel, Field
 from agents.requirement_agent.agent import RequirementAgent
 from agents.domain_agent.agent import DomainAgent
 from agents.architect_agent.agent import ArchitectAgent
+from agents.uiux_agent.agent import UIUXAgent
 from agents.coder_agent.agent import CoderAgent
 from agents.security_agent.agent import SecurityAgent
 from agents.tester_agent.agent import TesterAgent
 from tools.llm.provider import OllamaProvider
 from agents.architect_agent.agent import ArchitectAgent
-from agents.uiux_agent.agent import UIUXAgent
+
 uiux_agent = UIUXAgent(llm_provider=OllamaProvider())
 
 
@@ -376,87 +377,76 @@ def revise_architecture(payload: dict):
 
 @app.post("/uiux/srs/validate")
 def validate_uiux_inputs(payload: dict):
-    srs, api_contract = uiux_agent.load_approved_inputs(
-        run_id=payload.get("run_id", "RUN-0001"),
-        srs_version=payload.get("srs_version", "v1"),
-        api_version=payload.get("api_version", "v1"),
-    )
+    try:
+        srs, domain_pack, sds, api_contract, db_pack = uiux_agent.load_approved_inputs(
+            run_id=payload.get("run_id", "RUN-0001"),
+            srs_version=payload.get("srs_version", "v1"),
+            domain_version=payload.get("domain_version", "v1"),
+            architecture_version=payload.get("architecture_version", "v1"),
+        )
 
-    return uiux_agent.validate_inputs(srs, api_contract)
+        return uiux_agent.validate_inputs(
+            srs=srs,
+            domain_pack=domain_pack,
+            sds=sds,
+            api_contract=api_contract,
+            db_pack=db_pack,
+        )
 
-
-@app.post("/uiux/flows/generate")
-def generate_uiux_flows(payload: dict):
-    result = uiux_agent.generate_design_pack(
-        run_id=payload.get("run_id", "RUN-0001"),
-        srs_version=payload.get("srs_version", "v1"),
-        api_version=payload.get("api_version", "v1"),
-        uiux_version=payload.get("uiux_version", "v1"),
-        include_admin=payload.get("include_admin", True),
-        render_images=payload.get("render_images", True),
-        change_request=payload.get("change_request"),
-    )
-
-    return {
-        "run_id": result["run_id"],
-        "uiux_version": result["uiux_version"],
-        "change_request": result.get("change_request"),
-        "flow_json_path": result["flow_json_path"],
-        "flow_mmd_path": result["flow_mmd_path"],
-        "flow_png_path": result["flow_png_path"],
-    }
-
-
-@app.post("/uiux/wireframes/generate")
-def generate_uiux_wireframes(payload: dict):
-    result = uiux_agent.generate_design_pack(
-        run_id=payload.get("run_id", "RUN-0001"),
-        srs_version=payload.get("srs_version", "v1"),
-        api_version=payload.get("api_version", "v1"),
-        uiux_version=payload.get("uiux_version", "v1"),
-        include_admin=payload.get("include_admin", True),
-        render_images=payload.get("render_images", True),
-        change_request=payload.get("change_request"),
-    )
-
-    return {
-        "run_id": result["run_id"],
-        "uiux_version": result["uiux_version"],
-        "change_request": result.get("change_request"),
-        "wireframes_json_path": result["wireframes_json_path"],
-        "wireframe_html_paths": result["wireframe_html_paths"],
-        "wireframe_png_paths": result["wireframe_png_paths"],
-    }
+    except Exception as error:
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"{type(error).__name__}: {str(error)}")
 
 
 @app.post("/uiux/designpack/generate")
 def generate_uiux_design_pack(payload: dict):
-    return uiux_agent.generate_design_pack(
-        run_id=payload.get("run_id", "RUN-0001"),
-        srs_version=payload.get("srs_version", "v1"),
-        api_version=payload.get("api_version", "v1"),
-        uiux_version=payload.get("uiux_version", "v1"),
-        include_admin=payload.get("include_admin", True),
-        render_images=payload.get("render_images", True),
-        change_request=payload.get("change_request"),
-        use_llm_wireframes=payload.get("use_llm_wireframes", True),
-    )
+    try:
+        return uiux_agent.generate_design_pack(
+            run_id=payload.get("run_id", "RUN-0001"),
+            srs_version=payload.get("srs_version", "v1"),
+            domain_version=payload.get("domain_version", "v1"),
+            architecture_version=payload.get("architecture_version", "v1"),
+            uiux_version=payload.get("uiux_version", "v1"),
+            include_admin=payload.get("include_admin", True),
+            render_images=payload.get("render_images", True),
+            user_prompt=payload.get("user_prompt"),
+        )
+
+    except Exception as error:
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"{type(error).__name__}: {str(error)}")
 
 
 @app.post("/uiux/designpack/revise")
 def revise_uiux_design_pack(payload: dict):
-    return uiux_agent.revise_design_pack(
-        run_id=payload.get("run_id", "RUN-0001"),
-        current_version=payload["current_version"],
-        new_version=payload["new_version"],
-        change_request=payload["change_request"],
-        srs_version=payload.get("srs_version", "v1"),
-        api_version=payload.get("api_version", "v1"),
-        include_admin=payload.get("include_admin", True),
-        render_images=payload.get("render_images", True),
-        use_llm_wireframes=payload.get("use_llm_wireframes", True),
-    )
+    try:
+        if not payload.get("change_request"):
+            raise HTTPException(
+                status_code=400,
+                detail="change_request is required when revising UI/UX outputs."
+            )
 
+        return uiux_agent.revise_design_pack(
+            run_id=payload.get("run_id", "RUN-0001"),
+            current_version=payload["current_version"],
+            new_version=payload["new_version"],
+            change_request=payload["change_request"],
+            srs_version=payload.get("srs_version", "v1"),
+            domain_version=payload.get("domain_version", "v1"),
+            architecture_version=payload.get("architecture_version", "v1"),
+            include_admin=payload.get("include_admin", True),
+            render_images=payload.get("render_images", True),
+        )
+
+    except HTTPException:
+        raise
+
+    except Exception as error:
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"{type(error).__name__}: {str(error)}")
 
 # ---------------------------------------------------------
 # Security Agent Endpoints
