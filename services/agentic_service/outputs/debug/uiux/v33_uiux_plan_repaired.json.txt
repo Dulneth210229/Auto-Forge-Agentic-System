@@ -4,124 +4,130 @@
       "id": "UI-SCR-01",
       "name": "Homepage",
       "file_name": "UI-SCR-01_homepage.html",
-      "description": "The main landing page featuring featured categories, promotions, and best-sellers. Includes global navigation and search bar.",
+      "description": "Main landing page with navigation, hero section, and featured products",
       "route": "/",
-      "related_requirements": [
-        "FR-001",
-        "FR-003"
-      ]
+      "related_requirements": ["FR-001"]
     },
     {
       "id": "UI-SCR-02",
-      "name": "Product Listing Page (PLP)",
-      "file_name": "UI-SCR-02_plp.html",
-      "description": "Displays a grid of products based on search results or category browsing. Includes filtering and sorting options.",
-      "route": "/products/{category_slug}",
-      "related_requirements": [
-        "FR-001",
-        "FR-002"
-      ]
+      "name": "Product Catalog",
+      "file_name": "UI-SCR-02_product_catalog.html",
+      "description": "Grid layout showing products with images, titles, prices, and ratings",
+      "route": "/products",
+      "related_requirements": ["FR-002"]
     },
     {
       "id": "UI-SCR-03",
-      "name": "Product Detail Page (PDP)",
-      "file_name": "UI-SCR-03_pdp.html",
-      "description": "Dedicated page for a single product. Displays images, descriptions, pricing, variants (size/color), and an 'Add to Cart' CTA.",
-      "route": "/products/{product_slug}",
-      "related_requirements": [
-        "FR-002",
-        "FR-004"
-      ]
+      "name": "Product Detail",
+      "file_name": "UI-SCR-03_product_detail.html",
+      "description": "Detailed view of a single product with multiple images, description, and options",
+      "route": "/product/:id",
+      "related_requirements": ["FR-003"]
     },
     {
       "id": "UI-SCR-04",
       "name": "Shopping Cart",
-      "file_name": "UI-SCR-04_cart.html",
-      "description": "Review page for items selected for purchase. Allows quantity adjustment, removal of items, and application of coupon codes.",
+      "file_name": "UI-SCR-04_shopping_cart.html",
+      "description": "Summary of items in cart with quantity adjustments and total calculation",
       "route": "/cart",
-      "related_requirements": [
-        "FR-002",
-        "FR-005"
-      ]
+      "related_requirements": ["FR-004"]
     },
     {
       "id": "UI-SCR-05",
-      "name": "Checkout Flow",
-      "file_name": "UI-SCR-05_checkout.html",
-      "description": "Multi-step process (Shipping -> Payment -> Review) to finalize the purchase. Requires user authentication or guest checkout.",
+      "name": "Checkout Process",
+      "file_name": "UI-SCR-05_checkout_process.html",
+      "description": "Step-by-step checkout process with progress indicator",
       "route": "/checkout",
-      "related_requirements": [
-        "FR-005",
-        "FR-006"
-      ]
+      "related_requirements": ["FR-005"]
+    },
+    {
+      "id": "UI-SCR-06",
+      "name": "Account Dashboard",
+      "file_name": "UI-SCR-06_account_dashboard.html",
+      "description": "Dashboard showing user's profile, order history, and saved addresses",
+      "route": "/account",
+      "related_requirements": ["FR-006"]
     }
   ],
   "user_flows": [
     {
       "id": "UF-001",
-      "name": "Product Discovery to Purchase",
+      "name": "Main User Flow",
       "actor": "Customer",
       "nodes": [
         {
           "id": "FLOW-N01",
-          "label": "Start: Homepage View",
-          "screen_id": "UI-SCR-01",
+          "label": "Start",
+          "screen_id": null,
           "related_requirements": []
         },
         {
           "id": "FLOW-N02",
-          "label": "Browse/Search Results",
-          "screen_id": "UI-SCR-02",
-          "related_requirements": [
-            "FR-001"
-          ]
+          "label": "Homepage",
+          "screen_id": "UI-SCR-01",
+          "related_requirements": ["FR-001"]
         },
         {
           "id": "FLOW-N03",
-          "label": "View Product Details",
-          "screen_id": "UI-SCR-03",
-          "related_requirements": [
-            "FR-002"
-          ]
+          "label": "Product Catalog",
+          "screen_id": "UI-SCR-02",
+          "related_requirements": ["FR-002"]
         },
         {
           "id": "FLOW-N04",
-          "label": "Add to Cart",
-          "screen_id": "UI-SCR-04",
-          "related_requirements": [
-            "FR-002"
-          ]
+          "label": "Product Detail",
+          "screen_id": "UI-SCR-03",
+          "related_requirements": ["FR-003"]
         },
         {
           "id": "FLOW-N05",
-          "label": "Review Cart & Checkout",
+          "label": "Shopping Cart",
+          "screen_id": "UI-SCR-04",
+          "related_requirements": ["FR-004"]
+        },
+        {
+          "id": "FLOW-N06",
+          "label": "Checkout Process",
           "screen_id": "UI-SCR-05",
-          "related_requirements": [
-            "FR-005",
-            "FR-006"
-          ]
+          "related_requirements": ["FR-005"]
+        },
+        {
+          "id": "FLOW-N07",
+          "label": "Account Dashboard",
+          "screen_id": "UI-SCR-06",
+          "related_requirements": ["FR-006"]
         }
       ],
       "edges": [
         {
           "from_node": "FLOW-N01",
           "to_node": "FLOW-N02",
-          "condition": "Click Category/Search"
+          "condition": "Start journey"
         },
         {
           "from_node": "FLOW-N02",
           "to_node": "FLOW-N03",
-          "condition": "Click Product Image/Title"
+          "condition": "Browse products"
         },
         {
           "from_node": "FLOW-N03",
           "to_node": "FLOW-N04",
-          "condition": "Click Add to Cart"
+          "condition": "View product details"
         },
         {
           "from_node": "FLOW-N04",
           "to_node": "FLOW-N05",
-          "condition": "Proceed to Checkout"
+          "condition": "Add to cart"
+        },
+        {
+          "from_node": "FLOW-N05",
+          "to_node": "FLOW-N06",
+          "condition": "Proceed to checkout"
+        },
+        {
+          "from_node": "FLOW-N06",
+          "to_node": "FLOW-N07",
+          "condition": "Complete purchase"
         }
       ]
     }
@@ -131,37 +137,37 @@
       "requirement_id": "FR-001",
       "screen_id": "UI-SCR-01",
       "screen_name": "Homepage",
-      "reason": "Provides initial product discovery points (featured items, categories)."
+      "reason": "This screen satisfies the requirement."
     },
     {
-      "requirement_id": "FR-001",
+      "requirement_id": "FR-002",
       "screen_id": "UI-SCR-02",
-      "screen_name": "Product Listing Page (PLP)",
-      "reason": "Allows users to browse and filter multiple products simultaneously."
+      "screen_name": "Product Catalog",
+      "reason": "This screen satisfies the requirement."
     },
     {
-      "requirement_id": "FR-002",
+      "requirement_id": "FR-003",
       "screen_id": "UI-SCR-03",
-      "screen_name": "Product Detail Page (PDP)",
-      "reason": "Displays detailed product information, variants, and the primary CTA (Add to Cart)."
+      "screen_name": "Product Detail",
+      "reason": "This screen satisfies the requirement."
     },
     {
-      "requirement_id": "FR-002",
+      "requirement_id": "FR-004",
       "screen_id": "UI-SCR-04",
       "screen_name": "Shopping Cart",
-      "reason": "Allows users to review and modify selected items before checkout."
+      "reason": "This screen satisfies the requirement."
     },
     {
       "requirement_id": "FR-005",
-      "screen_id": "UI-SCR-04",
-      "screen_name": "Shopping Cart",
-      "reason": "Supports coupon code application and quantity adjustments."
+      "screen_id": "UI-SCR-05",
+      "screen_name": "Checkout Process",
+      "reason": "This screen satisfies the requirement."
     },
     {
       "requirement_id": "FR-006",
-      "screen_id": "UI-SCR-05",
-      "screen_name": "Checkout Flow",
-      "reason": "Handles the secure, multi-step process of shipping, payment, and order confirmation."
+      "screen_id": "UI-SCR-06",
+      "screen_name": "Account Dashboard",
+      "reason": "This screen satisfies the requirement."
     }
   ]
 }
