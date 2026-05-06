@@ -1,0 +1,45 @@
+```json
+{
+  "screens": [
+    {
+      "id": "UI-SCR-01",
+      "name": "Screen Name",
+      "file_name": "UI-SCR-01_screen_name.html",
+      "description": "Screen description"
+    }
+  ],
+  "user_flows": [
+    {
+      "id": "UF-001",
+      "name": "Main User Flow",
+      "actor": "Customer",
+      "nodes": [
+        {
+          "id": "FLOW-N01",
+          "label": "Start"
+        },
+        {
+          "id":"FLOW-N02",
+          "label": "Screen Name",
+          "screen_id": "UI-SCR-01"
+        }
+      ],
+      "edges": [
+        {
+          "from_node": "FLOW-N01",
+          "to_node": "FLOW-N02",
+          "condition": "Start journey"
+        }
+      ]
+    }
+  ],
+  "traceability": [
+    {
+      "requirement_id": "FR-001",
+      "screen_id": "UI-SCR-01",
+      "screen_name": "Screen Name",
+      "reason": "This screen satisfies the requirement."
+    }
+  ]
+}
+```
