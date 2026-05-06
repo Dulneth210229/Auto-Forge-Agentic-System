@@ -507,3 +507,78 @@ QUALITY REQUIREMENTS:
 
 Return the corrected final HTML now.
 """.strip()
+
+def build_final_html_regeneration_prompt(
+    screen: UIScreen,
+    project_name: str,
+    user_prompt: str | None = None,
+) -> str:
+    """
+    Final strict prompt used when normal generation and repair both fail.
+
+    This is still LLM-generated.
+    It does not use a predefined wireframe template.
+    """
+
+    return f"""
+Return ONLY HTML.
+
+You previously failed to return usable HTML.
+
+Now generate a complete HIGH-FIDELITY Tailwind CSS wireframe for this screen.
+
+STRICT RULES:
+- Start directly with <!DOCTYPE html>
+- End with </html>
+- Do not write explanation text.
+- Do not write markdown.
+- Do not write JSON.
+- Do not write Mermaid.
+- Do not use React.
+- Do not use JavaScript.
+- Use Tailwind CSS CDN.
+- Generate a complete visual screen, not a description.
+- Do not return empty text.
+- Do not say "I cannot".
+- Do not say "Here is".
+- Do not use placeholders only.
+
+Screen:
+- ID: {screen.id}
+- Name: {screen.name}
+- Description: {screen.description}
+- Route: {screen.route}
+- Related requirements: {screen.related_requirements}
+
+Project:
+{project_name}
+
+User style/change request:
+{user_prompt or "Modern high-fidelity e-commerce UI with navigation, cards, forms, tables where relevant, realistic content, clear buttons, and no blank sections."}
+
+Required output structure:
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{screen.id} - {screen.name}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 text-slate-900">
+  <main class="min-h-screen">
+    <!-- Generate a complete high-fidelity UI here -->
+  </main>
+</body>
+</html>
+
+Quality:
+- At least 5 visual sections.
+- Clear header/navigation.
+- Realistic screen-specific content.
+- Multiple cards/forms/tables/panels where suitable.
+- Buttons and actions.
+- Tailwind classes such as grid, flex, rounded, shadow, border, spacing.
+- Must fill a 1366x768 screenshot.
+
+Return ONLY the HTML document now.
+""".strip()

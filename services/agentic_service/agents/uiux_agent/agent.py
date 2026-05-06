@@ -13,6 +13,8 @@ from agents.uiux_agent.prompt import (
     build_uiux_plan_repair_prompt,
     build_high_fidelity_wireframe_prompt,
     build_wireframe_repair_prompt,
+    build_final_html_regeneration_prompt,
+
 )
 from agents.uiux_agent.parser import (
     parse_uiux_plan,
@@ -219,57 +221,111 @@ class UIUXAgent:
 
             return parse_uiux_plan(repaired_output)
 
-    def _generate_wireframe_html_with_llm(
-        self,
-        project_name: str,
-        screen,
-        srs: dict,
-        domain_pack: dict,
-        sds: dict,
-        api_contract: dict,
-        db_pack: dict,
-        all_screens: list[dict],
-        user_prompt: str | None,
-        uiux_version: str,
-    ) -> str:
-        prompt = build_high_fidelity_wireframe_prompt(
-            project_name=project_name,
-            screen=screen,
-            srs=srs,
-            domain_pack=domain_pack,
-            sds=sds,
-            api_contract=api_contract,
-            db_pack=db_pack,
-            all_screens=all_screens,
-            user_prompt=user_prompt,
-        )
+def _generate_wireframe_html_with_llm(
+    self,
+    project_name: str,
+    screen,
+    srs: dict,
+    domain_pack: dict,
+    sds: dict,
+    api_contract: dict,
+    db_pack: dict,
+    all_screens: list[dict],
+    user_prompt: str | None,
+    uiux_version: str,
+) -> str:
+    """
+    Generates one high-fidelity wireframe using Ollama.
 
-        debug_dir = self.output_dir / "debug" / "uiux"
-        debug_dir.mkdir(parents=True, exist_ok=True)
+    Attempts:
+    1. Normal high-fidelity prompt
+    2. Repair prompt
+    3. Final strict regeneration prompt
 
-        raw_output = self._run_llm_generate(prompt)
-        (debug_dir / f"{uiux_version}_{screen.id}_raw.html.txt").write_text(
-            raw_output,
-            encoding="utf-8",
-        )
+    No predefined UI template is used.
+    """
 
-        try:
-            return clean_html_output(raw_output)
+    debug_dir = self.output_dir / "debug" / "uiux"
+    debug_dir.mkdir(parents=True, exist_ok=True)
 
-        except WireframeParseError as first_error:
-            repair_prompt = build_wireframe_repair_prompt(
-                screen=screen,
-                invalid_output=raw_output,
-                error_message=str(first_error),
-            )
+    first_error = None
+    second_error = None
 
-            repaired_output = self._run_llm_generate(repair_prompt)
-            (debug_dir / f"{uiux_version}_{screen.id}_repaired.html.txt").write_text(
-                repaired_output,
-                encoding="utf-8",
-            )
+    # ---------------------------------------------------------
+    # Attempt 1: normal high-fidelity generation
+    # ---------------------------------------------------------
+    prompt = build_high_fidelity_wireframe_prompt(
+        project_name=project_name,
+        screen=screen,
+        srs=srs,
+        domain_pack=domain_pack,
+        sds=sds,
+        api_contract=api_contract,
+        db_pack=db_pack,
+        all_screens=all_screens,
+        user_prompt=user_prompt,
+    )
 
-            return clean_html_output(repaired_output)
+    raw_output = self._run_llm_generate(prompt)
+
+    raw_debug_path = debug_dir / f"{uiux_version}_{screen.id}_attempt1_raw.html.txt"
+    raw_debug_path.write_text(raw_output or "", encoding="utf-8")
+
+    try:
+        return clean_html_output(raw_output)
+
+    except WireframeParseError as error:
+        first_error = error
+        print(f"[WARN] Attempt 1 failed for {screen.id}: {error}")
+
+    # ---------------------------------------------------------
+    # Attempt 2: repair previous output
+    # ---------------------------------------------------------
+    repair_prompt = build_wireframe_repair_prompt(
+        screen=screen,
+        invalid_output=raw_output or "",
+        error_message=str(first_error),
+    )
+
+    repaired_output = self._run_llm_generate(repair_prompt)
+
+    repaired_debug_path = debug_dir / f"{uiux_version}_{screen.id}_attempt2_repaired.html.txt"
+    repaired_debug_path.write_text(repaired_output or "", encoding="utf-8")
+
+    try:
+        return clean_html_output(repaired_output)
+
+    except WireframeParseError as error:
+        second_error = error
+        print(f"[WARN] Attempt 2 failed for {screen.id}: {error}")
+
+    # ---------------------------------------------------------
+    # Attempt 3: final strict regeneration
+    # ---------------------------------------------------------
+    final_prompt = build_final_html_regeneration_prompt(
+        screen=screen,
+        project_name=project_name,
+        user_prompt=user_prompt,
+    )
+
+    final_output = self._run_llm_generate(final_prompt)
+
+    final_debug_path = debug_dir / f"{uiux_version}_{screen.id}_attempt3_final.html.txt"
+    final_debug_path.write_text(final_output or "", encoding="utf-8")
+
+    try:
+        return clean_html_output(final_output)
+
+    except WireframeParseError as third_error:
+        raise WireframeParseError(
+            f"Failed to generate usable HTML for {screen.id} - {screen.name} after 3 LLM attempts. "
+            f"Attempt 1 debug: {raw_debug_path}. "
+            f"Attempt 2 debug: {repaired_debug_path}. "
+            f"Attempt 3 debug: {final_debug_path}. "
+            f"Attempt 1 error: {first_error}. "
+            f"Attempt 2 error: {second_error}. "
+            f"Final error: {third_error}"
+        ) from third_error
 
     def generate_design_pack(
         self,

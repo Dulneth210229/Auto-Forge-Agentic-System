@@ -666,9 +666,29 @@ def parse_uiux_plan(raw_output: str) -> tuple[list[UIScreen], list[UserFlow], li
 # ---------------------------------------------------------------------
 
 def _extract_html_fragment(text: str) -> str | None:
+    """
+    Extracts a usable HTML fragment from LLM output.
+
+    Some models return <article>, <nav>, <header>, <form>, or <table>
+    instead of <main>/<section>/<div>.
+    """
+
     lower_text = text.lower()
 
-    candidates = ["<main", "<section", "<div", "<body"]
+    candidates = [
+        "<main",
+        "<section",
+        "<article",
+        "<header",
+        "<nav",
+        "<aside",
+        "<form",
+        "<table",
+        "<ul",
+        "<ol",
+        "<div",
+        "<body",
+    ]
 
     starts = [
         lower_text.find(candidate)
