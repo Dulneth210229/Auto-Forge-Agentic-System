@@ -1,6 +1,6 @@
 {
   "id": "UF-001",
-  "name": "Registration Flow",
+  "name": "Customer Purchase Flow",
   "actor": "Customer",
   "nodes": [],
   "edges": []
