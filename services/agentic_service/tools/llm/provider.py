@@ -108,13 +108,12 @@ class OllamaProvider(LLMProvider):
             "model": self.model,
             "prompt": prompt,
             "stream": False,
-            "format": "json",
             "options": {
                 "temperature": 0.2
             }
         }
 
-        async with httpx.AsyncClient(timeout=240) as client:
+        async with httpx.AsyncClient(timeout=1600) as client:
             response = await client.post(
                 f"{self.base_url}/api/generate",
                 json=payload

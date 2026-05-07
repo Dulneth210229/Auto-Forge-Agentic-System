@@ -1,3 +1,4 @@
+import logging
 from typing import Optional
 
 from fastapi import FastAPI, HTTPException
@@ -6,10 +7,17 @@ from pydantic import BaseModel, Field
 from agents.requirement_agent.agent import RequirementAgent
 from agents.domain_agent.agent import DomainAgent
 from agents.architect_agent.agent import ArchitectAgent
+from agents.uiux_agent.agent import UIUXAgent
 from agents.coder_agent.agent import CoderAgent
 from agents.security_agent.agent import SecurityAgent
 from agents.tester_agent.agent import TesterAgent
 from tools.llm.provider import OllamaProvider
+from agents.architect_agent.agent import ArchitectAgent
+
+uiux_agent = UIUXAgent(llm_provider=OllamaProvider())
+
+
+logger = logging.getLogger(__name__)
 
 
 app = FastAPI(
@@ -26,7 +34,7 @@ app = FastAPI(
 requirement_agent = RequirementAgent(llm_provider=OllamaProvider())
 domain_agent = DomainAgent(llm_provider=OllamaProvider())
 architect_agent = ArchitectAgent()
-coder_agent = CoderAgent()
+coder_agent = CoderAgent(llm_provider=OllamaProvider())
 security_agent = SecurityAgent(output_root="outputs")
 tester_agent = TesterAgent(output_root="outputs")
 
@@ -138,6 +146,41 @@ class TestingRunResponse(BaseModel):
     quality_gate: dict
 
 
+class CoderGenerateRequest(BaseModel):
+    """
+    Request body for the Coder Agent code generation.
+    """
+
+    run_id: str = Field(
+        default="RUN-0001",
+        description="AutoForge run ID"
+    )
+
+    srs_version: str = Field(
+        default="v1",
+        description="Source SRS version (e.g., v1, v2)"
+    )
+
+    code_version: str = Field(
+        default="v1",
+        description="Target code version to generate (e.g., v1, v2)"
+    )
+
+
+class CoderGenerateResponse(BaseModel):
+    """
+    Response body after code generation.
+    """
+
+    status: str
+    run_id: str
+    code_version: str
+    source_srs_version: str
+    manifest_path: str
+    output_dir: str
+    generated_file_count: int
+
+
 # ---------------------------------------------------------
 # Health Endpoint
 # ---------------------------------------------------------
@@ -234,9 +277,6 @@ async def generate_domain_pack(payload: dict):
 # ---------------------------------------------------------
 # Architect Agent Endpoints
 # ---------------------------------------------------------
-# ---------------------------------------------------------
-# Architect Agent Endpoints
-# ---------------------------------------------------------
 
 @app.post("/architecture/generate")
 def generate_architecture(payload: dict):
@@ -278,33 +318,43 @@ def generate_architecture(payload: dict):
 # Coder Agent Endpoints
 # ---------------------------------------------------------
 
-@app.post("/coder/generate")
-def generate_code(payload: dict):
+@app.post("/coder/generate", response_model=CoderGenerateResponse)
+async def generate_code(request: CoderGenerateRequest):
     """
-    Generate code artifacts using the Coder Agent.
-    """
+    Generate runnable application code from the approved SRS using the Coder Agent.
 
+    This endpoint:
+    - reads SRS_{srs_version}.json
+    - generates code files (backend, frontend, devops)
+    - creates CodeManifest_{code_version}.json
+    - returns generated file paths and count
+    """
+    
     try:
-        result = coder_agent.generate_code(
-            run_id=payload.get("run_id", "RUN-0001"),
-            srs_version=payload.get("srs_version", "v1"),
-            code_version=payload.get("code_version", "v1")
+        logger.info(f"Coder Agent: Generating code for run_id={request.run_id}, srs_version={request.srs_version}, code_version={request.code_version}")
+        
+        result = await coder_agent.generate_code(
+            run_id=request.run_id,
+            srs_version=request.srs_version,
+            code_version=request.code_version
         )
-
+        
+        logger.info(f"Coder Agent: Successfully generated {result.get('generated_file_count', 0)} files")
         return result
-
+    
     except FileNotFoundError as error:
+        logger.error(f"Coder Agent: SRS file not found - {error}")
         raise HTTPException(
             status_code=404,
-            detail=str(error)
+            detail=f"SRS file not found: {error}"
         )
-
+    
     except Exception as error:
+        logger.error(f"Coder Agent: Unexpected error - {type(error).__name__}: {error}", exc_info=True)
         raise HTTPException(
             status_code=500,
-            detail=f"Coder Agent failed: {error}"
+            detail=f"Coder Agent failed: {type(error).__name__}: {error}"
         )
-
 
 @app.post("/architecture/revise")
 def revise_architecture(payload: dict):
@@ -321,7 +371,82 @@ def revise_architecture(payload: dict):
     )
 
     return result
+# ---------------------------------------------------------
+# UI/UX Agent Endpoints
+# ---------------------------------------------------------
 
+@app.post("/uiux/srs/validate")
+def validate_uiux_inputs(payload: dict):
+    try:
+        srs, domain_pack, sds, api_contract, db_pack = uiux_agent.load_approved_inputs(
+            run_id=payload.get("run_id", "RUN-0001"),
+            srs_version=payload.get("srs_version", "v1"),
+            domain_version=payload.get("domain_version", "v1"),
+            architecture_version=payload.get("architecture_version", "v1"),
+        )
+
+        return uiux_agent.validate_inputs(
+            srs=srs,
+            domain_pack=domain_pack,
+            sds=sds,
+            api_contract=api_contract,
+            db_pack=db_pack,
+        )
+
+    except Exception as error:
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"{type(error).__name__}: {str(error)}")
+
+
+@app.post("/uiux/designpack/generate")
+def generate_uiux_design_pack(payload: dict):
+    try:
+        return uiux_agent.generate_design_pack(
+            run_id=payload.get("run_id", "RUN-0001"),
+            srs_version=payload.get("srs_version", "v1"),
+            domain_version=payload.get("domain_version", "v1"),
+            architecture_version=payload.get("architecture_version", "v1"),
+            uiux_version=payload.get("uiux_version", "v1"),
+            include_admin=payload.get("include_admin", True),
+            render_images=payload.get("render_images", True),
+            user_prompt=payload.get("user_prompt"),
+        )
+
+    except Exception as error:
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"{type(error).__name__}: {str(error)}")
+
+
+@app.post("/uiux/designpack/revise")
+def revise_uiux_design_pack(payload: dict):
+    try:
+        if not payload.get("change_request"):
+            raise HTTPException(
+                status_code=400,
+                detail="change_request is required when revising UI/UX outputs."
+            )
+
+        return uiux_agent.revise_design_pack(
+            run_id=payload.get("run_id", "RUN-0001"),
+            current_version=payload["current_version"],
+            new_version=payload["new_version"],
+            change_request=payload["change_request"],
+            srs_version=payload.get("srs_version", "v1"),
+            domain_version=payload.get("domain_version", "v1"),
+            architecture_version=payload.get("architecture_version", "v1"),
+            include_admin=payload.get("include_admin", True),
+            render_images=payload.get("render_images", True),
+        )
+
+    except HTTPException:
+        raise
+
+    except Exception as error:
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"{type(error).__name__}: {str(error)}")
 
 # ---------------------------------------------------------
 # Security Agent Endpoints

@@ -221,19 +221,6 @@
       "related_requirements": [
         "FR-001"
       ]
-    },
-    {
-      "id": "API-013",
-      "tag": "Catalog",
-      "method": "GET",
-      "path": "/products/search",
-      "summary": "Search products",
-      "description": "Searches products using keyword, category, and price range filters.",
-      "request_schema": null,
-      "response_schema": "ProductListResponse",
-      "related_requirements": [
-        "FR-SEARCH"
-      ]
     }
   ],
   "security_considerations": [

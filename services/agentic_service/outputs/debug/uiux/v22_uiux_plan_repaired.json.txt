@@ -1,0 +1,51 @@
+{
+  "screens": [
+    {
+      "name": "Registration Form",
+      "description": "Form for new user registration",
+      "components": [
+        "Full Name Field",
+        "Email Field",
+        "Password Field",
+        "Confirm Password Field",
+        "Register Button"
+      ]
+    },
+    {
+      "name": "Email Verification",
+      "description": "Email verification screen",
+      "components": [
+        "Verification Code Input",
+        "Resend Code Button",
+        "Verify Button"
+      ]
+    },
+    {
+      "name": "Welcome Screen",
+      "description": "Welcome user after successful registration",
+      "components": [
+        "Welcome Message",
+        "Continue Button"
+      ]
+    }
+  ],
+  "user_flows": [
+    {
+      "name": "User Registration Flow",
+      "steps": [
+        "User navigates to registration form",
+        "User fills in registration details",
+        "User submits registration form",
+        "System sends verification email",
+        "User verifies email",
+        "User is redirected to welcome screen"
+      ]
+    }
+  ],
+  "traceability": {
+    "FR-001": [
+      "Registration Form screen",
+      "User Registration Flow"
+    ]
+  }
+}
