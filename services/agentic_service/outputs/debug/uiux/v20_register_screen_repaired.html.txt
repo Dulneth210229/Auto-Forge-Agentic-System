@@ -1,8 +1,0 @@
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>E-Commerce Checkout</title>
-    <link href="https://cdn.tailwindcss.com/v2" rel="stylesheet" type="textноси
-```
