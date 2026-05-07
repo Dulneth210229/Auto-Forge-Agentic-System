@@ -1,0 +1,16 @@
+{
+  "requirements": {
+    "v1": {
+      "status": "approved",
+      "comment": "SRS is complete and approved.",
+      "timestamp": "2026-05-07T13:47:22.720345+00:00"
+    }
+  },
+  "domain": {
+    "v1": {
+      "status": "pending",
+      "comment": "DomainPack generated and waiting for human approval.",
+      "timestamp": "2026-05-07T13:53:10.899032+00:00"
+    }
+  }
+}

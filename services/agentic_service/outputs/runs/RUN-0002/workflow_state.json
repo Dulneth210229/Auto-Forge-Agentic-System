@@ -1,0 +1,60 @@
+{
+  "run_id": "RUN-0002",
+  "project_name": "AutoForge Shop",
+  "current_stage": "DOMAIN_PENDING_APPROVAL",
+  "pending_approval_stage": "domain",
+  "approved_stages": [
+    "requirements"
+  ],
+  "latest_versions": {
+    "requirements": "v1",
+    "domain": "v1",
+    "architecture": null,
+    "uiux": null,
+    "code": null,
+    "tests": null,
+    "security": null,
+    "export": null
+  },
+  "artifacts": [
+    {
+      "stage": "requirements",
+      "version": "v1",
+      "artifact_type": "json",
+      "path": "outputs\\runs\\RUN-0002\\srs\\v1\\SRS_v1.json",
+      "status": "approved"
+    },
+    {
+      "stage": "requirements",
+      "version": "v1",
+      "artifact_type": "markdown",
+      "path": "outputs\\runs\\RUN-0002\\srs\\v1\\SRS_v1.md",
+      "status": "approved"
+    },
+    {
+      "stage": "domain",
+      "version": "v1",
+      "artifact_type": "json",
+      "path": "outputs\\runs\\RUN-0002\\domain\\v1\\DomainPack_v1.json",
+      "status": "pending_approval"
+    },
+    {
+      "stage": "domain",
+      "version": "v1",
+      "artifact_type": "markdown",
+      "path": "outputs\\runs\\RUN-0002\\domain\\v1\\DomainPack_v1.md",
+      "status": "pending_approval"
+    }
+  ],
+  "messages": [
+    "Requirement Agent generated SRS_v1.",
+    "requirements v1 approved.",
+    "requirements v1 approved.",
+    "Domain Agent generated DomainPack_v1."
+  ],
+  "errors": [],
+  "traceability_links": [],
+  "next_action": "Review and approve or reject DomainPack_v1.",
+  "created_at": "2026-05-07T13:33:14.832821+00:00",
+  "updated_at": "2026-05-07T13:53:10.899614+00:00"
+}

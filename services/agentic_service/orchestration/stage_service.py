@@ -65,6 +65,45 @@ class StageService:
             "run_id": run_id,
             "artifacts": [artifact.model_dump() for artifact in state.artifacts],
         }
+    
+    def ingest_domain_knowledge(self, payload: Dict[str, Any]) -> dict:
+        """
+        Ingests the E-commerce domain knowledge text file into a vector store.
+
+        This method prepares the RAG knowledge base used by the Domain Agent.
+
+        Supported vector stores:
+        - faiss
+        - chroma
+
+        Example payload:
+        {
+          "file_path": "knowledge/ecommerce_domain_knowledge.txt",
+          "vector_store_type": "faiss"
+        }
+        """
+
+        # Lazy import:
+        # We import DomainAgent only when this method is called.
+        # This keeps API startup lightweight and avoids loading unnecessary
+        # agent dependencies before they are needed.
+        from agents.domain_agent.agent import DomainAgent
+        from tools.llm.provider import OllamaProvider
+
+        file_path = payload.get("file_path", "knowledge/ecommerce_domain_knowledge.txt")
+        vector_store_type = payload.get("vector_store_type", "faiss")
+
+        agent = DomainAgent(llm_provider=OllamaProvider())
+
+        result = agent.ingest_domain_knowledge(
+            file_path=file_path,
+            vector_store_type=vector_store_type,
+        )
+
+        return {
+            "message": "Domain knowledge ingested successfully.",
+            "result": result,
+        }
 
     async def generate_stage(
         self,
