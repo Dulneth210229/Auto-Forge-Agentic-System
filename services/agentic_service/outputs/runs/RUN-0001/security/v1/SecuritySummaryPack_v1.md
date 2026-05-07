@@ -3,7 +3,7 @@
 **Run ID:** RUN-0001  
 **Stage:** security  
 **Version:** v1  
-**Generated At:** 2026-05-06T04:05:10.710362+00:00  
+**Generated At:** 2026-05-06T04:28:17.105504+00:00  
 **Target Path:** outputs/runs/RUN-0001/code/v1/generated_app
 
 ---
@@ -25,8 +25,8 @@
 | Critical | 0 |
 | High | 0 |
 | Medium | 1 |
-| Low | 1 |
-| **Total** | **2** |
+| Low | 0 |
+| **Total** | **1** |
 
 ---
 
@@ -34,9 +34,9 @@
 
 | Metric | Count |
 |---|---:|
-| Dependency Vulnerabilities | 0 |
-| LLM Findings | 1 |
-| Fix Suggestions | 2 |
+| Dependency Vulnerabilities | 27 |
+| LLM Findings | 0 |
+| Fix Suggestions | 1 |
 | Top Blocking Findings | 0 |
 
 ---
@@ -46,8 +46,8 @@
 | Metric | Value |
 |---|---:|
 | Coverage Percentage | 100.0% |
-| Mapped Findings | 2 |
-| Total Findings | 2 |
+| Mapped Findings | 1 |
+| Total Findings | 1 |
 
 ---
 
@@ -55,8 +55,8 @@
 
 | Metric | Value |
 |---|---:|
-| Before Deduplication | 2 |
-| After Deduplication | 2 |
+| Before Deduplication | 1 |
+| After Deduplication | 1 |
 | Duplicates Removed | 0 |
 
 ---
