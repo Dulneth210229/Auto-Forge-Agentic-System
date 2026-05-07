@@ -1,5 +1,6 @@
 import json
 import re
+import shutil
 from pathlib import Path
 
 from .schemas import (
@@ -14,6 +15,7 @@ from .prompt import (
     build_backend_prompt,
     build_frontend_prompt,
     build_devops_prompt,
+    build_revision_prompt,
 )
 from .parser import parse_file_plan, CodeFileParseError
 
@@ -593,6 +595,7 @@ Previous response:
 
         if len(content.strip()) < 5:
             raise ValueError(f"Generated file is empty or too short: {relative_path}")
+        
 
     def _validate_openapi_coverage(self, code_files: dict, openapi_spec: str) -> list[str]:
         """
@@ -635,6 +638,432 @@ Previous response:
                 )
 
         return warnings
+    
+
+
+    def _copy_existing_code_version(
+        self,
+        run_id: str,
+        current_code_version: str,
+        new_code_version: str,
+    ) -> tuple[Path, Path]:
+        """
+        Copy existing generated_app from current version to a new version.
+
+        Example:
+        code/v5/generated_app -> code/v6/generated_app
+        """
+
+        current_dir = (
+            self.output_dir
+            / "runs"
+            / run_id
+            / "code"
+            / current_code_version
+            / "generated_app"
+        )
+
+        new_dir = (
+            self.output_dir
+            / "runs"
+            / run_id
+            / "code"
+            / new_code_version
+            / "generated_app"
+        )
+
+        if not current_dir.exists():
+            raise FileNotFoundError(
+                f"Current generated app not found: {current_dir}"
+            )
+
+        if new_dir.exists():
+            shutil.rmtree(new_dir)
+
+        new_dir.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copytree(current_dir, new_dir)
+
+        return current_dir, new_dir
+
+    def _list_code_files(self, base_dir: Path) -> list[str]:
+        """
+        List generated project files using relative paths.
+        """
+
+        files = []
+
+        for path in base_dir.rglob("*"):
+            if path.is_file():
+                relative_path = path.relative_to(base_dir).as_posix()
+                files.append(relative_path)
+
+        return sorted(files)
+
+    def _select_files_for_revision(
+        self,
+        available_files: list[str],
+        change_request: str,
+    ) -> list[str]:
+        """
+        Select likely affected files based on the change request.
+
+        This keeps revision prompts smaller and faster.
+        """
+
+        change_lower = change_request.lower()
+        selected = set()
+
+        backend_keywords = [
+            "api",
+            "endpoint",
+            "route",
+            "controller",
+            "backend",
+            "auth",
+            "login",
+            "register",
+            "product",
+            "cart",
+            "checkout",
+            "order",
+            "admin",
+            "payment",
+            "stock",
+        ]
+
+        frontend_keywords = [
+            "ui",
+            "screen",
+            "page",
+            "button",
+            "form",
+            "frontend",
+            "react",
+            "style",
+            "css",
+            "design",
+            "display",
+            "view",
+        ]
+
+        database_keywords = [
+            "model",
+            "schema",
+            "database",
+            "mongodb",
+            "mongoose",
+            "entity",
+            "field",
+        ]
+
+        devops_keywords = [
+            "docker",
+            "compose",
+            "readme",
+            "install",
+            "run",
+            "port",
+            "env",
+            "deployment",
+        ]
+
+        if any(word in change_lower for word in backend_keywords):
+            for file_path in available_files:
+                if file_path.startswith("backend/routes/"):
+                    selected.add(file_path)
+                if file_path.startswith("backend/controllers/"):
+                    selected.add(file_path)
+                if file_path.startswith("backend/services/"):
+                    selected.add(file_path)
+                if file_path == "backend/server.js":
+                    selected.add(file_path)
+
+        if any(word in change_lower for word in database_keywords):
+            for file_path in available_files:
+                if file_path.startswith("backend/models/"):
+                    selected.add(file_path)
+
+        if any(word in change_lower for word in frontend_keywords):
+            for file_path in available_files:
+                if file_path.startswith("frontend/src/"):
+                    selected.add(file_path)
+                if file_path == "frontend/package.json":
+                    selected.add(file_path)
+
+        if any(word in change_lower for word in devops_keywords):
+            for file_path in available_files:
+                if file_path in [
+                    "docker-compose.yml",
+                    "README.md",
+                    ".gitignore",
+                    "backend/package.json",
+                    "frontend/package.json",
+                    "backend/.env.example",
+                ]:
+                    selected.add(file_path)
+
+        if not selected:
+            for file_path in available_files:
+                if file_path in [
+                    "backend/routes/apiRoutes.js",
+                    "backend/controllers/apiController.js",
+                    "backend/services/businessService.js",
+                    "frontend/src/App.jsx",
+                    "frontend/src/api.js",
+                    "frontend/src/styles.css",
+                    "README.md",
+                ]:
+                    selected.add(file_path)
+
+        return sorted(selected)
+
+    def _read_selected_files(
+        self,
+        base_dir: Path,
+        selected_files: list[str],
+        max_chars_per_file: int = 12000,
+    ) -> dict:
+        """
+        Read selected files into a dictionary.
+
+        Large files are trimmed to prevent huge prompts.
+        """
+
+        selected_content = {}
+
+        for relative_path in selected_files:
+            file_path = base_dir / relative_path
+
+            if not file_path.exists():
+                continue
+
+            with open(file_path, "r", encoding="utf-8") as f:
+                content = f.read()
+
+            if len(content) > max_chars_per_file:
+                content = content[:max_chars_per_file] + "\n\n/* TRUNCATED FOR REVISION PROMPT */"
+
+            selected_content[relative_path] = content
+
+        return selected_content
+
+    async def revise_code(
+        self,
+        run_id: str,
+        current_code_version: str,
+        new_code_version: str,
+        change_request: str,
+        srs_version: str = "v1",
+        domain_version: str = "v1",
+        architecture_version: str = "v1",
+    ) -> dict:
+        """
+        Revise an existing generated MERN app.
+
+        This creates a new code version instead of overwriting the old version.
+        """
+
+        if not self.llm_provider:
+            raise ValueError("llm_provider is required to revise code")
+
+        if not change_request.strip():
+            raise ValueError("change_request is required")
+
+        srs_data, srs_path = self._load_srs(run_id, srs_version)
+        domain_pack, domain_path = self._load_domain_pack(run_id, domain_version)
+        sds_spec, sds_path = self._load_sds(run_id, architecture_version)
+        openapi_spec, openapi_path = self._load_openapi(run_id, architecture_version)
+        db_pack, db_path = self._load_db_pack(run_id, architecture_version)
+
+        _, new_dir = self._copy_existing_code_version(
+            run_id=run_id,
+            current_code_version=current_code_version,
+            new_code_version=new_code_version,
+        )
+
+        available_files = self._list_code_files(new_dir)
+
+        selected_files = self._select_files_for_revision(
+            available_files=available_files,
+            change_request=change_request,
+        )
+
+        selected_file_contents = self._read_selected_files(
+            base_dir=new_dir,
+            selected_files=selected_files,
+        )
+
+        project_name = self._extract_project_name(srs_data)
+        functional_reqs = self._extract_functional_requirements(srs_data)
+
+        context = {
+            "project_name": project_name,
+            "change_request": change_request,
+            "selected_files": selected_file_contents,
+            "srs_data": srs_data,
+            "domain_pack": domain_pack,
+            "sds_spec": sds_spec,
+            "openapi_spec": openapi_spec,
+            "db_pack": db_pack,
+        }
+
+        revision_prompt = build_revision_prompt(context)
+
+        revised_response = await self.llm_provider.generate(revision_prompt)
+
+        self._save_raw_llm_response(
+            run_id=run_id,
+            code_version=new_code_version,
+            response_text=revised_response,
+            filename="revision_raw_response.txt",
+        )
+
+        try:
+            changed_files = parse_file_plan(revised_response)
+
+        except CodeFileParseError:
+            repaired_response = await self._repair_llm_output_to_file_blocks(
+                raw_text=revised_response,
+                step_name="Revision",
+            )
+
+            self._save_raw_llm_response(
+                run_id=run_id,
+                code_version=new_code_version,
+                response_text=repaired_response,
+                filename="revision_repaired_response.txt",
+            )
+
+            changed_files = parse_file_plan(repaired_response)
+
+        if not changed_files:
+            raise ValueError("Revision did not produce any changed files")
+
+        generated_files = []
+
+        for rel_path, content in changed_files.items():
+            self._validate_no_placeholder_content(rel_path, content)
+
+            generated_file = self._write_file(
+                base_dir=new_dir,
+                relative_path=rel_path,
+                content=content,
+                purpose=f"Revised from change request: {rel_path}",
+                owner_agent=self._owner_for_file(rel_path),
+            )
+
+            generated_files.append(generated_file)
+
+        all_code_files = {}
+
+        for rel_path in self._list_code_files(new_dir):
+            file_path = new_dir / rel_path
+
+            with open(file_path, "r", encoding="utf-8") as f:
+                all_code_files[rel_path] = f.read()
+
+        self._validate_required_mern_files(all_code_files)
+
+        validation_warnings = []
+        validation_warnings.extend(
+            self._validate_openapi_coverage(all_code_files, openapi_spec)
+        )
+        validation_warnings.extend(
+            self._validate_dbpack_usage(all_code_files, db_pack)
+        )
+
+        all_generated_file_models = []
+
+        for rel_path in self._list_code_files(new_dir):
+            all_generated_file_models.append(
+                GeneratedFile(
+                    path=rel_path,
+                    purpose="Code file included in revised generated app",
+                    owner_agent=self._owner_for_file(rel_path),
+                )
+            )
+
+        manifest = CodeManifest(
+            run_id=run_id,
+            code_version=new_code_version,
+            source_srs_version=srs_version,
+            output_dir=str(new_dir),
+            input_artifacts=[
+                InputArtifactSummary(
+                    artifact_name="SRS",
+                    version=srs_version,
+                    path=str(srs_path),
+                ),
+                InputArtifactSummary(
+                    artifact_name="DomainPack",
+                    version=domain_version,
+                    path=str(domain_path),
+                ),
+                InputArtifactSummary(
+                    artifact_name="SDS",
+                    version=architecture_version,
+                    path=str(sds_path),
+                ),
+                InputArtifactSummary(
+                    artifact_name="OpenAPI",
+                    version=architecture_version,
+                    path=str(openapi_path),
+                ),
+                InputArtifactSummary(
+                    artifact_name="DBPack",
+                    version=architecture_version,
+                    path=str(db_path),
+                ),
+            ],
+            generated_files=all_generated_file_models,
+            responsibilities=self._responsibilities(all_generated_file_models),
+            traceability_links=self._traceability_links(
+                functional_reqs,
+                all_generated_file_models,
+                openapi_spec,
+            ),
+            run_instructions=[
+                "cd generated_app",
+                "docker-compose up --build",
+                "Or run backend and frontend manually using README.md.",
+            ],
+            validation_warnings=validation_warnings,
+        )
+
+        manifest_path = (
+            self.output_dir
+            / "runs"
+            / run_id
+            / "code"
+            / new_code_version
+            / f"CodeManifest_{new_code_version}.json"
+        )
+
+        manifest_path.parent.mkdir(parents=True, exist_ok=True)
+
+        with open(manifest_path, "w", encoding="utf-8") as f:
+            f.write(manifest.model_dump_json(indent=2))
+
+        return {
+            "status": "success",
+            "run_id": run_id,
+            "previous_code_version": current_code_version,
+            "code_version": new_code_version,
+            "source_srs_version": srs_version,
+            "manifest_path": str(manifest_path),
+            "output_dir": str(new_dir),
+            "changed_files": list(changed_files.keys()),
+            "changed_file_count": len(changed_files),
+            "selected_files_for_revision": selected_files,
+            "input_artifacts": {
+                "srs": str(srs_path),
+                "domain_pack": str(domain_path),
+                "sds": str(sds_path),
+                "openapi": str(openapi_path),
+                "db_pack": str(db_path),
+            },
+            "validation_warnings": validation_warnings,
+        }
 
     # ---------------------------------------------------------
     # Main generation method

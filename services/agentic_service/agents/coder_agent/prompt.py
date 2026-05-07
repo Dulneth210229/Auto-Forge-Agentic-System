@@ -588,3 +588,88 @@ def build_coder_prompt(context: dict) -> str:
     """
 
     return build_backend_prompt(context)
+
+def build_revision_prompt(context: dict) -> str:
+    """
+    Build a focused revision prompt for existing generated code.
+
+    This prompt does not regenerate the whole MERN project.
+    It updates only the files provided in selected_files.
+    """
+
+    project_name = context.get("project_name", "AutoForge E-Commerce App")
+    change_request = context.get("change_request", "")
+    selected_files = context.get("selected_files", {})
+    openapi_spec = context.get("openapi_spec", "")
+    sds_spec = context.get("sds_spec", {})
+    db_pack = context.get("db_pack", {})
+    domain_pack = context.get("domain_pack", {})
+
+    endpoint_summary = _extract_openapi_endpoints(openapi_spec)
+    module_summary = _extract_sds_modules(sds_spec)
+    entity_summary = _extract_db_entities(db_pack)
+    domain_summary = _extract_domain_summary(domain_pack)
+
+    selected_files_text = ""
+
+    for path, content in selected_files.items():
+        selected_files_text += f"\n\n--- FILE: {path} ---\n{content}\n"
+
+    return f"""
+You are the AutoForge Coder Agent revision worker.
+
+Your task is to revise an existing MERN e-commerce generated app.
+
+PROJECT:
+{project_name}
+
+USER CHANGE REQUEST:
+{change_request}
+
+STACK POLICY:
+- Use MERN only.
+- Backend: Node.js, Express.js, MongoDB, Mongoose.
+- Frontend: React + Vite.
+- Do not generate Python, Java, FastAPI, Spring Boot, Flask, Django, PHP, or Laravel files.
+
+IMPORTANT:
+- Do NOT regenerate the entire project.
+- Revise only the affected files.
+- Preserve existing file paths.
+- Return full updated file content for each changed file.
+- Do not return unchanged files unless needed.
+
+OPENAPI ENDPOINTS:
+{endpoint_summary}
+
+SDS MODULES:
+{module_summary}
+
+DBPACK ENTITIES:
+{entity_summary}
+
+DOMAIN SUMMARY:
+{domain_summary}
+
+SELECTED EXISTING FILES:
+{selected_files_text}
+
+OUTPUT FORMAT:
+Output ONLY file blocks.
+Your first character in the response must be < and your response must start with <file path="...">.
+
+Use this exact format:
+
+<file path="relative/path/to/file.ext">
+FULL UPDATED FILE CONTENT HERE
+</file>
+
+RULES:
+- No markdown outside file blocks.
+- No explanations.
+- No TODO, FIXME, placeholder, or incomplete code.
+- Every returned file must be complete and runnable.
+- Keep MERN structure.
+- If modifying routes, also update matching controller/service code when needed.
+- If modifying frontend API calls, make sure they match backend routes.
+"""

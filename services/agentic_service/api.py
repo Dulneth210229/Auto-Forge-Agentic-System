@@ -207,6 +207,48 @@ class CoderGenerateResponse(BaseModel):
     )
 
 
+class CoderReviseRequest(BaseModel):
+    """
+    Request body for revising generated code.
+
+    This creates a new code version from an existing generated code version.
+    """
+
+    run_id: str = Field(
+        default="RUN-0001",
+        description="AutoForge run ID"
+    )
+
+    current_code_version: str = Field(
+        default="v1",
+        description="Existing code version to revise"
+    )
+
+    new_code_version: str = Field(
+        default="v2",
+        description="New code version to create"
+    )
+
+    srs_version: str = Field(
+        default="v1",
+        description="SRS version used as source context"
+    )
+
+    domain_version: str = Field(
+        default="v1",
+        description="DomainPack version used as source context"
+    )
+
+    architecture_version: str = Field(
+        default="v1",
+        description="Architecture version used as source context"
+    )
+
+    change_request: str = Field(
+        ...,
+        description="Human revision instruction for the generated code"
+    )
+
 # ---------------------------------------------------------
 # Health Endpoint
 # ---------------------------------------------------------
@@ -483,6 +525,56 @@ async def generate_code(request: CoderGenerateRequest):
         raise HTTPException(
             status_code=500,
             detail=f"Coder Agent failed: {type(error).__name__}: {error}"
+        )
+    
+@app.post("/coder/revise")
+async def revise_code(request: CoderReviseRequest):
+    """
+    Revise an existing generated code version.
+
+    Example:
+    v5 generated app + user change request -> v6 generated app.
+    """
+
+    try:
+        logger.info(
+            f"Coder Agent: Revising code for run_id={request.run_id}, "
+            f"current_code_version={request.current_code_version}, "
+            f"new_code_version={request.new_code_version}"
+        )
+
+        result = await coder_agent.revise_code(
+            run_id=request.run_id,
+            current_code_version=request.current_code_version,
+            new_code_version=request.new_code_version,
+            change_request=request.change_request,
+            srs_version=request.srs_version,
+            domain_version=request.domain_version,
+            architecture_version=request.architecture_version,
+        )
+
+        logger.info(
+            f"Coder Agent: Revision completed. "
+            f"Changed files: {result.get('changed_file_count', 0)}"
+        )
+
+        return result
+
+    except FileNotFoundError as error:
+        logger.error(f"Coder Agent revision: File not found - {error}")
+        raise HTTPException(
+            status_code=404,
+            detail=f"Required file not found: {error}"
+        )
+
+    except Exception as error:
+        logger.error(
+            f"Coder Agent revision failed - {type(error).__name__}: {error}",
+            exc_info=True,
+        )
+        raise HTTPException(
+            status_code=500,
+            detail=f"Coder Agent revision failed: {type(error).__name__}: {error}"
         )
 
 
