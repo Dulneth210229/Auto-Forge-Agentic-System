@@ -1,5 +1,7 @@
 import logging
 from typing import Optional
+import threading
+from datetime import datetime
 
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
@@ -400,34 +402,55 @@ def revise_architecture(payload: dict):
 # UI/UX Agent Endpoints
 # ---------------------------------------------------------
 
+# ---------------------------------------------------------
+# UI/UX Agent Endpoints - Manual Split Workflow
+# ---------------------------------------------------------
+
 @app.post("/uiux/srs/validate")
 def validate_uiux_inputs(payload: dict):
+    """
+    Validates that the approved upstream artifacts required by UI/UX Agent exist.
+
+    Required:
+    - Approved SRS
+    - Approved DomainPack
+    - Approved Architecture output:
+      SDS JSON, OpenAPI YAML, DBPack JSON
+    """
+
     try:
-        srs, domain_pack, sds, api_contract, db_pack = uiux_agent.load_approved_inputs(
+        return uiux_agent.validate_approved_inputs(
             run_id=payload.get("run_id", "RUN-0001"),
             srs_version=payload.get("srs_version", "v1"),
             domain_version=payload.get("domain_version", "v1"),
             architecture_version=payload.get("architecture_version", "v1"),
         )
 
-        return uiux_agent.validate_inputs(
-            srs=srs,
-            domain_pack=domain_pack,
-            sds=sds,
-            api_contract=api_contract,
-            db_pack=db_pack,
-        )
-
     except Exception as error:
         import traceback
         traceback.print_exc()
-        raise HTTPException(status_code=500, detail=f"{type(error).__name__}: {str(error)}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"{type(error).__name__}: {str(error)}",
+        )
 
 
-@app.post("/uiux/designpack/generate")
-def generate_uiux_design_pack(payload: dict):
+@app.post("/uiux/plan/generate")
+def generate_uiux_plan(payload: dict):
+    """
+    Step 1:
+    Generates UI/UX plan only.
+
+    Outputs:
+    - uiux_plan_vX.json
+    - user_flows_vX.json
+    - user_flows_vX.mmd
+    - user_flows_vX.png if render_images=True
+    - trace_uiux_vX.json
+    """
+
     try:
-        return uiux_agent.generate_design_pack(
+        return uiux_agent.generate_plan(
             run_id=payload.get("run_id", "RUN-0001"),
             srs_version=payload.get("srs_version", "v1"),
             domain_version=payload.get("domain_version", "v1"),
@@ -441,16 +464,88 @@ def generate_uiux_design_pack(payload: dict):
     except Exception as error:
         import traceback
         traceback.print_exc()
-        raise HTTPException(status_code=500, detail=f"{type(error).__name__}: {str(error)}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"{type(error).__name__}: {str(error)}",
+        )
+
+
+@app.post("/uiux/wireframes/generate-all")
+def generate_all_uiux_wireframes(payload: dict):
+    """
+    Step 2:
+    Generates all wireframes from the saved UI/UX plan.
+
+    Important:
+    - Run /uiux/plan/generate first.
+    - This reads uiux_plan_vX.json.
+    - Generates HTML/PNG screen by screen.
+    - skip_existing=True avoids regenerating completed screens.
+    """
+
+    try:
+        return uiux_agent.generate_all_wireframes(
+            run_id=payload.get("run_id", "RUN-0001"),
+            srs_version=payload.get("srs_version", "v1"),
+            domain_version=payload.get("domain_version", "v1"),
+            architecture_version=payload.get("architecture_version", "v1"),
+            uiux_version=payload.get("uiux_version", "v1"),
+            render_images=payload.get("render_images", True),
+            user_prompt=payload.get("user_prompt"),
+            fail_fast=payload.get("fail_fast", False),
+            skip_existing=payload.get("skip_existing", True),
+            max_screens=payload.get("max_screens"),
+        )
+
+    except Exception as error:
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(
+            status_code=500,
+            detail=f"{type(error).__name__}: {str(error)}",
+        )
+
+
+@app.post("/uiux/designpack/finalize")
+def finalize_uiux_design_pack(payload: dict):
+    """
+    Step 3:
+    Finalizes UIUXPack from existing artifacts.
+
+    This endpoint does not call Ollama.
+    """
+
+    try:
+        return uiux_agent.finalize_design_pack(
+            run_id=payload.get("run_id", "RUN-0001"),
+            srs_version=payload.get("srs_version", "v1"),
+            domain_version=payload.get("domain_version", "v1"),
+            architecture_version=payload.get("architecture_version", "v1"),
+            uiux_version=payload.get("uiux_version", "v1"),
+        )
+
+    except Exception as error:
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(
+            status_code=500,
+            detail=f"{type(error).__name__}: {str(error)}",
+        )
 
 
 @app.post("/uiux/designpack/revise")
 def revise_uiux_design_pack(payload: dict):
+    """
+    Revises UI/UX outputs as a new version.
+
+    Used only when user gives a change request.
+    """
+
     try:
         if not payload.get("change_request"):
             raise HTTPException(
                 status_code=400,
-                detail="change_request is required when revising UI/UX outputs."
+                detail="change_request is required when revising UI/UX outputs.",
             )
 
         return uiux_agent.revise_design_pack(
@@ -463,6 +558,9 @@ def revise_uiux_design_pack(payload: dict):
             architecture_version=payload.get("architecture_version", "v1"),
             include_admin=payload.get("include_admin", True),
             render_images=payload.get("render_images", True),
+            fail_fast=payload.get("fail_fast", False),
+            skip_existing=payload.get("skip_existing", True),
+            max_screens=payload.get("max_screens"),
         )
 
     except HTTPException:
@@ -471,7 +569,277 @@ def revise_uiux_design_pack(payload: dict):
     except Exception as error:
         import traceback
         traceback.print_exc()
-        raise HTTPException(status_code=500, detail=f"{type(error).__name__}: {str(error)}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"{type(error).__name__}: {str(error)}",
+        )
+
+
+@app.post("/uiux/designpack/generate")
+def generate_uiux_design_pack_legacy(payload: dict):
+    """
+    Legacy endpoint.
+
+    This still works, but it runs the full workflow in one request.
+    For best stability, use:
+    - /orchestrator/uiux/run
+    """
+
+    try:
+        return uiux_agent.generate_design_pack(
+            run_id=payload.get("run_id", "RUN-0001"),
+            srs_version=payload.get("srs_version", "v1"),
+            domain_version=payload.get("domain_version", "v1"),
+            architecture_version=payload.get("architecture_version", "v1"),
+            uiux_version=payload.get("uiux_version", "v1"),
+            include_admin=payload.get("include_admin", True),
+            render_images=payload.get("render_images", True),
+            user_prompt=payload.get("user_prompt"),
+            change_request=payload.get("change_request"),
+        )
+
+    except Exception as error:
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(
+            status_code=500,
+            detail=f"{type(error).__name__}: {str(error)}",
+        )
+
+
+# ---------------------------------------------------------
+# UI/UX Orchestrator - No public job_id
+# ---------------------------------------------------------
+
+uiux_jobs = {}
+uiux_jobs_lock = threading.Lock()
+
+
+def _now_iso() -> str:
+    """
+    Returns UTC timestamp string.
+    """
+
+    return datetime.utcnow().isoformat() + "Z"
+
+
+def _uiux_job_key(run_id: str, uiux_version: str) -> str:
+    """
+    Internal key.
+
+    User does not need to know this.
+    User tracks using run_id + uiux_version.
+    """
+
+    return f"{run_id}:{uiux_version}"
+
+
+def _set_uiux_job(run_id: str, uiux_version: str, updates: dict):
+    """
+    Thread-safe UI/UX job state update.
+    """
+
+    key = _uiux_job_key(run_id, uiux_version)
+
+    with uiux_jobs_lock:
+        current = uiux_jobs.get(key, {})
+        current.update(updates)
+        current["run_id"] = run_id
+        current["uiux_version"] = uiux_version
+        current["updated_at"] = _now_iso()
+        uiux_jobs[key] = current
+
+
+def _run_uiux_orchestrator_job(payload: dict):
+    """
+    Background UI/UX workflow.
+
+    User-facing identity:
+    - run_id
+    - uiux_version
+
+    Internal steps:
+    1. Generate UI/UX plan
+    2. Generate all wireframe HTML + PNG images
+    3. Finalize UIUXPack
+    """
+
+    run_id = payload.get("run_id", "RUN-0001")
+    srs_version = payload.get("srs_version", "v1")
+    domain_version = payload.get("domain_version", "v1")
+    architecture_version = payload.get("architecture_version", "v1")
+    uiux_version = payload.get("uiux_version", "v1")
+    include_admin = payload.get("include_admin", True)
+    render_images = payload.get("render_images", True)
+    user_prompt = payload.get("user_prompt")
+    fail_fast = payload.get("fail_fast", False)
+    skip_existing = payload.get("skip_existing", True)
+    max_screens = payload.get("max_screens")
+
+    try:
+        _set_uiux_job(
+            run_id,
+            uiux_version,
+            {
+                "status": "running",
+                "stage": "plan_generation",
+                "message": "Generating UI/UX plan and user flow.",
+                "started_at": _now_iso(),
+                "payload": payload,
+            },
+        )
+
+        plan_result = uiux_agent.generate_plan(
+            run_id=run_id,
+            srs_version=srs_version,
+            domain_version=domain_version,
+            architecture_version=architecture_version,
+            uiux_version=uiux_version,
+            include_admin=include_admin,
+            render_images=render_images,
+            user_prompt=user_prompt,
+        )
+
+        _set_uiux_job(
+            run_id,
+            uiux_version,
+            {
+                "status": "running",
+                "stage": "wireframe_generation",
+                "message": "Generating wireframe HTML and PNG images screen by screen.",
+                "plan_result": plan_result,
+            },
+        )
+
+        wireframe_result = uiux_agent.generate_all_wireframes(
+            run_id=run_id,
+            srs_version=srs_version,
+            domain_version=domain_version,
+            architecture_version=architecture_version,
+            uiux_version=uiux_version,
+            render_images=render_images,
+            user_prompt=user_prompt,
+            fail_fast=fail_fast,
+            skip_existing=skip_existing,
+            max_screens=max_screens,
+        )
+
+        _set_uiux_job(
+            run_id,
+            uiux_version,
+            {
+                "status": "running",
+                "stage": "finalization",
+                "message": "Finalizing UIUXPack JSON and Markdown.",
+                "wireframe_result": wireframe_result,
+            },
+        )
+
+        finalize_result = uiux_agent.finalize_design_pack(
+            run_id=run_id,
+            srs_version=srs_version,
+            domain_version=domain_version,
+            architecture_version=architecture_version,
+            uiux_version=uiux_version,
+            status="finalized",
+        )
+
+        final_status = "success"
+
+        if wireframe_result.get("failed_count", 0) > 0:
+            final_status = "partial_success"
+
+        _set_uiux_job(
+            run_id,
+            uiux_version,
+            {
+                "status": final_status,
+                "stage": "completed",
+                "message": "UI/UX orchestration completed.",
+                "finalize_result": finalize_result,
+                "completed_at": _now_iso(),
+            },
+        )
+
+    except Exception as error:
+        import traceback
+        traceback.print_exc()
+
+        _set_uiux_job(
+            run_id,
+            uiux_version,
+            {
+                "status": "failed",
+                "stage": "failed",
+                "message": f"{type(error).__name__}: {str(error)}",
+                "error": f"{type(error).__name__}: {str(error)}",
+                "completed_at": _now_iso(),
+            },
+        )
+
+
+@app.post("/orchestrator/uiux/run")
+def run_uiux_orchestrator(payload: dict):
+    """
+    Starts the full UI/UX workflow in the background.
+
+    No public job_id is required.
+    User tracks progress using run_id + uiux_version.
+    """
+
+    run_id = payload.get("run_id", "RUN-0001")
+    uiux_version = payload.get("uiux_version", "v1")
+
+    _set_uiux_job(
+        run_id,
+        uiux_version,
+        {
+            "status": "queued",
+            "stage": "queued",
+            "message": "UI/UX orchestration queued.",
+            "payload": payload,
+            "created_at": _now_iso(),
+        },
+    )
+
+    worker = threading.Thread(
+        target=_run_uiux_orchestrator_job,
+        args=(payload,),
+        daemon=True,
+    )
+
+    worker.start()
+
+    return {
+        "status": "started",
+        "run_id": run_id,
+        "uiux_version": uiux_version,
+        "message": "UI/UX workflow started in background.",
+        "status_endpoint": f"/orchestrator/uiux/status?run_id={run_id}&uiux_version={uiux_version}",
+    }
+
+
+@app.get("/orchestrator/uiux/status")
+def get_uiux_orchestrator_status(run_id: str, uiux_version: str):
+    """
+    Returns UI/UX orchestration status using run_id + uiux_version.
+
+    No job_id is required.
+    """
+
+    key = _uiux_job_key(run_id, uiux_version)
+
+    with uiux_jobs_lock:
+        job = uiux_jobs.get(key)
+
+    if not job:
+        raise HTTPException(
+            status_code=404,
+            detail=f"No UI/UX orchestration found for run_id={run_id}, uiux_version={uiux_version}",
+        )
+
+    return job
+
 
 
 # ---------------------------------------------------------
