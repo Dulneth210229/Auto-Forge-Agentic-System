@@ -122,6 +122,63 @@ class CoderAgent:
 
         path = self._first_existing_path(possible_paths, "DBPack")
         return self._load_json_file(path, "DBPack"), path
+    
+    def _load_user_flows(self, run_id: str, uiux_version: str) -> tuple[dict, Path]:
+        """
+        Load UI/UX user flows JSON from UIUX Agent outputs.
+        """
+
+        possible_paths = [
+            self.output_dir / "runs" / run_id / "uiux" / uiux_version / "flows" / f"user_flows_{uiux_version}.json",
+            self.output_dir / "runs" / run_id / "uiux" / uiux_version / "flows" / "user_flows.json",
+        ]
+
+        path = self._first_existing_path(possible_paths, "UI/UX user flows")
+        return self._load_json_file(path, "UI/UX user flows"), path
+
+    def _load_wireframes(
+        self,
+        run_id: str,
+        uiux_version: str,
+        max_chars_per_file: int = 2000
+    ) -> tuple[dict, list[Path]]:
+        """
+        Load HTML wireframes from UIUX Agent outputs.
+
+        The returned dictionary uses filename as key and trimmed HTML as value.
+        """
+
+        wireframe_dir = (
+            self.output_dir
+            / "runs"
+            / run_id
+            / "uiux"
+            / uiux_version
+            / "wireframes"
+        )
+
+        if not wireframe_dir.exists():
+            raise FileNotFoundError(f"UI/UX wireframes folder not found: {wireframe_dir}")
+
+        wireframes = {}
+        paths = []
+
+        for html_path in sorted(wireframe_dir.glob("*.html")):
+            with open(html_path, "r", encoding="utf-8") as f:
+                content = f.read()
+
+            if len(content) > max_chars_per_file:
+                content = content[:max_chars_per_file] + "\n<!-- TRUNCATED FOR CODER PROMPT -->"
+
+            wireframes[html_path.name] = content
+            paths.append(html_path)
+
+        if not wireframes:
+            raise FileNotFoundError(f"No HTML wireframes found in: {wireframe_dir}")
+
+        return wireframes, paths
+    
+
 
     # ---------------------------------------------------------
     # Extraction helpers
@@ -856,6 +913,7 @@ Previous response:
         srs_version: str = "v1",
         domain_version: str = "v1",
         architecture_version: str = "v1",
+        uiux_version: str = "v1",
     ) -> dict:
         """
         Revise an existing generated MERN app.
@@ -874,6 +932,8 @@ Previous response:
         sds_spec, sds_path = self._load_sds(run_id, architecture_version)
         openapi_spec, openapi_path = self._load_openapi(run_id, architecture_version)
         db_pack, db_path = self._load_db_pack(run_id, architecture_version)
+        user_flows, user_flows_path = self._load_user_flows(run_id, uiux_version)
+        wireframes, wireframe_paths = self._load_wireframes(run_id, uiux_version)
 
         _, new_dir = self._copy_existing_code_version(
             run_id=run_id,
@@ -905,6 +965,8 @@ Previous response:
             "sds_spec": sds_spec,
             "openapi_spec": openapi_spec,
             "db_pack": db_pack,
+            "user_flows": user_flows,
+            "wireframes": wireframes,
         }
 
         revision_prompt = build_revision_prompt(context)
@@ -1014,6 +1076,23 @@ Previous response:
                     version=architecture_version,
                     path=str(db_path),
                 ),
+                InputArtifactSummary(
+                    artifact_name="UIUXUserFlows",
+                    version=uiux_version,
+                    path=str(user_flows_path),
+                ),
+                InputArtifactSummary(
+                    artifact_name="UIUXWireframes",
+                    version=uiux_version,
+                    path=str(
+                        self.output_dir
+                        / "runs"
+                        / run_id
+                        / "uiux"
+                        / uiux_version
+                        / "wireframes"
+                    ),
+                ),
             ],
             generated_files=all_generated_file_models,
             responsibilities=self._responsibilities(all_generated_file_models),
@@ -1061,6 +1140,10 @@ Previous response:
                 "sds": str(sds_path),
                 "openapi": str(openapi_path),
                 "db_pack": str(db_path),
+                "uiux_user_flows": str(user_flows_path),
+                "uiux_wireframes": [
+                    str(path) for path in wireframe_paths
+                ],
             },
             "validation_warnings": validation_warnings,
         }
@@ -1076,6 +1159,7 @@ Previous response:
         code_version: str = "v1",
         domain_version: str = "v1",
         architecture_version: str = "v1",
+        uiux_version: str = "v1",
     ) -> dict:
         """
         Generate runnable MERN application code from approved artifacts.
@@ -1096,6 +1180,8 @@ Previous response:
         sds_spec, sds_path = self._load_sds(run_id, architecture_version)
         openapi_spec, openapi_path = self._load_openapi(run_id, architecture_version)
         db_pack, db_path = self._load_db_pack(run_id, architecture_version)
+        user_flows, user_flows_path = self._load_user_flows(run_id, uiux_version)
+        wireframes, wireframe_paths = self._load_wireframes(run_id, uiux_version)
 
         project_name = self._extract_project_name(srs_data)
         functional_reqs = self._extract_functional_requirements(srs_data)
@@ -1117,6 +1203,8 @@ Previous response:
             "sds_spec": sds_spec,
             "openapi_spec": openapi_spec,
             "db_pack": db_pack,
+            "user_flows": user_flows,
+            "wireframes": wireframes,
         }
 
         # 3. Split generation steps.
@@ -1207,6 +1295,24 @@ Previous response:
                     version=architecture_version,
                     path=str(db_path),
                 ),
+                InputArtifactSummary(
+                    artifact_name="UIUXUserFlows",
+                    version=uiux_version,
+                    path=str(user_flows_path),
+                ),
+                InputArtifactSummary(
+                    artifact_name="UIUXWireframes",
+                    version=uiux_version,
+                    path=str(
+                        self.output_dir
+                        / "runs"
+                        / run_id
+                        / "uiux"
+                        / uiux_version
+                        / "wireframes"
+                    ),
+                ),
+                
             ],
             generated_files=generated_files,
             responsibilities=self._responsibilities(generated_files),
@@ -1251,6 +1357,10 @@ Previous response:
                 "sds": str(sds_path),
                 "openapi": str(openapi_path),
                 "db_pack": str(db_path),
+                "uiux_user_flows": str(user_flows_path),
+                "uiux_wireframes": [
+                    str(path) for path in wireframe_paths
+                ],
             },
             "validation_warnings": validation_warnings,
         }
