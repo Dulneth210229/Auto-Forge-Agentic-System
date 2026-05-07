@@ -151,6 +151,12 @@ class TestingRunResponse(BaseModel):
 class CoderGenerateRequest(BaseModel):
     """
     Request body for the Coder Agent code generation.
+    
+    Inputs from multiple agents:
+    - srs_version: SRS from Requirement Agent
+    - architecture_version: OpenAPI, SDS from Architect Agent
+    - domain_version: DomainPack from Domain Agent
+    - Database artifacts are loaded from architecture_version path
     """
 
     run_id: str = Field(
@@ -160,12 +166,22 @@ class CoderGenerateRequest(BaseModel):
 
     srs_version: str = Field(
         default="v1",
-        description="Source SRS version (e.g., v1, v2)"
+        description="Source SRS version from Requirement Agent (e.g., v1, v2)"
     )
 
     code_version: str = Field(
         default="v1",
         description="Target code version to generate (e.g., v1, v2)"
+    )
+
+    domain_version: str = Field(
+        default="v1",
+        description="DomainPack version from Domain Agent (e.g., v1, v2)"
+    )
+
+    architecture_version: str = Field(
+        default="v1",
+        description="Architecture version (OpenAPI, SDS, DBPack from Architect Agent)"
     )
 
 
@@ -182,6 +198,58 @@ class CoderGenerateResponse(BaseModel):
     output_dir: str
     generated_file_count: int
 
+    input_artifacts: dict = Field(
+        default_factory=dict,
+        description="Artifact files used by the Coder Agent"
+    )
+
+    validation_warnings: list[str] = Field(
+        default_factory=list,
+        description="Warnings about OpenAPI or DBPack coverage"
+    )
+
+
+class CoderReviseRequest(BaseModel):
+    """
+    Request body for revising generated code.
+
+    This creates a new code version from an existing generated code version.
+    """
+
+    run_id: str = Field(
+        default="RUN-0001",
+        description="AutoForge run ID"
+    )
+
+    current_code_version: str = Field(
+        default="v1",
+        description="Existing code version to revise"
+    )
+
+    new_code_version: str = Field(
+        default="v2",
+        description="New code version to create"
+    )
+
+    srs_version: str = Field(
+        default="v1",
+        description="SRS version used as source context"
+    )
+
+    domain_version: str = Field(
+        default="v1",
+        description="DomainPack version used as source context"
+    )
+
+    architecture_version: str = Field(
+        default="v1",
+        description="Architecture version used as source context"
+    )
+
+    change_request: str = Field(
+        ...,
+        description="Human revision instruction for the generated code"
+    )
 
 # ---------------------------------------------------------
 # Health Endpoint
@@ -313,49 +381,6 @@ def generate_architecture(payload: dict):
         raise HTTPException(
             status_code=500,
             detail=f"Architect Agent failed: {error}"
-        )
-
-
-# ---------------------------------------------------------
-# Coder Agent Endpoints
-# ---------------------------------------------------------
-
-@app.post("/coder/generate", response_model=CoderGenerateResponse)
-async def generate_code(request: CoderGenerateRequest):
-    """
-    Generate runnable application code from the approved SRS using the Coder Agent.
-
-    This endpoint:
-    - reads SRS_{srs_version}.json
-    - generates code files (backend, frontend, devops)
-    - creates CodeManifest_{code_version}.json
-    - returns generated file paths and count
-    """
-    
-    try:
-        logger.info(f"Coder Agent: Generating code for run_id={request.run_id}, srs_version={request.srs_version}, code_version={request.code_version}")
-        
-        result = await coder_agent.generate_code(
-            run_id=request.run_id,
-            srs_version=request.srs_version,
-            code_version=request.code_version
-        )
-        
-        logger.info(f"Coder Agent: Successfully generated {result.get('generated_file_count', 0)} files")
-        return result
-    
-    except FileNotFoundError as error:
-        logger.error(f"Coder Agent: SRS file not found - {error}")
-        raise HTTPException(
-            status_code=404,
-            detail=f"SRS file not found: {error}"
-        )
-    
-    except Exception as error:
-        logger.error(f"Coder Agent: Unexpected error - {type(error).__name__}: {error}", exc_info=True)
-        raise HTTPException(
-            status_code=500,
-            detail=f"Coder Agent failed: {type(error).__name__}: {error}"
         )
 
 @app.post("/architecture/revise")
@@ -814,6 +839,111 @@ def get_uiux_orchestrator_status(run_id: str, uiux_version: str):
         )
 
     return job
+
+
+
+# ---------------------------------------------------------
+# Coder Agent Endpoints
+# ---------------------------------------------------------
+
+@app.post("/coder/generate", response_model=CoderGenerateResponse)
+async def generate_code(request: CoderGenerateRequest):
+    """
+    Generate runnable application code from multiple approved artifacts using the Coder Agent.
+
+    Inputs:
+    - SRS from Requirement Agent (srs_version)
+    - OpenAPI.yaml, SDS from Architect Agent (architecture_version)
+    - DBPack from Database Agent (architecture_version)
+    - DomainPack from Domain Agent (domain_version)
+
+    This endpoint:
+    - reads SRS_{srs_version}.json
+    - reads OpenAPI.yaml and SDS.json from architecture
+    - reads DBPack.json from database
+    - reads DomainPack.json from domain
+    - generates code files based on all inputs (backend, frontend, devops)
+    - creates CodeManifest_{code_version}.json
+    - returns generated file paths and count
+    """
+    
+    try:
+        logger.info(f"Coder Agent: Generating code for run_id={request.run_id}, srs_version={request.srs_version}, code_version={request.code_version}, architecture_version={request.architecture_version}, domain_version={request.domain_version}")
+        
+        result = await coder_agent.generate_code(
+            run_id=request.run_id,
+            srs_version=request.srs_version,
+            code_version=request.code_version,
+            domain_version=request.domain_version,
+            architecture_version=request.architecture_version
+        )
+        
+        logger.info(f"Coder Agent: Successfully generated {result.get('generated_file_count', 0)} files")
+        return result
+    
+    except FileNotFoundError as error:
+        logger.error(f"Coder Agent: Required artifact file not found - {error}")
+        raise HTTPException(
+            status_code=404,
+            detail=f"Required artifact not found: {error}"
+        )
+    
+    except Exception as error:
+        logger.error(f"Coder Agent: Unexpected error - {type(error).__name__}: {error}", exc_info=True)
+        raise HTTPException(
+            status_code=500,
+            detail=f"Coder Agent failed: {type(error).__name__}: {error}"
+        )
+    
+@app.post("/coder/revise")
+async def revise_code(request: CoderReviseRequest):
+    """
+    Revise an existing generated code version.
+
+    Example:
+    v5 generated app + user change request -> v6 generated app.
+    """
+
+    try:
+        logger.info(
+            f"Coder Agent: Revising code for run_id={request.run_id}, "
+            f"current_code_version={request.current_code_version}, "
+            f"new_code_version={request.new_code_version}"
+        )
+
+        result = await coder_agent.revise_code(
+            run_id=request.run_id,
+            current_code_version=request.current_code_version,
+            new_code_version=request.new_code_version,
+            change_request=request.change_request,
+            srs_version=request.srs_version,
+            domain_version=request.domain_version,
+            architecture_version=request.architecture_version,
+        )
+
+        logger.info(
+            f"Coder Agent: Revision completed. "
+            f"Changed files: {result.get('changed_file_count', 0)}"
+        )
+
+        return result
+
+    except FileNotFoundError as error:
+        logger.error(f"Coder Agent revision: File not found - {error}")
+        raise HTTPException(
+            status_code=404,
+            detail=f"Required file not found: {error}"
+        )
+
+    except Exception as error:
+        logger.error(
+            f"Coder Agent revision failed - {type(error).__name__}: {error}",
+            exc_info=True,
+        )
+        raise HTTPException(
+            status_code=500,
+            detail=f"Coder Agent revision failed: {type(error).__name__}: {error}"
+        )
 
 
 # ---------------------------------------------------------

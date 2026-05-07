@@ -84,6 +84,7 @@
 
 #=======================================================Dulneth's edits end here=======================================================##
 import os
+import json
 from abc import ABC, abstractmethod
 
 import httpx
@@ -101,25 +102,59 @@ class LLMProvider(ABC):
 class OllamaProvider(LLMProvider):
     def __init__(self):
         self.base_url = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
-        self.model = os.getenv("OLLAMA_MODEL", "llama3")
+        self.model = os.getenv("OLLAMA_MODEL", "qwen2.5-coder:7b")  # ✅ updated default model
 
     async def generate(self, prompt: str) -> str:
         payload = {
             "model": self.model,
             "prompt": prompt,
-            "stream": False,
+            "stream": True,
             "options": {
-                "temperature": 0.2
+                "temperature": 0.1,       # ✅ lowered: more deterministic code output
+                "num_ctx": 16384,         # ✅ increased: use qwen2.5-coder's large context window
+                "num_predict": 6000,      # ✅ increased: prevents mid-file cutoff
+                "top_p": 0.9,             # ✅ added: better token selection
+                "top_k": 40,              # ✅ added: limits token candidates for quality
+                "repeat_penalty": 1.1,    # ✅ added: prevents looping/repetitive output
+                "num_keep": 24            # ✅ added: matches model's recommended num_keep
             }
         }
 
-        async with httpx.AsyncClient(timeout=1600) as client:
-            response = await client.post(
+        timeout = httpx.Timeout(
+            connect=30.0,
+            read=900.0,    # ✅ increased: 15 min — CPU inference needs more time
+            write=30.0,
+            pool=30.0
+        )
+
+        chunks = []
+
+        async with httpx.AsyncClient(timeout=timeout) as client:
+            async with client.stream(
+                "POST",
                 f"{self.base_url}/api/generate",
                 json=payload
-            )
+            ) as response:
+                response.raise_for_status()
 
-        response.raise_for_status()
-        data = response.json()
+                async for line in response.aiter_lines():
+                    if not line:
+                        continue
 
-        return data.get("response", "")
+                    try:
+                        data = json.loads(line)
+                    except json.JSONDecodeError:
+                        continue  # ✅ added: safely skip malformed lines
+
+                    if "response" in data:
+                        chunks.append(data["response"])
+
+                    if data.get("done") is True:
+                        break
+
+        return "".join(chunks)
+
+
+# ✅ added: FastAPI dependency injection helper
+def get_llm_provider() -> LLMProvider:
+    return OllamaProvider()
