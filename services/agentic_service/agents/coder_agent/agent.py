@@ -28,6 +28,10 @@ class CoderAgent:
     # ---------------------------------------------------------
 
     def _load_json_file(self, path: Path, artifact_name: str) -> dict:
+        """
+        Load a JSON artifact from disk.
+        """
+
         if not path.exists():
             raise FileNotFoundError(f"{artifact_name} not found: {path}")
 
@@ -35,6 +39,10 @@ class CoderAgent:
             return json.load(f)
 
     def _load_text_file(self, path: Path, artifact_name: str) -> str:
+        """
+        Load a text artifact from disk, such as OpenAPI YAML.
+        """
+
         if not path.exists():
             raise FileNotFoundError(f"{artifact_name} not found: {path}")
 
@@ -42,6 +50,10 @@ class CoderAgent:
             return f.read()
 
     def _first_existing_path(self, paths: list[Path], artifact_name: str) -> Path:
+        """
+        Returns the first existing path from possible versioned/non-versioned paths.
+        """
+
         for path in paths:
             if path.exists():
                 return path
@@ -114,6 +126,10 @@ class CoderAgent:
     # ---------------------------------------------------------
 
     def _extract_project_name(self, srs_data: dict) -> str:
+        """
+        Extract project name from possible SRS shapes.
+        """
+
         if srs_data.get("project_name"):
             return srs_data["project_name"]
 
@@ -124,6 +140,10 @@ class CoderAgent:
         return "Generated Application"
 
     def _extract_functional_requirements(self, srs_data: dict) -> list:
+        """
+        Extract functional requirements from possible SRS shapes.
+        """
+
         if isinstance(srs_data.get("functional_requirements"), list):
             return srs_data["functional_requirements"]
 
@@ -134,16 +154,35 @@ class CoderAgent:
         return []
 
     def _extract_db_entities(self, db_pack: dict) -> list[str]:
-        entities = db_pack.get("entities", [])
+        """
+        Extract entity names from DBPack for validation and traceability warnings.
+        """
+
+        if not isinstance(db_pack, dict):
+            return []
+
+        entities = (
+            db_pack.get("entities")
+            or db_pack.get("data_models")
+            or db_pack.get("models")
+            or []
+        )
+
         entity_names = []
 
         for entity in entities:
-            if isinstance(entity, dict) and entity.get("name"):
-                entity_names.append(entity["name"])
+            if isinstance(entity, dict):
+                name = entity.get("name") or entity.get("entity_name")
+                if name:
+                    entity_names.append(name)
 
         return entity_names
 
     def _extract_endpoints_from_openapi(self, openapi_spec: str) -> list[str]:
+        """
+        Extract endpoint strings from OpenAPI text.
+        """
+
         if not openapi_spec or not isinstance(openapi_spec, str):
             return []
 
@@ -180,7 +219,11 @@ class CoderAgent:
 
     def _is_safe_path(self, relative_path: str) -> bool:
         """
-        Calls patch_policy.py. Supports both old and new signatures.
+        Call patch_policy.py.
+
+        This supports both:
+        - old function signature: is_safe_generated_path(path)
+        - new function signature: is_safe_generated_path(path, tech_stack="mern")
         """
 
         try:
@@ -196,6 +239,10 @@ class CoderAgent:
         purpose: str,
         owner_agent: str,
     ) -> GeneratedFile:
+        """
+        Write one generated file after path policy validation.
+        """
+
         if not self._is_safe_path(relative_path):
             raise ValueError(f"Unsafe or unsupported MERN generated path: {relative_path}")
 
@@ -222,6 +269,10 @@ class CoderAgent:
         response_text: str,
         filename: str,
     ) -> str:
+        """
+        Save raw LLM responses for debugging.
+        """
+
         debug_dir = (
             self.output_dir
             / "runs"
@@ -240,7 +291,18 @@ class CoderAgent:
 
         return str(debug_path)
 
-    async def _repair_llm_output_to_file_blocks(self, raw_text: str, step_name: str) -> str:
+    async def _repair_llm_output_to_file_blocks(
+        self,
+        raw_text: str,
+        step_name: str,
+    ) -> str:
+        """
+        Repair formatting only.
+
+        This does not generate new requirements.
+        It asks the model to convert its previous response into file blocks.
+        """
+
         repair_prompt = f"""
 You generated code for the {step_name} step, but the output format was invalid.
 
@@ -278,8 +340,16 @@ Previous response:
         code_version: str,
     ) -> dict:
         """
-        Generate files for one step: Backend, Frontend, or DevOps.
-        If parsing fails, save raw output and try one repair call.
+        Generate files for one step:
+        - Backend
+        - Frontend
+        - DevOps
+
+        Each step gets:
+        1. One generation call
+        2. Parse attempt
+        3. Repair call only if parse fails
+        4. Debug files saved
         """
 
         response_text = await self.llm_provider.generate(prompt)
@@ -322,6 +392,10 @@ Previous response:
     # ---------------------------------------------------------
 
     def _owner_for_file(self, relative_path: str) -> str:
+        """
+        Assign generated files to internal responsibilities.
+        """
+
         lower = relative_path.lower()
 
         if lower.startswith("backend/models/") or "model" in lower or "schema" in lower:
@@ -342,6 +416,10 @@ Previous response:
         return "Development Agent"
 
     def _responsibilities(self, generated_files: list[GeneratedFile]) -> list:
+        """
+        Build responsibility summary from generated file ownership.
+        """
+
         development_outputs = []
         database_outputs = []
         devops_outputs = []
@@ -393,6 +471,12 @@ Previous response:
         generated_files: list[GeneratedFile],
         openapi_spec: str,
     ) -> list:
+        """
+        Basic requirement-to-code traceability.
+
+        Later this can be improved by matching requirement IDs to exact routes.
+        """
+
         endpoints = self._extract_endpoints_from_openapi(openapi_spec)
         generated_paths = [file.path for file in generated_files]
 
@@ -418,6 +502,10 @@ Previous response:
     # ---------------------------------------------------------
 
     def _validate_generated_files_exist(self, code_files: dict) -> None:
+        """
+        Ensure at least some files were generated.
+        """
+
         if not code_files:
             raise ValueError(
                 "The LLM did not generate any files. "
@@ -425,6 +513,13 @@ Previous response:
             )
 
     def _validate_required_mern_files(self, code_files: dict) -> None:
+        """
+        Validate the required MERN output.
+
+        Because SDS may request monolith or microservices, backend internals may vary.
+        But the minimum runnable MERN structure must still exist.
+        """
+
         required_files = [
             "backend/package.json",
             "backend/server.js",
@@ -458,6 +553,15 @@ Previous response:
             )
 
     def _validate_no_placeholder_content(self, relative_path: str, content: str) -> None:
+        """
+        Reject clearly incomplete generated files.
+
+        Important:
+        We do NOT block the single word "placeholder" because valid code may use
+        names like placeholderImage or comments like demo placeholder token.
+        Instead, we block stronger incomplete-code phrases.
+        """
+
         lower_content = content.lower()
 
         blocked_phrases = [
@@ -466,24 +570,35 @@ Previous response:
             "implement me",
             "generated endpoints should be implemented here",
             "generated content should go here",
+            "add your code here",
+            "write your code here",
+            "replace this with",
+            "this is a stub",
+            "stub implementation",
+            "not implemented",
+            "coming soon",
             "... add more",
             "todo:",
             "fixme:",
             "xxx:",
             "hack:",
-            "placeholder",
         ]
 
         for phrase in blocked_phrases:
             if phrase in lower_content:
                 raise ValueError(
-                    f"Generated file contains incomplete placeholder text: {relative_path}"
+                    f"Generated file contains incomplete placeholder text: {relative_path}. "
+                    f"Blocked phrase: {phrase}"
                 )
 
         if len(content.strip()) < 5:
             raise ValueError(f"Generated file is empty or too short: {relative_path}")
 
     def _validate_openapi_coverage(self, code_files: dict, openapi_spec: str) -> list[str]:
+        """
+        Warning-only endpoint coverage check.
+        """
+
         endpoints = self._extract_endpoints_from_openapi(openapi_spec)
         combined_code = "\n".join(code_files.values())
         warnings = []
@@ -502,6 +617,10 @@ Previous response:
         return warnings
 
     def _validate_dbpack_usage(self, code_files: dict, db_pack: dict) -> list[str]:
+        """
+        Warning-only DBPack coverage check.
+        """
+
         entities = self._extract_db_entities(db_pack)
         combined_code = "\n".join(code_files.values()).lower()
         warnings = []
@@ -529,9 +648,20 @@ Previous response:
         domain_version: str = "v1",
         architecture_version: str = "v1",
     ) -> dict:
+        """
+        Generate runnable MERN application code from approved artifacts.
+
+        This method uses split generation:
+        1. Backend
+        2. Frontend
+        3. DevOps
+        4. Integration and manifest
+        """
+
         if not self.llm_provider:
             raise ValueError("llm_provider is required to generate code")
 
+        # 1. Load upstream artifacts.
         srs_data, srs_path = self._load_srs(run_id, srs_version)
         domain_pack, domain_path = self._load_domain_pack(run_id, domain_version)
         sds_spec, sds_path = self._load_sds(run_id, architecture_version)
@@ -550,6 +680,7 @@ Previous response:
             / "generated_app"
         )
 
+        # 2. Shared context used by all three prompts.
         context = {
             "project_name": project_name,
             "srs_data": srs_data,
@@ -559,6 +690,7 @@ Previous response:
             "db_pack": db_pack,
         }
 
+        # 3. Split generation steps.
         generation_steps = [
             ("Backend", build_backend_prompt(context)),
             ("Frontend", build_frontend_prompt(context)),
@@ -583,8 +715,10 @@ Previous response:
                     raise ValueError(
                         f"Duplicate generated file path detected: {rel_path}"
                     )
+
                 code_files[rel_path] = content
 
+        # 4. Validate combined project output.
         self._validate_generated_files_exist(code_files)
         self._validate_required_mern_files(code_files)
 
@@ -596,6 +730,7 @@ Previous response:
             self._validate_dbpack_usage(code_files, db_pack)
         )
 
+        # 5. Write generated files.
         generated_files = []
 
         for rel_path, content in code_files.items():
@@ -611,6 +746,7 @@ Previous response:
 
             generated_files.append(generated_file)
 
+        # 6. Create manifest.
         manifest = CodeManifest(
             run_id=run_id,
             code_version=code_version,
