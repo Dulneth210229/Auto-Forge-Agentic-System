@@ -3,7 +3,7 @@
 **Run ID:** RUN-0001  
 **Stage:** testing  
 **Version:** v1  
-**Target Path:** ./sample_ecommerce_app  
+**Target Path:** outputs/runs/RUN-0001/code/v1/generated_app  
 **Generated Tests Path:** outputs\runs\RUN-0001\tests\v1\generated_tests  
 **Regression Tests Path:** outputs\runs\RUN-0001\tests\v1\regression_tests  
 **Security Validation Tests Path:** outputs\runs\RUN-0001\tests\v1\security_validation_tests
@@ -15,8 +15,8 @@
 | Metric | Count |
 |---|---:|
 | Total Tests | 33 |
-| Passed | 33 |
-| Failed | 0 |
+| Passed | 29 |
+| Failed | 4 |
 | Skipped | 0 |
 | Not Run | 0 |
 
@@ -39,15 +39,45 @@
 
 | Field | Value |
 |---|---|
-| Status | passed |
-| Exit Code | 0 |
-| Duration | 439 ms |
+| Status | failed |
+| Exit Code | 1 |
+| Duration | 471 ms |
 
 ### Pytest Stdout
 
 ```txt
-.................................                                        [100%]
-33 passed in 0.07s
+................F.F...........F.F                                        [100%]
+================================== FAILURES ===================================
+________________ test_regression_negative_quantity_is_rejected ________________
+outputs\runs\RUN-0001\tests\v1\generated_tests\test_regression_cases.py:54: in test_regression_negative_quantity_is_rejected
+    assert _has_any(text, keywords), (
+E   AssertionError: Regression failed: negative quantity rejection was not found.
+E   assert False
+E    +  where False = _has_any('\nversion: \'3.8\'\nservices:\n  backend:\n    build: \n      context: ./backend\n      dockerfile: dockerfile\n    p...ntity": 1}], "total": 1200.0}, {"id": "ord-0002", "items": [{"product_id": "p001", "quantity": 1}], "total": 1200.0}]}', ['invalid quantity', 'must be positive', 'greater than 0', 'negative', 'quantity <= 0'])
+___________ test_regression_missing_payment_or_customer_is_rejected ___________
+outputs\runs\RUN-0001\tests\v1\generated_tests\test_regression_cases.py:86: in test_regression_missing_payment_or_customer_is_rejected
+    assert _has_any(text, keywords), (
+E   AssertionError: Regression failed: missing payment/customer rejection was not found.
+E   assert False
+E    +  where False = _has_any('\nversion: \'3.8\'\nservices:\n  backend:\n    build: \n      context: ./backend\n      dockerfile: dockerfile\n    p...ntity": 1}], "total": 1200.0}, {"id": "ord-0002", "items": [{"product_id": "p001", "quantity": 1}], "total": 1200.0}]}', ['missing payment', 'missing customer', 'payment required', 'customer required', 'required'])
+_________________ test_customer_or_payment_validation_exists __________________
+outputs\runs\RUN-0001\tests\v1\generated_tests\test_validation_edge_cases.py:75: in test_customer_or_payment_validation_exists
+    assert _has_any(text, keywords), (
+E   AssertionError: Customer or payment validation was not found.
+E   assert False
+E    +  where False = _has_any('\nversion: \'3.8\'\nservices:\n  backend:\n    build: \n      context: ./backend\n      dockerfile: dockerfile\n    p...ntity": 1}], "total": 1200.0}, {"id": "ord-0002", "items": [{"product_id": "p001", "quantity": 1}], "total": 1200.0}]}', ['customer', 'payment', 'billing', 'email', 'required', 'missing', ...])
+______________________ test_out_of_stock_handling_exists ______________________
+outputs\runs\RUN-0001\tests\v1\generated_tests\test_validation_edge_cases.py:101: in test_out_of_stock_handling_exists
+    assert _has_any(text, keywords), (
+E   AssertionError: Stock or out-of-stock handling was not found.
+E   assert False
+E    +  where False = _has_any('\nversion: \'3.8\'\nservices:\n  backend:\n    build: \n      context: ./backend\n      dockerfile: dockerfile\n    p...ntity": 1}], "total": 1200.0}, {"id": "ord-0002", "items": [{"product_id": "p001", "quantity": 1}], "total": 1200.0}]}', ['stock', 'out of stock', 'inventory', 'available_quantity', 'insufficient stock'])
+=========================== short test summary info ===========================
+FAILED outputs/runs/RUN-0001/tests/v1/generated_tests/test_regression_cases.py::test_regression_negative_quantity_is_rejected
+FAILED outputs/runs/RUN-0001/tests/v1/generated_tests/test_regression_cases.py::test_regression_missing_payment_or_customer_is_rejected
+FAILED outputs/runs/RUN-0001/tests/v1/generated_tests/test_validation_edge_cases.py::test_customer_or_payment_validation_exists
+FAILED outputs/runs/RUN-0001/tests/v1/generated_tests/test_validation_edge_cases.py::test_out_of_stock_handling_exists
+4 failed, 29 passed in 0.12s
 
 ```
 
@@ -159,7 +189,7 @@
 
 **Type:** smoke  
 **Target Module:** project  
-**Target File:** ./sample_ecommerce_app  
+**Target File:** outputs/runs/RUN-0001/code/v1/generated_app  
 **Related Requirement:** NFR-TEST-001  
 **API / Artifact:** N/A  
 **Related Security Finding:**   
@@ -176,7 +206,7 @@ Target project folder should exist and contain source files.
 
 **Type:** unit  
 **Target Module:** backend  
-**Target File:** ./sample_ecommerce_app  
+**Target File:** outputs/runs/RUN-0001/code/v1/generated_app  
 **Related Requirement:** NFR-TEST-002  
 **API / Artifact:** N/A  
 **Related Security Finding:**   
@@ -193,7 +223,7 @@ All Python files should compile without syntax errors.
 
 **Type:** integration  
 **Target Module:** ecommerce  
-**Target File:** ./sample_ecommerce_app  
+**Target File:** outputs/runs/RUN-0001/code/v1/generated_app  
 **Related Requirement:** FR-001  
 **API / Artifact:** /products, /cart, /checkout, /orders  
 **Related Security Finding:**   
@@ -210,7 +240,7 @@ Generated code should include catalog/product, cart, and checkout/order features
 
 **Type:** api  
 **Target Module:** ecommerce_api  
-**Target File:** ./sample_ecommerce_app  
+**Target File:** outputs/runs/RUN-0001/code/v1/generated_app  
 **Related Requirement:** FR-API-001  
 **API / Artifact:** /products, /cart, /checkout, /orders  
 **Related Security Finding:**   
@@ -227,7 +257,7 @@ Generated code should include API/function contracts for catalog, cart, checkout
 
 **Type:** integration  
 **Target Module:** ecommerce_workflow  
-**Target File:** ./sample_ecommerce_app  
+**Target File:** outputs/runs/RUN-0001/code/v1/generated_app  
 **Related Requirement:** FR-WORKFLOW-001  
 **API / Artifact:** /products → /cart → /checkout → /orders  
 **Related Security Finding:**   
@@ -244,7 +274,7 @@ Generated code should support Product -> Cart -> Checkout -> Order workflow.
 
 **Type:** integration  
 **Target Module:** validation  
-**Target File:** ./sample_ecommerce_app  
+**Target File:** outputs/runs/RUN-0001/code/v1/generated_app  
 **Related Requirement:** NFR-VALIDATION-001  
 **API / Artifact:** /products, /cart, /checkout  
 **Related Security Finding:**   
@@ -261,7 +291,7 @@ Generated code should include validation for invalid product IDs, quantities, em
 
 **Type:** regression  
 **Target Module:** regression  
-**Target File:** ./sample_ecommerce_app  
+**Target File:** outputs/runs/RUN-0001/code/v1/generated_app  
 **Related Requirement:** NFR-REGRESSION-001  
 **API / Artifact:** /cart, /checkout, /orders  
 **Related Security Finding:**   
@@ -301,71 +331,71 @@ Security report should be structurally valid and useful for downstream fixing.
 | Test ID | Status | Duration | Message |
 |---|---|---:|---|
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_ecommerce_keywords.py::test_catalog_or_product_feature_exists | passed | 13 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_ecommerce_keywords.py::test_catalog_or_product_feature_exists | passed | 14 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_ecommerce_keywords.py::test_cart_feature_exists | passed | 13 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_ecommerce_keywords.py::test_cart_feature_exists | passed | 14 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_ecommerce_keywords.py::test_checkout_or_order_feature_exists | passed | 13 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_ecommerce_keywords.py::test_checkout_or_order_feature_exists | passed | 14 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_ecommerce_workflow.py::test_product_to_cart_workflow_is_supported | passed | 13 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_ecommerce_workflow.py::test_product_to_cart_workflow_is_supported | passed | 14 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_ecommerce_workflow.py::test_cart_to_checkout_workflow_is_supported | passed | 13 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_ecommerce_workflow.py::test_cart_to_checkout_workflow_is_supported | passed | 14 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_ecommerce_workflow.py::test_checkout_to_order_workflow_is_supported | passed | 13 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_ecommerce_workflow.py::test_checkout_to_order_workflow_is_supported | passed | 14 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_ecommerce_workflow.py::test_full_ecommerce_workflow_keywords_exist | passed | 13 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_ecommerce_workflow.py::test_full_ecommerce_workflow_keywords_exist | passed | 14 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_functional_api_contract.py::test_catalog_api_or_function_contract_exists | passed | 13 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_functional_api_contract.py::test_catalog_api_or_function_contract_exists | passed | 14 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_functional_api_contract.py::test_cart_api_or_function_contract_exists | passed | 13 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_functional_api_contract.py::test_cart_api_or_function_contract_exists | passed | 14 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_functional_api_contract.py::test_checkout_api_or_function_contract_exists | passed | 13 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_functional_api_contract.py::test_checkout_api_or_function_contract_exists | passed | 14 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_functional_api_contract.py::test_order_api_or_function_contract_exists | passed | 13 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_functional_api_contract.py::test_order_api_or_function_contract_exists | passed | 14 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_project_structure.py::test_target_project_folder_exists | passed | 13 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_project_structure.py::test_target_project_folder_exists | passed | 14 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_project_structure.py::test_target_project_contains_source_files | passed | 13 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_project_structure.py::test_target_project_contains_source_files | passed | 14 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_project_structure.py::test_target_project_has_ecommerce_related_files_or_content | passed | 13 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_project_structure.py::test_target_project_has_ecommerce_related_files_or_content | passed | 14 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_python_syntax.py::test_python_files_have_valid_syntax | passed | 13 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_python_syntax.py::test_python_files_have_valid_syntax | passed | 14 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_regression_cases.py::test_regression_empty_cart_checkout_is_prevented | passed | 13 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_regression_cases.py::test_regression_empty_cart_checkout_is_prevented | passed | 14 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_regression_cases.py::test_regression_negative_quantity_is_rejected | passed | 13 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_regression_cases.py::test_regression_negative_quantity_is_rejected | failed | 14 ms | Test failed. See pytest stdout/stderr for details. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_regression_cases.py::test_regression_invalid_product_id_is_handled | passed | 13 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_regression_cases.py::test_regression_invalid_product_id_is_handled | passed | 14 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_regression_cases.py::test_regression_missing_payment_or_customer_is_rejected | passed | 13 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_regression_cases.py::test_regression_missing_payment_or_customer_is_rejected | failed | 14 ms | Test failed. See pytest stdout/stderr for details. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_regression_cases.py::test_regression_order_creation_depends_on_checkout_or_cart | passed | 13 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_regression_cases.py::test_regression_order_creation_depends_on_checkout_or_cart | passed | 14 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_security_validation.py::test_security_report_json_exists | passed | 13 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_security_validation.py::test_security_report_json_exists | passed | 14 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_security_validation.py::test_security_report_has_required_top_level_sections | passed | 13 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_security_validation.py::test_security_report_has_required_top_level_sections | passed | 14 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_security_validation.py::test_security_gate_has_valid_structure | passed | 13 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_security_validation.py::test_security_gate_has_valid_structure | passed | 14 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_security_validation.py::test_security_findings_have_required_fields | passed | 13 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_security_validation.py::test_security_findings_have_required_fields | passed | 14 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_security_validation.py::test_security_fix_suggestions_reference_existing_findings | passed | 13 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_security_validation.py::test_security_fix_suggestions_reference_existing_findings | passed | 14 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_security_validation.py::test_security_findings_have_traceability_fields | passed | 13 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_security_validation.py::test_security_findings_have_traceability_fields | passed | 14 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_security_validation.py::test_security_summary_matches_findings_count | passed | 13 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_security_validation.py::test_security_summary_matches_findings_count | passed | 14 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_validation_edge_cases.py::test_invalid_product_id_validation_exists | passed | 13 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_validation_edge_cases.py::test_invalid_product_id_validation_exists | passed | 14 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_validation_edge_cases.py::test_negative_or_zero_quantity_validation_exists | passed | 13 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_validation_edge_cases.py::test_negative_or_zero_quantity_validation_exists | passed | 14 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_validation_edge_cases.py::test_empty_cart_checkout_validation_exists | passed | 13 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_validation_edge_cases.py::test_empty_cart_checkout_validation_exists | passed | 14 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_validation_edge_cases.py::test_customer_or_payment_validation_exists | passed | 13 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_validation_edge_cases.py::test_customer_or_payment_validation_exists | failed | 14 ms | Test failed. See pytest stdout/stderr for details. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_validation_edge_cases.py::test_price_validation_exists | passed | 13 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_validation_edge_cases.py::test_price_validation_exists | passed | 14 ms | Test passed. |
 
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_validation_edge_cases.py::test_out_of_stock_handling_exists | passed | 13 ms | Test passed. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_validation_edge_cases.py::test_out_of_stock_handling_exists | failed | 14 ms | Test failed. See pytest stdout/stderr for details. |
 
 
 
@@ -376,14 +406,16 @@ Security report should be structurally valid and useful for downstream fixing.
 | Metric | Value |
 |---|---:|
 | Test Coverage | 1.0 |
-| Pass Rate | 1.0 |
-| Execution Efficiency | 439.0 ms |
+| Pass Rate | 0.88 |
+| Execution Efficiency | 471.0 ms |
 
 ---
 
 ## 11. Recommendations
 
 
+
+- Some generated tests failed. Review pytest stdout/stderr in TestReport_v1.json.
 
 - Generated pytest files were executed.
 

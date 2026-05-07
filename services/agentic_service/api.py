@@ -7,10 +7,14 @@ from pydantic import BaseModel, Field
 from agents.requirement_agent.agent import RequirementAgent
 from agents.domain_agent.agent import DomainAgent
 from agents.architect_agent.agent import ArchitectAgent
+from agents.uiux_agent.agent import UIUXAgent
 from agents.coder_agent.agent import CoderAgent
 from agents.security_agent.agent import SecurityAgent
 from agents.tester_agent.agent import TesterAgent
 from tools.llm.provider import OllamaProvider
+from agents.architect_agent.agent import ArchitectAgent
+
+uiux_agent = UIUXAgent(llm_provider=OllamaProvider())
 
 
 logger = logging.getLogger(__name__)
@@ -300,7 +304,6 @@ async def generate_domain_pack(payload: dict):
 # Architect Agent Endpoints
 # ---------------------------------------------------------
 
-
 @app.post("/architecture/generate")
 def generate_architecture(payload: dict):
     """
@@ -351,7 +354,82 @@ def revise_architecture(payload: dict):
     )
 
     return result
+# ---------------------------------------------------------
+# UI/UX Agent Endpoints
+# ---------------------------------------------------------
 
+@app.post("/uiux/srs/validate")
+def validate_uiux_inputs(payload: dict):
+    try:
+        srs, domain_pack, sds, api_contract, db_pack = uiux_agent.load_approved_inputs(
+            run_id=payload.get("run_id", "RUN-0001"),
+            srs_version=payload.get("srs_version", "v1"),
+            domain_version=payload.get("domain_version", "v1"),
+            architecture_version=payload.get("architecture_version", "v1"),
+        )
+
+        return uiux_agent.validate_inputs(
+            srs=srs,
+            domain_pack=domain_pack,
+            sds=sds,
+            api_contract=api_contract,
+            db_pack=db_pack,
+        )
+
+    except Exception as error:
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"{type(error).__name__}: {str(error)}")
+
+
+@app.post("/uiux/designpack/generate")
+def generate_uiux_design_pack(payload: dict):
+    try:
+        return uiux_agent.generate_design_pack(
+            run_id=payload.get("run_id", "RUN-0001"),
+            srs_version=payload.get("srs_version", "v1"),
+            domain_version=payload.get("domain_version", "v1"),
+            architecture_version=payload.get("architecture_version", "v1"),
+            uiux_version=payload.get("uiux_version", "v1"),
+            include_admin=payload.get("include_admin", True),
+            render_images=payload.get("render_images", True),
+            user_prompt=payload.get("user_prompt"),
+        )
+
+    except Exception as error:
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"{type(error).__name__}: {str(error)}")
+
+
+@app.post("/uiux/designpack/revise")
+def revise_uiux_design_pack(payload: dict):
+    try:
+        if not payload.get("change_request"):
+            raise HTTPException(
+                status_code=400,
+                detail="change_request is required when revising UI/UX outputs."
+            )
+
+        return uiux_agent.revise_design_pack(
+            run_id=payload.get("run_id", "RUN-0001"),
+            current_version=payload["current_version"],
+            new_version=payload["new_version"],
+            change_request=payload["change_request"],
+            srs_version=payload.get("srs_version", "v1"),
+            domain_version=payload.get("domain_version", "v1"),
+            architecture_version=payload.get("architecture_version", "v1"),
+            include_admin=payload.get("include_admin", True),
+            render_images=payload.get("render_images", True),
+        )
+
+    except HTTPException:
+        raise
+
+    except Exception as error:
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"{type(error).__name__}: {str(error)}")
 
 
 # ---------------------------------------------------------

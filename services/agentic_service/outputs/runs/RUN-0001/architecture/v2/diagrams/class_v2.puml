@@ -75,14 +75,6 @@ class Address {
   string country
 }
 
-class Review {
-  uuid id
-  uuid user_id
-  uuid product_id
-  integer rating
-  text comment {optional}
-}
-
 User "1" -- "1" Cart : 1 to 1
 Cart "1" -- "*" CartItem : 1 to many
 Product "1" -- "*" CartItem : 1 to many
@@ -92,7 +84,5 @@ Product "1" -- "*" OrderItem : 1 to many
 Order "1" -- "1" Payment : 1 to 1
 Category "1" -- "*" Product : 1 to many
 User "1" -- "*" Address : 1 to many
-User "1" -- "*" Review : 1 to many
-Product "1" -- "*" Review : 1 to many
 
 @enduml

@@ -184,16 +184,6 @@ Allows admin to create a product.
 **Response Schema:** ProductResponse  
 **Related Requirements:** FR-001
 
-### API-013 — GET /products/search
-
-**Tag:** Catalog
-
-Searches products using keyword, category, and price range filters.
-
-**Request Schema:** None  
-**Response Schema:** ProductListResponse  
-**Related Requirements:** FR-SEARCH
-
 
 ---
 

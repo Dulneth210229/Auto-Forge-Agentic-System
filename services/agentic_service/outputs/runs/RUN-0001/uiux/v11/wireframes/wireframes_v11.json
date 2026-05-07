@@ -1,0 +1,123 @@
+{
+  "version": "v11",
+  "screens": [
+    {
+      "id": "UI-SCR-01",
+      "name": "Account Access",
+      "file_name": "UI-SCR-01_account_access.html",
+      "description": "Auto-generated UI screen based on API operation POST /auth/register.",
+      "route": "/account-access",
+      "related_requirements": [
+        "FR-001",
+        "FR-002",
+        "FR-003",
+        "FR-004",
+        "FR-005",
+        "FR-006"
+      ]
+    },
+    {
+      "id": "UI-SCR-02",
+      "name": "Product Catalog",
+      "file_name": "UI-SCR-02_product_catalog.html",
+      "description": "Auto-generated UI screen based on API operation GET /products.",
+      "route": "/product-catalog",
+      "related_requirements": [
+        "FR-001",
+        "FR-002",
+        "FR-003",
+        "FR-004"
+      ]
+    },
+    {
+      "id": "UI-SCR-03",
+      "name": "Product Details",
+      "file_name": "UI-SCR-03_product_details.html",
+      "description": "Auto-generated UI screen based on API operation GET /products/{product_id}.",
+      "route": "/product-details",
+      "related_requirements": [
+        "FR-001",
+        "FR-002",
+        "FR-003",
+        "FR-004",
+        "FR-005",
+        "FR-006"
+      ]
+    },
+    {
+      "id": "UI-SCR-04",
+      "name": "Shopping Cart",
+      "file_name": "UI-SCR-04_shopping_cart.html",
+      "description": "Auto-generated UI screen based on API operation GET /cart.",
+      "route": "/shopping-cart",
+      "related_requirements": [
+        "FR-001",
+        "FR-002",
+        "FR-003",
+        "FR-004",
+        "FR-005",
+        "FR-006"
+      ]
+    },
+    {
+      "id": "UI-SCR-05",
+      "name": "Checkout",
+      "file_name": "UI-SCR-05_checkout.html",
+      "description": "Auto-generated UI screen based on API operation POST /checkout.",
+      "route": "/checkout",
+      "related_requirements": [
+        "FR-001",
+        "FR-002",
+        "FR-003",
+        "FR-004",
+        "FR-005",
+        "FR-006"
+      ]
+    },
+    {
+      "id": "UI-SCR-06",
+      "name": "Order Placement",
+      "file_name": "UI-SCR-06_order_placement.html",
+      "description": "Auto-generated UI screen based on API operation POST /orders.",
+      "route": "/order-placement",
+      "related_requirements": [
+        "FR-001",
+        "FR-002",
+        "FR-003",
+        "FR-004",
+        "FR-005",
+        "FR-006"
+      ]
+    },
+    {
+      "id": "UI-SCR-07",
+      "name": "Order History",
+      "file_name": "UI-SCR-07_order_history.html",
+      "description": "Auto-generated UI screen based on API operation GET /orders.",
+      "route": "/order-history",
+      "related_requirements": [
+        "FR-001",
+        "FR-002",
+        "FR-003",
+        "FR-004",
+        "FR-005",
+        "FR-006"
+      ]
+    },
+    {
+      "id": "UI-SCR-08",
+      "name": "Admin Admin",
+      "file_name": "UI-SCR-08_admin_admin.html",
+      "description": "Auto-generated UI screen based on API operation POST /admin/products.",
+      "route": "/admin-admin",
+      "related_requirements": [
+        "FR-001",
+        "FR-002",
+        "FR-003",
+        "FR-004",
+        "FR-005",
+        "FR-006"
+      ]
+    }
+  ]
+}
