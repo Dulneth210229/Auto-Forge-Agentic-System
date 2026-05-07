@@ -145,6 +145,12 @@ class TestingRunResponse(BaseModel):
 class CoderGenerateRequest(BaseModel):
     """
     Request body for the Coder Agent code generation.
+    
+    Inputs from multiple agents:
+    - srs_version: SRS from Requirement Agent
+    - architecture_version: OpenAPI, SDS from Architect Agent
+    - domain_version: DomainPack from Domain Agent
+    - Database artifacts are loaded from architecture_version path
     """
 
     run_id: str = Field(
@@ -154,12 +160,22 @@ class CoderGenerateRequest(BaseModel):
 
     srs_version: str = Field(
         default="v1",
-        description="Source SRS version (e.g., v1, v2)"
+        description="Source SRS version from Requirement Agent (e.g., v1, v2)"
     )
 
     code_version: str = Field(
         default="v1",
         description="Target code version to generate (e.g., v1, v2)"
+    )
+
+    domain_version: str = Field(
+        default="v1",
+        description="DomainPack version from Domain Agent (e.g., v1, v2)"
+    )
+
+    architecture_version: str = Field(
+        default="v1",
+        description="Architecture version (OpenAPI, SDS, DBPack from Architect Agent)"
     )
 
 
@@ -175,6 +191,16 @@ class CoderGenerateResponse(BaseModel):
     manifest_path: str
     output_dir: str
     generated_file_count: int
+
+    input_artifacts: dict = Field(
+        default_factory=dict,
+        description="Artifact files used by the Coder Agent"
+    )
+
+    validation_warnings: list[str] = Field(
+        default_factory=list,
+        description="Warnings about OpenAPI or DBPack coverage"
+    )
 
 
 # ---------------------------------------------------------
@@ -273,9 +299,7 @@ async def generate_domain_pack(payload: dict):
 # ---------------------------------------------------------
 # Architect Agent Endpoints
 # ---------------------------------------------------------
-# ---------------------------------------------------------
-# Architect Agent Endpoints
-# ---------------------------------------------------------
+
 
 @app.post("/architecture/generate")
 def generate_architecture(payload: dict):
@@ -312,49 +336,6 @@ def generate_architecture(payload: dict):
             detail=f"Architect Agent failed: {error}"
         )
 
-
-# ---------------------------------------------------------
-# Coder Agent Endpoints
-# ---------------------------------------------------------
-
-@app.post("/coder/generate", response_model=CoderGenerateResponse)
-async def generate_code(request: CoderGenerateRequest):
-    """
-    Generate runnable application code from the approved SRS using the Coder Agent.
-
-    This endpoint:
-    - reads SRS_{srs_version}.json
-    - generates code files (backend, frontend, devops)
-    - creates CodeManifest_{code_version}.json
-    - returns generated file paths and count
-    """
-    
-    try:
-        logger.info(f"Coder Agent: Generating code for run_id={request.run_id}, srs_version={request.srs_version}, code_version={request.code_version}")
-        
-        result = await coder_agent.generate_code(
-            run_id=request.run_id,
-            srs_version=request.srs_version,
-            code_version=request.code_version
-        )
-        
-        logger.info(f"Coder Agent: Successfully generated {result.get('generated_file_count', 0)} files")
-        return result
-    
-    except FileNotFoundError as error:
-        logger.error(f"Coder Agent: SRS file not found - {error}")
-        raise HTTPException(
-            status_code=404,
-            detail=f"SRS file not found: {error}"
-        )
-    
-    except Exception as error:
-        logger.error(f"Coder Agent: Unexpected error - {type(error).__name__}: {error}", exc_info=True)
-        raise HTTPException(
-            status_code=500,
-            detail=f"Coder Agent failed: {type(error).__name__}: {error}"
-        )
-
 @app.post("/architecture/revise")
 def revise_architecture(payload: dict):
     """
@@ -370,6 +351,61 @@ def revise_architecture(payload: dict):
     )
 
     return result
+
+
+
+# ---------------------------------------------------------
+# Coder Agent Endpoints
+# ---------------------------------------------------------
+
+@app.post("/coder/generate", response_model=CoderGenerateResponse)
+async def generate_code(request: CoderGenerateRequest):
+    """
+    Generate runnable application code from multiple approved artifacts using the Coder Agent.
+
+    Inputs:
+    - SRS from Requirement Agent (srs_version)
+    - OpenAPI.yaml, SDS from Architect Agent (architecture_version)
+    - DBPack from Database Agent (architecture_version)
+    - DomainPack from Domain Agent (domain_version)
+
+    This endpoint:
+    - reads SRS_{srs_version}.json
+    - reads OpenAPI.yaml and SDS.json from architecture
+    - reads DBPack.json from database
+    - reads DomainPack.json from domain
+    - generates code files based on all inputs (backend, frontend, devops)
+    - creates CodeManifest_{code_version}.json
+    - returns generated file paths and count
+    """
+    
+    try:
+        logger.info(f"Coder Agent: Generating code for run_id={request.run_id}, srs_version={request.srs_version}, code_version={request.code_version}, architecture_version={request.architecture_version}, domain_version={request.domain_version}")
+        
+        result = await coder_agent.generate_code(
+            run_id=request.run_id,
+            srs_version=request.srs_version,
+            code_version=request.code_version,
+            domain_version=request.domain_version,
+            architecture_version=request.architecture_version
+        )
+        
+        logger.info(f"Coder Agent: Successfully generated {result.get('generated_file_count', 0)} files")
+        return result
+    
+    except FileNotFoundError as error:
+        logger.error(f"Coder Agent: Required artifact file not found - {error}")
+        raise HTTPException(
+            status_code=404,
+            detail=f"Required artifact not found: {error}"
+        )
+    
+    except Exception as error:
+        logger.error(f"Coder Agent: Unexpected error - {type(error).__name__}: {error}", exc_info=True)
+        raise HTTPException(
+            status_code=500,
+            detail=f"Coder Agent failed: {type(error).__name__}: {error}"
+        )
 
 
 # ---------------------------------------------------------
