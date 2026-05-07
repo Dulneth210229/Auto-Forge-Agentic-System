@@ -352,6 +352,89 @@ def _extract_domain_summary(domain_pack: dict) -> str:
     return "\n".join(lines) if lines else "- Use DomainPack for e-commerce workflows and business behavior"
 
 
+def _extract_user_flow_summary(user_flows: dict) -> str:
+    """
+    Summarize UI/UX user flows for the frontend generation prompt.
+    """
+
+    if not isinstance(user_flows, dict):
+        return "- No user flows provided"
+
+    lines = []
+
+    flows = (
+        user_flows.get("flows")
+        or user_flows.get("user_flows")
+        or user_flows.get("screens")
+        or []
+    )
+
+    if isinstance(flows, list):
+        for flow in flows[:20]:
+            if isinstance(flow, dict):
+                flow_id = flow.get("id") or flow.get("flow_id") or "FLOW"
+                name = flow.get("name") or flow.get("title") or "User flow"
+                description = flow.get("description") or ""
+                lines.append(f"- {flow_id}: {name} — {description}")
+            else:
+                lines.append(f"- {flow}")
+
+    return "\n".join(lines) if lines else "- Use user flows to guide screen navigation"
+
+
+def _extract_wireframe_summary(wireframes: dict) -> str:
+    """
+    Summarize HTML wireframe files for the frontend generation prompt.
+    """
+
+    if not isinstance(wireframes, dict) or not wireframes:
+        return "- No wireframes provided"
+
+    lines = []
+
+    for filename, html in list(wireframes.items())[:20]:
+        title_match = re.search(r"<title>(.*?)</title>", html, re.IGNORECASE | re.DOTALL)
+        h1_match = re.search(r"<h1[^>]*>(.*?)</h1>", html, re.IGNORECASE | re.DOTALL)
+
+        title = title_match.group(1).strip() if title_match else ""
+        h1 = h1_match.group(1).strip() if h1_match else ""
+
+        label = title or h1 or filename
+        lines.append(f"- {filename}: {label}")
+
+    return "\n".join(lines)
+
+def _compact_wireframe_html(wireframes: dict, max_total_chars: int = 6000) -> str:
+    """
+    Create a small wireframe preview for the frontend prompt.
+
+    This prevents Ollama timeout when many HTML wireframes exist.
+    """
+
+    if not isinstance(wireframes, dict) or not wireframes:
+        return "- No wireframe HTML provided"
+
+    parts = []
+    used_chars = 0
+
+    for filename, html in wireframes.items():
+        cleaned_html = str(html).strip()
+
+        remaining = max_total_chars - used_chars
+        if remaining <= 0:
+            break
+
+        snippet = cleaned_html[:remaining]
+
+        parts.append(
+            f"\n--- WIREFRAME FILE: {filename} ---\n{snippet}"
+        )
+
+        used_chars += len(snippet)
+
+    return "\n".join(parts)
+
+
 def _strict_file_block_rules() -> str:
     """
     Common output-format rules for all generation steps.
@@ -472,6 +555,11 @@ def build_frontend_prompt(context: dict) -> str:
     srs_summary = _extract_srs_summary(context.get("srs_data", {}))
     domain_summary = _extract_domain_summary(context.get("domain_pack", {}))
 
+    user_flow_summary = _extract_user_flow_summary(context.get("user_flows", {}))
+    wireframe_summary = _extract_wireframe_summary(context.get("wireframes", {}))
+    wireframes = context.get("wireframes", {})
+    wireframe_text = _compact_wireframe_html(wireframes, max_total_chars=6000)
+
     return f"""You are an expert React and Vite frontend developer.
 
 Generate ONLY frontend files for a runnable MERN e-commerce app.
@@ -493,6 +581,15 @@ DOMAIN SUMMARY:
 
 AVAILABLE API ENDPOINTS:
 {endpoint_summary}
+
+USER FLOWS FROM UI/UX AGENT:
+{user_flow_summary}
+
+WIREFRAMES FROM UI/UX AGENT:
+{wireframe_summary}
+
+WIREFRAME HTML CONTENT:
+{wireframe_text}
 
 REQUIRED FRONTEND FILES:
 <file path="frontend/package.json">...</file>
@@ -516,6 +613,10 @@ FRONTEND REQUIREMENTS:
 - Keep UI simple, clean, and usable.
 - Use only React state/hooks and plain CSS.
 - Do not generate TypeScript unless explicitly required; use JSX.
+- Use the UI/UX Agent wireframes as the main layout and screen-flow guide.
+- Convert wireframe HTML into React/Vite components.
+- Preserve screen names, important sections, forms, buttons, labels, and navigation flow.
+- Do not copy unrelated raw wireframe styling if it conflicts with the React app.
 
 {_strict_file_block_rules()}
 
