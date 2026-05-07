@@ -76,6 +76,25 @@ def get_run_artifacts(run_id: str):
     except Exception as error:
         raise HTTPException(status_code=404, detail=str(error))
 
+@app.post("/domain/knowledge/ingest")
+def ingest_domain_knowledge(payload: dict):
+    """
+    Ingests the E-commerce domain knowledge file into FAISS or ChromaDB.
+
+    This endpoint prepares the RAG knowledge base for the Domain Agent.
+
+    Example payload:
+    {
+      "file_path": "knowledge/ecommerce_domain_knowledge.txt",
+      "vector_store_type": "faiss"
+    }
+    """
+
+    try:
+        return stage_service.ingest_domain_knowledge(payload)
+
+    except Exception as error:
+        raise HTTPException(status_code=500, detail=str(error))
 
 @app.post("/runs/{run_id}/stages/{stage}/generate")
 async def generate_stage(run_id: str, stage: str, payload: dict):
