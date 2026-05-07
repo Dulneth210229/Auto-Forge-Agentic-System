@@ -1,0 +1,26 @@
+[
+  {
+    "requirement_id": "FR-001",
+    "screen_id": "UI-SCR-01",
+    "screen_name": "Product Listing Page",
+    "reason": "Allows users to view and browse the catalog of available products."
+  },
+  {
+    "requirement_id": "FR-002",
+    "screen_id": "UI-SCR-03",
+    "screen_name": "Shopping Cart",
+    "reason": "Enables users to add, update, and remove items from their cart before purchase."
+  },
+  {
+    "requirement_id": "FR-003",
+    "screen_id": "UI-SCR-04",
+    "screen_name": "Checkout Process",
+    "reason": "Handles the finalization of the order, including shipping and payment processing."
+  },
+  {
+    "requirement_id": "FR-004",
+    "screen_id": "UI-SCR-05",
+    "screen_name": "Order History",
+    "reason": "Provides the user with a record and details of all past orders."
+  }
+]
