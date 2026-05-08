@@ -140,8 +140,12 @@ class StageService:
             if normalized_stage == "architecture":
                 return await self._generate_architecture(run_id, payload)
 
+            if normalized_stage == "uiux":
+                return await self._generate_uiux(run_id, payload)
+
             raise ValueError(
-                f"Unsupported stage: {stage}. Currently supported: requirements, domain, architecture."
+                "Unsupported stage: "
+                f"{stage}. Currently supported: requirements, domain, architecture, uiux."
             )
 
         except Exception as error:
@@ -165,6 +169,65 @@ class StageService:
                 pass
 
             raise error
+
+    def _register_result_artifacts(
+        self,
+        state: WorkflowState,
+        stage: str,
+        version: str,
+        result: dict,
+        artifact_key_map: dict,
+    ) -> int:
+        """
+        Registers artifact paths returned by an agent.
+
+        Different agents return artifact paths using different keys.
+        This helper avoids repeating the same registration logic.
+
+        Example:
+        result = {
+            "json_path": "...",
+            "markdown_path": "...",
+            "artifacts": [
+                {"type": "wireframe_html", "path": "..."}
+            ]
+        }
+        """
+
+        registered_count = 0
+
+        for key, artifact_type in artifact_key_map.items():
+            path = result.get(key)
+
+            if path:
+                ArtifactRegistry.add_artifact(
+                    state=state,
+                    stage=stage,
+                    version=version,
+                    artifact_type=artifact_type,
+                    path=path,
+                    status="pending_approval",
+                )
+
+                registered_count += 1
+
+        for artifact in result.get("artifacts", []):
+            artifact_type = artifact.get("type", f"{stage}_artifact")
+            path = artifact.get("path")
+
+            if path:
+                ArtifactRegistry.add_artifact(
+                    state=state,
+                    stage=stage,
+                    version=version,
+                    artifact_type=artifact_type,
+                    path=path,
+                    status="pending_approval",
+                )
+
+                registered_count += 1
+
+        return registered_count
 
     async def _generate_requirements(
         self,
@@ -490,6 +553,176 @@ class StageService:
             "result": result,
         }
 
+    async def _generate_uiux(
+        self,
+        run_id: str,
+        payload: Dict[str, Any],
+    ) -> dict:
+        """
+        Runs the UI/UX Agent through the orchestrator.
+
+        Dependency rule:
+        UI/UX cannot run unless:
+        1. Requirements are approved
+        2. DomainPack is approved
+        3. Architecture is approved
+
+        This method runs the split UI/UX workflow:
+        1. validate_approved_inputs()
+        2. generate_plan()
+        3. generate_all_wireframes()
+        4. finalize_design_pack()
+        """
+
+        state = self.run_manager.load_state(run_id)
+
+        srs_version = payload.get("srs_version") or state.latest_versions.get("requirements")
+        domain_version = payload.get("domain_version") or state.latest_versions.get("domain")
+        architecture_version = payload.get("architecture_version") or state.latest_versions.get("architecture")
+
+        if not srs_version:
+            raise ValueError("No SRS version found. Generate and approve requirements first.")
+
+        if not domain_version:
+            raise ValueError("No DomainPack version found. Generate and approve domain stage first.")
+
+        if not architecture_version:
+            raise ValueError("No Architecture version found. Generate and approve architecture first.")
+
+        if not self.approval_manager.is_approved(run_id, "requirements", srs_version):
+            raise ValueError(
+                f"Cannot generate UI/UX. Requirements {srs_version} is not approved."
+            )
+
+        if not self.approval_manager.is_approved(run_id, "domain", domain_version):
+            raise ValueError(
+                f"Cannot generate UI/UX. DomainPack {domain_version} is not approved."
+            )
+
+        if not self.approval_manager.is_approved(run_id, "architecture", architecture_version):
+            raise ValueError(
+                f"Cannot generate UI/UX. Architecture {architecture_version} is not approved."
+            )
+
+        current_uiux_version = state.latest_versions.get("uiux")
+        new_uiux_version = VersionManager.next_version(current_uiux_version)
+
+        include_admin = payload.get("include_admin", True)
+        render_images = payload.get("render_images", True)
+        fail_fast = payload.get("fail_fast", False)
+        skip_existing = payload.get("skip_existing", True)
+        max_screens = payload.get("max_screens")
+        user_prompt = payload.get("user_prompt")
+
+        # Lazy imports:
+        # UI/UX dependencies such as Playwright are imported only when this
+        # stage actually runs. This prevents Uvicorn startup failures when
+        # you are testing other agents.
+        from agents.uiux_agent.agent import UIUXAgent
+        from tools.llm.provider import OllamaProvider
+        from orchestration.agent_adapters import call_uiux_full_workflow
+
+        agent = UIUXAgent(llm_provider=OllamaProvider())
+
+        result = await call_uiux_full_workflow(
+            agent=agent,
+            run_id=run_id,
+            srs_version=srs_version,
+            domain_version=domain_version,
+            architecture_version=architecture_version,
+            uiux_version=new_uiux_version,
+            include_admin=include_admin,
+            render_images=render_images,
+            fail_fast=fail_fast,
+            skip_existing=skip_existing,
+            max_screens=max_screens,
+            user_prompt=user_prompt,
+        )
+
+        finalize_result = result.get("finalize_result", {})
+
+        if not isinstance(finalize_result, dict):
+            raise ValueError(
+                "UI/UX Agent finalize result is invalid. Expected a dictionary with artifact paths."
+            )
+
+        state.latest_versions["uiux"] = new_uiux_version
+        state.current_stage = "UIUX_PENDING_APPROVAL"
+        state.pending_approval_stage = "uiux"
+        state.next_action = f"Review and approve or reject UIUXDesignPack_{new_uiux_version}."
+
+        state.messages.append(
+            f"UI/UX Agent generated UI/UX artifacts for {new_uiux_version}."
+        )
+
+        uiux_artifact_key_map = {
+            "json_path": "json",
+            "markdown_path": "markdown",
+            "uiux_pack_json_path": "uiux_pack_json",
+            "uiux_pack_markdown_path": "uiux_pack_markdown",
+            "design_pack_json_path": "design_pack_json",
+            "design_pack_markdown_path": "design_pack_markdown",
+            "plan_path": "uiux_plan",
+            "user_flows_json_path": "user_flows_json",
+            "user_flows_mermaid_path": "user_flows_mermaid",
+            "user_flows_png_path": "user_flows_png",
+            "traceability_path": "uiux_traceability",
+        }
+
+        registered_count = self._register_result_artifacts(
+            state=state,
+            stage="uiux",
+            version=new_uiux_version,
+            result=finalize_result,
+            artifact_key_map=uiux_artifact_key_map,
+        )
+
+        # Register plan result artifacts if they are returned separately.
+        plan_result = result.get("plan_result", {})
+
+        if isinstance(plan_result, dict):
+            registered_count += self._register_result_artifacts(
+                state=state,
+                stage="uiux",
+                version=new_uiux_version,
+                result=plan_result,
+                artifact_key_map=uiux_artifact_key_map,
+            )
+
+        # Register wireframe result artifacts if they are returned separately.
+        wireframe_result = result.get("wireframe_result", {})
+
+        if isinstance(wireframe_result, dict):
+            registered_count += self._register_result_artifacts(
+                state=state,
+                stage="uiux",
+                version=new_uiux_version,
+                result=wireframe_result,
+                artifact_key_map=uiux_artifact_key_map,
+            )
+
+        if registered_count == 0:
+            raise ValueError(
+                "UI/UX Agent completed but returned no recognizable artifact paths. "
+                "Expected keys like json_path, markdown_path, uiux_pack_json_path, "
+                "or artifacts[]."
+            )
+
+        self.approval_manager.set_pending(
+            run_id=run_id,
+            stage="uiux",
+            version=new_uiux_version,
+            comment="UI/UX artifacts generated and waiting for human approval.",
+        )
+
+        self.run_manager.save_state(state)
+
+        return {
+            "message": "UI/UX stage generated successfully.",
+            "state": state.model_dump(),
+            "result": result,
+        }
+
     async def revise_stage(
         self,
         run_id: str,
@@ -638,7 +871,11 @@ class StageService:
 
         elif normalized_stage == "architecture":
             state.current_stage = "ARCHITECTURE_APPROVED"
-            state.next_action = "Next stage is UI/UX Agent."
+            state.next_action = "Generate UI/UX DesignPack using the UI/UX Agent."
+
+        elif normalized_stage == "uiux":
+            state.current_stage = "UIUX_APPROVED"
+            state.next_action = "Next stage is Coder Agent."
 
         else:
             state.current_stage = f"{normalized_stage.upper()}_APPROVED"
@@ -708,6 +945,10 @@ class StageService:
         elif normalized_stage == "architecture":
             state.current_stage = "ARCHITECTURE_REJECTED"
             state.next_action = "Generate a new architecture version after fixing the issue."
+
+        elif normalized_stage == "uiux":
+            state.current_stage = "UIUX_REJECTED"
+            state.next_action = "Revise UI/UX using /runs/{run_id}/stages/uiux/revise."
 
         else:
             state.current_stage = f"{normalized_stage.upper()}_REJECTED"
