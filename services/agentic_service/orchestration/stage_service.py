@@ -4,6 +4,7 @@ from orchestration.approval_manager import ApprovalManager
 from orchestration.error_manager import ErrorManager
 from orchestration.run_manager import RunManager
 from orchestration.version_manager import VersionManager
+from agents.architect_agent import agent
 from states.artifact_registry import ArtifactRegistry
 from states.system_state import WorkflowState
 
@@ -136,8 +137,11 @@ class StageService:
             if normalized_stage == "domain":
                 return await self._generate_domain(run_id, payload)
 
+            if normalized_stage == "architecture":
+                return await self._generate_architecture(run_id, payload)
+
             raise ValueError(
-                f"Unsupported stage: {stage}. Currently supported: requirements, domain."
+                f"Unsupported stage: {stage}. Currently supported: requirements, domain, architecture."
             )
 
         except Exception as error:
@@ -330,6 +334,162 @@ class StageService:
             "result": result,
         }
 
+    async def _generate_architecture(
+        self,
+        run_id: str,
+        payload: Dict[str, Any],
+    ) -> dict:
+        """
+        Calls Architect Agent and registers Architecture/SDS/API artifacts.
+
+        Dependency rule:
+        Architecture cannot run unless:
+        1. Requirements are approved
+        2. DomainPack is approved
+
+        Expected payload:
+        {
+          "srs_version": "v1",
+          "domain_version": "v1"
+        }
+
+        The architecture_version is generated automatically by the orchestrator.
+        """
+
+        # Lazy imports:
+        # The Architect Agent is imported only when this stage is executed.
+        # This keeps Uvicorn startup stable even if Architect dependencies
+        # are not ready during Requirement/Domain development.
+        from agents.architect_agent.agent import ArchitectAgent
+        from tools.llm.provider import OllamaProvider
+        from orchestration.agent_adapters import call_architect_agent
+
+        state = self.run_manager.load_state(run_id)
+
+        srs_version = payload.get("srs_version") or state.latest_versions.get("requirements")
+        domain_version = payload.get("domain_version") or state.latest_versions.get("domain")
+
+        if not srs_version:
+            raise ValueError("No SRS version found. Generate and approve requirements first.")
+
+        if not domain_version:
+            raise ValueError("No DomainPack version found. Generate and approve domain stage first.")
+
+        if not self.approval_manager.is_approved(run_id, "requirements", srs_version):
+            raise ValueError(
+                f"Cannot generate architecture. Requirements {srs_version} is not approved."
+            )
+
+        if not self.approval_manager.is_approved(run_id, "domain", domain_version):
+            raise ValueError(
+                f"Cannot generate architecture. DomainPack {domain_version} is not approved."
+            )
+
+        current_architecture_version = state.latest_versions.get("architecture")
+        new_architecture_version = VersionManager.next_version(current_architecture_version)
+
+        try:
+            agent = ArchitectAgent(llm_provider=OllamaProvider())
+        except TypeError:
+            agent = ArchitectAgent()
+
+        result = await call_architect_agent(
+            agent=agent,
+            run_id=run_id,
+            srs_version=srs_version,
+            domain_version=domain_version,
+            architecture_version=new_architecture_version,
+        )
+
+        if not isinstance(result, dict):
+            raise ValueError(
+                "Architect Agent returned invalid result. Expected a dictionary with artifact paths."
+            )
+
+        state.latest_versions["architecture"] = new_architecture_version
+        state.current_stage = "ARCHITECTURE_PENDING_APPROVAL"
+        state.pending_approval_stage = "architecture"
+        state.next_action = (
+            f"Review and approve or reject Architecture/SDS {new_architecture_version}."
+        )
+
+        state.messages.append(
+            f"Architect Agent generated architecture artifacts for {new_architecture_version}."
+        )
+
+        # Register common architecture artifact paths if the Architect Agent returns them.
+        # This supports different Architect Agent output designs.
+        artifact_key_map = {
+            "json_path": "json",
+            "markdown_path": "markdown",
+            "sds_json_path": "sds_json",
+            "sds_markdown_path": "sds_markdown",
+            "openapi_json_path": "openapi_json",
+            "openapi_yaml_path": "openapi_yaml",
+            "db_pack_path": "db_pack",
+            "diagram_manifest_path": "diagram_manifest",
+        }
+
+        registered_count = 0
+
+        for key, artifact_type in artifact_key_map.items():
+            path = result.get(key)
+
+            if path:
+                ArtifactRegistry.add_artifact(
+                    state=state,
+                    stage="architecture",
+                    version=new_architecture_version,
+                    artifact_type=artifact_type,
+                    path=path,
+                    status="pending_approval",
+                )
+
+                registered_count += 1
+
+        # Some Architect Agents return a list of artifacts.
+        # Example:
+        # "artifacts": [
+        #   {"type": "openapi_yaml", "path": "..."},
+        #   {"type": "class_diagram", "path": "..."}
+        # ]
+        for artifact in result.get("artifacts", []):
+            artifact_type = artifact.get("type", "architecture_artifact")
+            path = artifact.get("path")
+
+            if path:
+                ArtifactRegistry.add_artifact(
+                    state=state,
+                    stage="architecture",
+                    version=new_architecture_version,
+                    artifact_type=artifact_type,
+                    path=path,
+                    status="pending_approval",
+                )
+
+                registered_count += 1
+
+        if registered_count == 0:
+            raise ValueError(
+                "Architect Agent completed but returned no recognizable artifact paths. "
+                "Expected keys like json_path, markdown_path, openapi_yaml_path, or artifacts[]."
+            )
+
+        self.approval_manager.set_pending(
+            run_id=run_id,
+            stage="architecture",
+            version=new_architecture_version,
+            comment="Architecture artifacts generated and waiting for human approval.",
+        )
+
+        self.run_manager.save_state(state)
+
+        return {
+            "message": "Architecture stage generated successfully.",
+            "state": state.model_dump(),
+            "result": result,
+        }
+
     async def revise_stage(
         self,
         run_id: str,
@@ -474,7 +634,11 @@ class StageService:
 
         elif normalized_stage == "domain":
             state.current_stage = "DOMAIN_APPROVED"
-            state.next_action = "Next stage is Architect Agent."
+            state.next_action = "Generate architecture using the Architect Agent."
+
+        elif normalized_stage == "architecture":
+            state.current_stage = "ARCHITECTURE_APPROVED"
+            state.next_action = "Next stage is UI/UX Agent."
 
         else:
             state.current_stage = f"{normalized_stage.upper()}_APPROVED"
@@ -540,6 +704,10 @@ class StageService:
         elif normalized_stage == "domain":
             state.current_stage = "DOMAIN_REJECTED"
             state.next_action = "Generate a new DomainPack version after fixing the issue."
+
+        elif normalized_stage == "architecture":
+            state.current_stage = "ARCHITECTURE_REJECTED"
+            state.next_action = "Generate a new architecture version after fixing the issue."
 
         else:
             state.current_stage = f"{normalized_stage.upper()}_REJECTED"
