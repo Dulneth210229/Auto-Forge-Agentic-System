@@ -184,6 +184,12 @@ class CoderGenerateRequest(BaseModel):
         description="Architecture version (OpenAPI, SDS, DBPack from Architect Agent)"
     )
 
+    uiux_version: str = Field(
+    default="v1",
+    description="UI/UX version containing user flows and wireframes"
+)
+
+
 
 class CoderGenerateResponse(BaseModel):
     """
@@ -245,6 +251,12 @@ class CoderReviseRequest(BaseModel):
         default="v1",
         description="Architecture version used as source context"
     )
+
+    uiux_version: str = Field(
+    default="v1",
+    description="UI/UX version containing user flows and wireframes"
+)
+
 
     change_request: str = Field(
         ...,
@@ -875,7 +887,8 @@ async def generate_code(request: CoderGenerateRequest):
             srs_version=request.srs_version,
             code_version=request.code_version,
             domain_version=request.domain_version,
-            architecture_version=request.architecture_version
+            architecture_version=request.architecture_version,
+            uiux_version=request.uiux_version,
         )
         
         logger.info(f"Coder Agent: Successfully generated {result.get('generated_file_count', 0)} files")
@@ -919,6 +932,7 @@ async def revise_code(request: CoderReviseRequest):
             srs_version=request.srs_version,
             domain_version=request.domain_version,
             architecture_version=request.architecture_version,
+            uiux_version=request.uiux_version,
         )
 
         logger.info(

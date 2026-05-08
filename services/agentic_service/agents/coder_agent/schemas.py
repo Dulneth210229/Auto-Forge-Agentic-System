@@ -7,6 +7,7 @@ class CodeGenRequest(BaseModel):
     srs_version: str = "v1"
     domain_version: str = "v1"
     architecture_version: str = "v1"
+    uiux_version: str = "v1"
     code_version: str = "v1"
 
 

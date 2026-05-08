@@ -110,19 +110,19 @@ class OllamaProvider(LLMProvider):
             "prompt": prompt,
             "stream": True,
             "options": {
-                "temperature": 0.1,       # ✅ lowered: more deterministic code output
-                "num_ctx": 16384,         # ✅ increased: use qwen2.5-coder's large context window
-                "num_predict": 6000,      # ✅ increased: prevents mid-file cutoff
-                "top_p": 0.9,             # ✅ added: better token selection
-                "top_k": 40,              # ✅ added: limits token candidates for quality
-                "repeat_penalty": 1.1,    # ✅ added: prevents looping/repetitive output
-                "num_keep": 24            # ✅ added: matches model's recommended num_keep
+                "temperature": 0.1,       # lowered: more deterministic code output
+                "num_ctx": 16384,         # increased: use qwen2.5-coder's large context window
+                "num_predict": 6000,      # increased: prevents mid-file cutoff
+                "top_p": 0.9,             # added: better token selection
+                "top_k": 40,              # added: limits token candidates for quality
+                "repeat_penalty": 1.1,    # added: prevents looping/repetitive output
+                "num_keep": 24            # added: matches model's recommended num_keep
             }
         }
 
         timeout = httpx.Timeout(
             connect=30.0,
-            read=900.0,    # ✅ increased: 15 min — CPU inference needs more time
+            read=900.0,    # increased: 15 min — CPU inference needs more time
             write=30.0,
             pool=30.0
         )
