@@ -1,6 +1,6 @@
 {
   "project_name": "AutoForge Shop",
-  "version": "v3",
+  "version": "v5",
   "database_type": "relational",
   "entities": [
     {

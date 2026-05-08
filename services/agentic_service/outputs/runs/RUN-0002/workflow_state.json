@@ -10,7 +10,7 @@
   "latest_versions": {
     "requirements": "v1",
     "domain": "v1",
-    "architecture": "v3",
+    "architecture": "v5",
     "uiux": null,
     "code": null,
     "tests": null,
@@ -318,6 +318,258 @@
       "artifact_type": "usecase_v3",
       "path": "outputs\\runs\\RUN-0002\\architecture\\v3\\diagrams\\usecase_v3.puml",
       "status": "pending_approval"
+    },
+    {
+      "stage": "architecture",
+      "version": "v4",
+      "artifact_type": "json",
+      "path": "outputs\\runs\\RUN-0002\\architecture\\v4\\SDS_v4.json",
+      "status": "pending_approval"
+    },
+    {
+      "stage": "architecture",
+      "version": "v4",
+      "artifact_type": "markdown",
+      "path": "outputs\\runs\\RUN-0002\\architecture\\v4\\SDS_v4.md",
+      "status": "pending_approval"
+    },
+    {
+      "stage": "architecture",
+      "version": "v4",
+      "artifact_type": "sds_markdown",
+      "path": "outputs\\runs\\RUN-0002\\architecture\\v4\\SDS_v4.md",
+      "status": "pending_approval"
+    },
+    {
+      "stage": "architecture",
+      "version": "v4",
+      "artifact_type": "openapi_yaml",
+      "path": "outputs\\runs\\RUN-0002\\architecture\\v4\\OpenAPI_v4.yaml",
+      "status": "pending_approval"
+    },
+    {
+      "stage": "architecture",
+      "version": "v4",
+      "artifact_type": "db_pack",
+      "path": "outputs\\runs\\RUN-0002\\architecture\\v4\\DBPack_v4.json",
+      "status": "pending_approval"
+    },
+    {
+      "stage": "architecture",
+      "version": "v4",
+      "artifact_type": "json",
+      "path": "outputs\\runs\\RUN-0002\\architecture\\v4\\DBPack_v4.json",
+      "status": "pending_approval"
+    },
+    {
+      "stage": "architecture",
+      "version": "v4",
+      "artifact_type": "md",
+      "path": "outputs\\runs\\RUN-0002\\architecture\\v4\\DBPack_v4.md",
+      "status": "pending_approval"
+    },
+    {
+      "stage": "architecture",
+      "version": "v4",
+      "artifact_type": "json",
+      "path": "outputs\\runs\\RUN-0002\\architecture\\v4\\Traceability_Architecture_v4.json",
+      "status": "pending_approval"
+    },
+    {
+      "stage": "architecture",
+      "version": "v4",
+      "artifact_type": "architecture_flow_v4",
+      "path": "outputs\\runs\\RUN-0002\\architecture\\v4\\diagrams\\architecture_flow_v4.png",
+      "status": "pending_approval"
+    },
+    {
+      "stage": "architecture",
+      "version": "v4",
+      "artifact_type": "architecture_flow_v4",
+      "path": "outputs\\runs\\RUN-0002\\architecture\\v4\\diagrams\\architecture_flow_v4.puml",
+      "status": "pending_approval"
+    },
+    {
+      "stage": "architecture",
+      "version": "v4",
+      "artifact_type": "class_v4",
+      "path": "outputs\\runs\\RUN-0002\\architecture\\v4\\diagrams\\class_v4.png",
+      "status": "pending_approval"
+    },
+    {
+      "stage": "architecture",
+      "version": "v4",
+      "artifact_type": "class_v4",
+      "path": "outputs\\runs\\RUN-0002\\architecture\\v4\\diagrams\\class_v4.puml",
+      "status": "pending_approval"
+    },
+    {
+      "stage": "architecture",
+      "version": "v4",
+      "artifact_type": "sequence_checkout_v4",
+      "path": "outputs\\runs\\RUN-0002\\architecture\\v4\\diagrams\\sequence_checkout_v4.png",
+      "status": "pending_approval"
+    },
+    {
+      "stage": "architecture",
+      "version": "v4",
+      "artifact_type": "sequence_checkout_v4",
+      "path": "outputs\\runs\\RUN-0002\\architecture\\v4\\diagrams\\sequence_checkout_v4.puml",
+      "status": "pending_approval"
+    },
+    {
+      "stage": "architecture",
+      "version": "v4",
+      "artifact_type": "sequence_order_history_v4",
+      "path": "outputs\\runs\\RUN-0002\\architecture\\v4\\diagrams\\sequence_order_history_v4.png",
+      "status": "pending_approval"
+    },
+    {
+      "stage": "architecture",
+      "version": "v4",
+      "artifact_type": "sequence_order_history_v4",
+      "path": "outputs\\runs\\RUN-0002\\architecture\\v4\\diagrams\\sequence_order_history_v4.puml",
+      "status": "pending_approval"
+    },
+    {
+      "stage": "architecture",
+      "version": "v4",
+      "artifact_type": "usecase_v4",
+      "path": "outputs\\runs\\RUN-0002\\architecture\\v4\\diagrams\\usecase_v4.png",
+      "status": "pending_approval"
+    },
+    {
+      "stage": "architecture",
+      "version": "v4",
+      "artifact_type": "usecase_v4",
+      "path": "outputs\\runs\\RUN-0002\\architecture\\v4\\diagrams\\usecase_v4.puml",
+      "status": "pending_approval"
+    },
+    {
+      "stage": "architecture",
+      "version": "v5",
+      "artifact_type": "json",
+      "path": "outputs\\runs\\RUN-0002\\architecture\\v5\\SDS_v5.json",
+      "status": "pending_approval"
+    },
+    {
+      "stage": "architecture",
+      "version": "v5",
+      "artifact_type": "markdown",
+      "path": "outputs\\runs\\RUN-0002\\architecture\\v5\\SDS_v5.md",
+      "status": "pending_approval"
+    },
+    {
+      "stage": "architecture",
+      "version": "v5",
+      "artifact_type": "sds_markdown",
+      "path": "outputs\\runs\\RUN-0002\\architecture\\v5\\SDS_v5.md",
+      "status": "pending_approval"
+    },
+    {
+      "stage": "architecture",
+      "version": "v5",
+      "artifact_type": "openapi_yaml",
+      "path": "outputs\\runs\\RUN-0002\\architecture\\v5\\OpenAPI_v5.yaml",
+      "status": "pending_approval"
+    },
+    {
+      "stage": "architecture",
+      "version": "v5",
+      "artifact_type": "db_pack",
+      "path": "outputs\\runs\\RUN-0002\\architecture\\v5\\DBPack_v5.json",
+      "status": "pending_approval"
+    },
+    {
+      "stage": "architecture",
+      "version": "v5",
+      "artifact_type": "json",
+      "path": "outputs\\runs\\RUN-0002\\architecture\\v5\\DBPack_v5.json",
+      "status": "pending_approval"
+    },
+    {
+      "stage": "architecture",
+      "version": "v5",
+      "artifact_type": "md",
+      "path": "outputs\\runs\\RUN-0002\\architecture\\v5\\DBPack_v5.md",
+      "status": "pending_approval"
+    },
+    {
+      "stage": "architecture",
+      "version": "v5",
+      "artifact_type": "json",
+      "path": "outputs\\runs\\RUN-0002\\architecture\\v5\\Traceability_Architecture_v5.json",
+      "status": "pending_approval"
+    },
+    {
+      "stage": "architecture",
+      "version": "v5",
+      "artifact_type": "architecture_flow_v5",
+      "path": "outputs\\runs\\RUN-0002\\architecture\\v5\\diagrams\\architecture_flow_v5.png",
+      "status": "pending_approval"
+    },
+    {
+      "stage": "architecture",
+      "version": "v5",
+      "artifact_type": "architecture_flow_v5",
+      "path": "outputs\\runs\\RUN-0002\\architecture\\v5\\diagrams\\architecture_flow_v5.puml",
+      "status": "pending_approval"
+    },
+    {
+      "stage": "architecture",
+      "version": "v5",
+      "artifact_type": "class_v5",
+      "path": "outputs\\runs\\RUN-0002\\architecture\\v5\\diagrams\\class_v5.png",
+      "status": "pending_approval"
+    },
+    {
+      "stage": "architecture",
+      "version": "v5",
+      "artifact_type": "class_v5",
+      "path": "outputs\\runs\\RUN-0002\\architecture\\v5\\diagrams\\class_v5.puml",
+      "status": "pending_approval"
+    },
+    {
+      "stage": "architecture",
+      "version": "v5",
+      "artifact_type": "sequence_checkout_v5",
+      "path": "outputs\\runs\\RUN-0002\\architecture\\v5\\diagrams\\sequence_checkout_v5.png",
+      "status": "pending_approval"
+    },
+    {
+      "stage": "architecture",
+      "version": "v5",
+      "artifact_type": "sequence_checkout_v5",
+      "path": "outputs\\runs\\RUN-0002\\architecture\\v5\\diagrams\\sequence_checkout_v5.puml",
+      "status": "pending_approval"
+    },
+    {
+      "stage": "architecture",
+      "version": "v5",
+      "artifact_type": "sequence_order_history_v5",
+      "path": "outputs\\runs\\RUN-0002\\architecture\\v5\\diagrams\\sequence_order_history_v5.png",
+      "status": "pending_approval"
+    },
+    {
+      "stage": "architecture",
+      "version": "v5",
+      "artifact_type": "sequence_order_history_v5",
+      "path": "outputs\\runs\\RUN-0002\\architecture\\v5\\diagrams\\sequence_order_history_v5.puml",
+      "status": "pending_approval"
+    },
+    {
+      "stage": "architecture",
+      "version": "v5",
+      "artifact_type": "usecase_v5",
+      "path": "outputs\\runs\\RUN-0002\\architecture\\v5\\diagrams\\usecase_v5.png",
+      "status": "pending_approval"
+    },
+    {
+      "stage": "architecture",
+      "version": "v5",
+      "artifact_type": "usecase_v5",
+      "path": "outputs\\runs\\RUN-0002\\architecture\\v5\\diagrams\\usecase_v5.puml",
+      "status": "pending_approval"
     }
   ],
   "messages": [
@@ -327,7 +579,9 @@
     "domain v1 approved.",
     "Architect Agent generated architecture artifacts for v1.",
     "Architect Agent generated architecture artifacts for v2.",
-    "Architect Agent generated architecture artifacts for v3."
+    "Architect Agent generated architecture artifacts for v3.",
+    "Architect Agent generated architecture artifacts for v4.",
+    "Architect Agent generated architecture artifacts for v5."
   ],
   "errors": [
     {
@@ -356,7 +610,7 @@
     }
   ],
   "traceability_links": [],
-  "next_action": "Review and approve or reject Architecture/SDS v3.",
+  "next_action": "Review and approve or reject Architecture/SDS v5.",
   "created_at": "2026-05-07T17:15:57.629959+00:00",
-  "updated_at": "2026-05-08T11:17:10.240747+00:00"
+  "updated_at": "2026-05-08T12:29:17.753884+00:00"
 }

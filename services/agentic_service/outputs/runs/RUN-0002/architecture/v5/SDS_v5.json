@@ -1,6 +1,6 @@
 {
   "project_name": "AutoForge Shop",
-  "version": "v3",
+  "version": "v5",
   "architecture_style": "modular_monolith",
   "overview": "The system follows a modular monolith architecture for the MVP. The application is deployed as one backend service, but internally separated into Identity, Catalog, Cart, Checkout, Order, and Admin modules.",
   "modules": [

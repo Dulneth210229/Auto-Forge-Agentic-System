@@ -1,6 +1,6 @@
 # Software Design Specification: AutoForge Shop
 
-**Version:** v3  
+**Version:** v5  
 **Architecture Style:** modular_monolith
 
 ---
