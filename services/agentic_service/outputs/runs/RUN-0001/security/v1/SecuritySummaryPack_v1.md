@@ -3,8 +3,8 @@
 **Run ID:** RUN-0001  
 **Stage:** security  
 **Version:** v1  
-**Generated At:** 2026-05-06T04:28:17.105504+00:00  
-**Target Path:** outputs/runs/RUN-0001/code/v1/generated_app
+**Generated At:** 2026-05-07T16:05:27.268984+00:00  
+**Target Path:** ./sample_ecommerce_app
 
 ---
 
@@ -12,9 +12,9 @@
 
 | Field | Value |
 |---|---|
-| Status | **WARN** |
-| Reason | Security gate warning because Medium severity findings were detected. |
-| Policy | WARN if Medium findings exist and no Critical or blocking High findings exist. |
+| Status | **FAIL** |
+| Reason | Security gate failed because Critical vulnerabilities were detected. |
+| Policy | FAIL if one or more Critical findings exist. |
 
 ---
 
@@ -22,11 +22,11 @@
 
 | Severity | Count |
 |---|---:|
-| Critical | 0 |
-| High | 0 |
-| Medium | 1 |
-| Low | 0 |
-| **Total** | **1** |
+| Critical | 6 |
+| High | 15 |
+| Medium | 9 |
+| Low | 3 |
+| **Total** | **33** |
 
 ---
 
@@ -34,10 +34,10 @@
 
 | Metric | Count |
 |---|---:|
-| Dependency Vulnerabilities | 27 |
-| LLM Findings | 0 |
-| Fix Suggestions | 1 |
-| Top Blocking Findings | 0 |
+| Dependency Vulnerabilities | 54 |
+| LLM Findings | 2 |
+| Fix Suggestions | 33 |
+| Top Blocking Findings | 10 |
 
 ---
 
@@ -46,8 +46,8 @@
 | Metric | Value |
 |---|---:|
 | Coverage Percentage | 100.0% |
-| Mapped Findings | 1 |
-| Total Findings | 1 |
+| Mapped Findings | 33 |
+| Total Findings | 33 |
 
 ---
 
@@ -55,15 +55,26 @@
 
 | Metric | Value |
 |---|---:|
-| Before Deduplication | 1 |
-| After Deduplication | 1 |
-| Duplicates Removed | 0 |
+| Before Deduplication | 46 |
+| After Deduplication | 33 |
+| Duplicates Removed | 13 |
 
 ---
 
 ## 6. Top Blocking Findings
 
-No blocking findings.
+| ID | Title | Severity | File | Method | Requirement | Module |
+|---|---|---|---|---|---|---|
+| SEC-001 | Hardcoded secret detected | High | sample_ecommerce_app\app.py | AST | FR-006 | admin |
+| SEC-002 | Use of eval() detected | Critical | sample_ecommerce_app\app.py | AST | NFR-SEC-001 | general_security |
+| SEC-003 | Unsafe subprocess usage with shell=True | High | sample_ecommerce_app\app.py | AST | NFR-SEC-001 | general_security |
+| SEC-007 | Possible raw SQL string formatting | High | sample_ecommerce_app\app.py | AST | NFR-SEC-001 | general_security |
+| SEC-008 | Direct innerHTML assignment detected | High | sample_ecommerce_app\frontend.js | AST | FR-007 | frontend |
+| SEC-010 | JavaScript eval() usage detected | Critical | sample_ecommerce_app\frontend.js | AST | FR-007 | frontend |
+| SEC-012 | Vulnerable dependency detected: lodash | High | sample_ecommerce_app\package.json | Dependency | NFR-002 | dependency_management |
+| SEC-013 | Vulnerable dependency detected: lodash | High | sample_ecommerce_app\package.json | Dependency | NFR-002 | dependency_management |
+| SEC-014 | Vulnerable dependency detected: lodash | High | sample_ecommerce_app\package.json | Dependency | NFR-002 | dependency_management |
+| SEC-016 | Vulnerable dependency detected: axios | High | sample_ecommerce_app\package.json | Dependency | NFR-002 | dependency_management |
 
 ---
 
