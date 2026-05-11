@@ -2,25 +2,25 @@
   "run_id": "RUN-0001",
   "stage": "testing",
   "version": "v1",
-  "generated_at": "2026-05-11T13:02:20.926693+00:00",
-  "target_path": "outputs/runs/RUN-0001/code/v1/generated_app",
+  "generated_at": "2026-05-11T19:12:37.552205+00:00",
+  "target_path": "./sample_ecommerce_app",
   "summary": {
     "total_tests": 33,
-    "passed": 29,
-    "failed": 4,
+    "passed": 33,
+    "failed": 0,
     "skipped": 0,
     "not_run": 0
   },
   "metrics": {
     "test_coverage": 1.0,
-    "pass_rate": 0.88,
-    "execution_efficiency": 571.0
+    "pass_rate": 1.0,
+    "execution_efficiency": 5479.0
   },
   "pytest_run": {
-    "exit_code": 1,
-    "status": "failed",
-    "duration_ms": 571,
-    "stdout": "................F.F...........F.F                                        [100%]\n================================== FAILURES ===================================\n________________ test_regression_negative_quantity_is_rejected ________________\noutputs\\runs\\RUN-0001\\tests\\v1\\generated_tests\\test_regression_cases.py:54: in test_regression_negative_quantity_is_rejected\n    assert _has_any(text, keywords), (\nE   AssertionError: Regression failed: negative quantity rejection was not found.\nE   assert False\nE    +  where False = _has_any('\\nversion: \\'3.8\\'\\nservices:\\n  backend:\\n    build: \\n      context: ./backend\\n      dockerfile: dockerfile\\n    p...ntity\": 1}], \"total\": 1200.0}, {\"id\": \"ord-0002\", \"items\": [{\"product_id\": \"p001\", \"quantity\": 1}], \"total\": 1200.0}]}', ['invalid quantity', 'must be positive', 'greater than 0', 'negative', 'quantity <= 0'])\n___________ test_regression_missing_payment_or_customer_is_rejected ___________\noutputs\\runs\\RUN-0001\\tests\\v1\\generated_tests\\test_regression_cases.py:86: in test_regression_missing_payment_or_customer_is_rejected\n    assert _has_any(text, keywords), (\nE   AssertionError: Regression failed: missing payment/customer rejection was not found.\nE   assert False\nE    +  where False = _has_any('\\nversion: \\'3.8\\'\\nservices:\\n  backend:\\n    build: \\n      context: ./backend\\n      dockerfile: dockerfile\\n    p...ntity\": 1}], \"total\": 1200.0}, {\"id\": \"ord-0002\", \"items\": [{\"product_id\": \"p001\", \"quantity\": 1}], \"total\": 1200.0}]}', ['missing payment', 'missing customer', 'payment required', 'customer required', 'required'])\n_________________ test_customer_or_payment_validation_exists __________________\noutputs\\runs\\RUN-0001\\tests\\v1\\generated_tests\\test_validation_edge_cases.py:75: in test_customer_or_payment_validation_exists\n    assert _has_any(text, keywords), (\nE   AssertionError: Customer or payment validation was not found.\nE   assert False\nE    +  where False = _has_any('\\nversion: \\'3.8\\'\\nservices:\\n  backend:\\n    build: \\n      context: ./backend\\n      dockerfile: dockerfile\\n    p...ntity\": 1}], \"total\": 1200.0}, {\"id\": \"ord-0002\", \"items\": [{\"product_id\": \"p001\", \"quantity\": 1}], \"total\": 1200.0}]}', ['customer', 'payment', 'billing', 'email', 'required', 'missing', ...])\n______________________ test_out_of_stock_handling_exists ______________________\noutputs\\runs\\RUN-0001\\tests\\v1\\generated_tests\\test_validation_edge_cases.py:101: in test_out_of_stock_handling_exists\n    assert _has_any(text, keywords), (\nE   AssertionError: Stock or out-of-stock handling was not found.\nE   assert False\nE    +  where False = _has_any('\\nversion: \\'3.8\\'\\nservices:\\n  backend:\\n    build: \\n      context: ./backend\\n      dockerfile: dockerfile\\n    p...ntity\": 1}], \"total\": 1200.0}, {\"id\": \"ord-0002\", \"items\": [{\"product_id\": \"p001\", \"quantity\": 1}], \"total\": 1200.0}]}', ['stock', 'out of stock', 'inventory', 'available_quantity', 'insufficient stock'])\n=========================== short test summary info ===========================\nFAILED outputs/runs/RUN-0001/tests/v1/generated_tests/test_regression_cases.py::test_regression_negative_quantity_is_rejected\nFAILED outputs/runs/RUN-0001/tests/v1/generated_tests/test_regression_cases.py::test_regression_missing_payment_or_customer_is_rejected\nFAILED outputs/runs/RUN-0001/tests/v1/generated_tests/test_validation_edge_cases.py::test_customer_or_payment_validation_exists\nFAILED outputs/runs/RUN-0001/tests/v1/generated_tests/test_validation_edge_cases.py::test_out_of_stock_handling_exists\n4 failed, 29 passed in 0.18s\n",
+    "exit_code": 0,
+    "status": "passed",
+    "duration_ms": 5479,
+    "stdout": ".................................                                        [100%]\n33 passed in 0.84s\n",
     "stderr": ""
   },
   "traceability_summary": {
@@ -36,41 +36,15 @@
     "execution_results": 33,
     "regression_test_cases": 5,
     "security_validation_cases": 4,
-    "failed_results": 4
+    "failed_results": 0
   },
   "quality_gate": {
-    "status": "FAIL",
-    "reason": "4 test(s) failed.",
-    "policy": "FAIL if any generated test fails."
+    "status": "PASS",
+    "reason": "All generated tests passed.",
+    "policy": "PASS when pytest succeeds and no tests fail or skip."
   },
-  "failed_results": [
-    {
-      "test_id": "outputs/runs/RUN-0001/tests/v1/generated_tests/test_regression_cases.py::test_regression_negative_quantity_is_rejected",
-      "status": "failed",
-      "message": "Test failed. See pytest stdout/stderr for details.",
-      "duration_ms": 17
-    },
-    {
-      "test_id": "outputs/runs/RUN-0001/tests/v1/generated_tests/test_regression_cases.py::test_regression_missing_payment_or_customer_is_rejected",
-      "status": "failed",
-      "message": "Test failed. See pytest stdout/stderr for details.",
-      "duration_ms": 17
-    },
-    {
-      "test_id": "outputs/runs/RUN-0001/tests/v1/generated_tests/test_validation_edge_cases.py::test_customer_or_payment_validation_exists",
-      "status": "failed",
-      "message": "Test failed. See pytest stdout/stderr for details.",
-      "duration_ms": 17
-    },
-    {
-      "test_id": "outputs/runs/RUN-0001/tests/v1/generated_tests/test_validation_edge_cases.py::test_out_of_stock_handling_exists",
-      "status": "failed",
-      "message": "Test failed. See pytest stdout/stderr for details.",
-      "duration_ms": 17
-    }
-  ],
+  "failed_results": [],
   "recommendations": [
-    "Some generated tests failed. Review pytest stdout/stderr in TestReport_v1.json.",
     "Generated pytest files were executed.",
     "Functional API-style tests were generated for catalog, cart, checkout, and order.",
     "Integration workflow tests were generated for Product -> Cart -> Checkout -> Order.",
