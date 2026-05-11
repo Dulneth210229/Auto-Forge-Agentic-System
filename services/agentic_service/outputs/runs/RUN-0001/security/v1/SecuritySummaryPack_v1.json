@@ -2,7 +2,7 @@
   "run_id": "RUN-0001",
   "stage": "security",
   "version": "v1",
-  "generated_at": "2026-05-06T04:28:17.105504+00:00",
+  "generated_at": "2026-05-11T13:01:32.386240+00:00",
   "target_path": "outputs/runs/RUN-0001/code/v1/generated_app",
   "security_gate": {
     "status": "WARN",
@@ -28,7 +28,7 @@
   },
   "counts": {
     "total_findings": 1,
-    "dependency_vulnerabilities": 27,
+    "dependency_vulnerabilities": 81,
     "llm_findings": 0,
     "fix_suggestions": 1,
     "top_blocking_findings": 0

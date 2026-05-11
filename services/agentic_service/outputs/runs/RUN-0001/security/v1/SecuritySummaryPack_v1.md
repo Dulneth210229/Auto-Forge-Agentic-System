@@ -3,7 +3,7 @@
 **Run ID:** RUN-0001  
 **Stage:** security  
 **Version:** v1  
-**Generated At:** 2026-05-06T04:28:17.105504+00:00  
+**Generated At:** 2026-05-11T13:01:32.386240+00:00  
 **Target Path:** outputs/runs/RUN-0001/code/v1/generated_app
 
 ---
@@ -34,7 +34,7 @@
 
 | Metric | Count |
 |---|---:|
-| Dependency Vulnerabilities | 27 |
+| Dependency Vulnerabilities | 81 |
 | LLM Findings | 0 |
 | Fix Suggestions | 1 |
 | Top Blocking Findings | 0 |
