@@ -3,7 +3,7 @@
 **Run ID:** RUN-0001  
 **Stage:** testing  
 **Version:** v1  
-**Generated At:** 2026-05-06T04:03:24.832758+00:00  
+**Generated At:** 2026-05-11T13:02:20.926693+00:00  
 **Target Path:** outputs/runs/RUN-0001/code/v1/generated_app
 
 ---
@@ -36,7 +36,7 @@
 |---|---:|
 | Test Coverage | 1.0 |
 | Pass Rate | 0.88 |
-| Execution Efficiency | 471.0 ms |
+| Execution Efficiency | 571.0 ms |
 
 ---
 
@@ -69,10 +69,10 @@
 
 | Test ID | Status | Duration | Message |
 |---|---|---:|---|
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_regression_cases.py::test_regression_negative_quantity_is_rejected | failed | 14 ms | Test failed. See pytest stdout/stderr for details. |
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_regression_cases.py::test_regression_missing_payment_or_customer_is_rejected | failed | 14 ms | Test failed. See pytest stdout/stderr for details. |
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_validation_edge_cases.py::test_customer_or_payment_validation_exists | failed | 14 ms | Test failed. See pytest stdout/stderr for details. |
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_validation_edge_cases.py::test_out_of_stock_handling_exists | failed | 14 ms | Test failed. See pytest stdout/stderr for details. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_regression_cases.py::test_regression_negative_quantity_is_rejected | failed | 17 ms | Test failed. See pytest stdout/stderr for details. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_regression_cases.py::test_regression_missing_payment_or_customer_is_rejected | failed | 17 ms | Test failed. See pytest stdout/stderr for details. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_validation_edge_cases.py::test_customer_or_payment_validation_exists | failed | 17 ms | Test failed. See pytest stdout/stderr for details. |
+| outputs/runs/RUN-0001/tests/v1/generated_tests/test_validation_edge_cases.py::test_out_of_stock_handling_exists | failed | 17 ms | Test failed. See pytest stdout/stderr for details. |
 
 ---
 
