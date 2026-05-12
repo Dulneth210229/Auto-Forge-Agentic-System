@@ -115,4 +115,10 @@ export const autoForgeApi = {
 
   readArtifact: (path) =>
     get(`/artifacts/read?path=${encodeURIComponent(path)}`),
+
+  getArtifactTree: (path) =>
+    get(`/artifacts/tree?path=${encodeURIComponent(path)}`),
+
+  getFolderDownloadUrl: (path) =>
+    `${API_BASE_URL}/artifacts/download-folder?path=${encodeURIComponent(path)}`,
 };

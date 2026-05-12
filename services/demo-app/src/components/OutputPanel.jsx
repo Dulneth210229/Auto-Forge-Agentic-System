@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import ArtifactList from "./ArtifactList";
 import MarkdownPreview from "./MarkdownPreview";
+import CoderOutputSummary from "./CoderOutputSummary";
 
 /**
  * Finds generated artifact file paths from any backend response.
@@ -196,16 +197,26 @@ export default function OutputPanel({
         </div>
       )}
 
-      {!loading && displayData && (
-        <>
-          <ArtifactList paths={paths} onReadArtifact={onReadArtifact} />
+     {!loading && displayData && (
+  <>
+    {title.toLowerCase().includes("coder") && (
+      <CoderOutputSummary
+        data={displayData}
+        onReadArtifact={onReadArtifact}
+      />
+    )}
 
-          <div className="json-preview compact-json">
-            <h3>Backend Response Summary</h3>
-            <pre>{JSON.stringify(displayData, null, 2)}</pre>
-          </div>
-        </>
-      )}
+    <ArtifactList paths={paths} onReadArtifact={onReadArtifact} />
+
+    {/* <details className="json-details" open>
+      <summary>View Raw Backend JSON Response</summary>
+
+      <div className="json-preview compact-json">
+        <pre>{JSON.stringify(displayData, null, 2)}</pre>
+      </div>
+    </details> */}
+  </>
+)}
 
       {displayArtifactContent && (
         <div className="artifact-preview">
