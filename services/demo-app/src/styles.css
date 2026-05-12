@@ -981,3 +981,68 @@ textarea {
     font-size: 20px;
   }
 }
+
+/* -------------------------------------------------------
+   Security + Testing Agent Enhancements
+------------------------------------------------------- */
+
+.agent-info-card {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 16px;
+  margin-bottom: 14px;
+  box-shadow: 0 8px 26px rgba(15, 23, 42, 0.04);
+}
+
+.agent-info-card h3 {
+  margin: 0 0 10px;
+  font-size: 15px;
+}
+
+.agent-info-card ul {
+  margin: 0;
+  padding-left: 20px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.result-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.result-summary-card {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 14px;
+}
+
+.result-summary-card span {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.result-summary-card strong {
+  display: block;
+  color: var(--text);
+  font-size: 20px;
+  word-break: break-word;
+}
+
+.result-summary-card.danger strong {
+  color: var(--danger);
+}
+
+@media (max-width: 860px) {
+  .result-summary-grid {
+    grid-template-columns: 1fr;
+  }
+}

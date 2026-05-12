@@ -9,7 +9,7 @@ export default function SecurityAgentPage() {
   const [form, setForm] = useState({
     run_id: "RUN-0001",
     version: "v1",
-    target_path: "./sample_ecommerce_app",
+    target_path: "outputs/runs/RUN-0001/code/v1/generated_app",
     enable_llm: false,
   });
 
@@ -28,23 +28,27 @@ export default function SecurityAgentPage() {
     }));
   }
 
-  async function runAgent() {
+  function buildPayload() {
+    return {
+      run_id: form.run_id.trim(),
+      version: form.version.trim(),
+      target_path: form.target_path.trim(),
+      enable_llm: Boolean(form.enable_llm),
+    };
+  }
+
+  async function runSecurityAgent() {
     setLoading(true);
     setError("");
     setOutput(null);
     setArtifactContent("");
+    setSelectedArtifactPath("");
 
     try {
-      const result = await autoForgeApi.runSecurity({
-        run_id: form.run_id,
-        version: form.version,
-        target_path: form.target_path,
-        enable_llm: form.enable_llm,
-      });
-
+      const result = await autoForgeApi.runSecurity(buildPayload());
       setOutput(result);
     } catch (err) {
-      setError(err.message);
+      setError(err.message || "Security Agent failed.");
     } finally {
       setLoading(false);
     }
@@ -57,9 +61,26 @@ export default function SecurityAgentPage() {
       setArtifactContent(content);
     } catch (err) {
       setSelectedArtifactPath(path);
-      setArtifactContent(`Could not read artifact.\n\n${err.message}`);
+      setArtifactContent(
+        `Could not read artifact. Please check /artifacts/read endpoint.\n\n${err.message}`
+      );
     }
   }
+
+  const summary = output?.summary || {};
+  const securityGate =
+    output?.security_gate?.status ||
+    output?.security_gate?.decision ||
+    "Unknown";
+
+  const totalFindings =
+    summary.total_findings ??
+    summary.total ??
+    output?.dependency_vulnerabilities_count ??
+    0;
+
+  const dependencyCount = output?.dependency_vulnerabilities_count ?? 0;
+  const llmFindings = output?.llm_findings_count ?? 0;
 
   return (
     <div className="page-grid">
@@ -67,37 +88,43 @@ export default function SecurityAgentPage() {
         <PageHeader
           badge="Stage 07"
           title="Security Agent"
-          description="Scans the generated application for security issues, dependency vulnerabilities, LLM-assisted findings, severity summaries, and final security gate results."
+          description="Scans the generated code for static security issues, dependency vulnerabilities, optional LLM-assisted review findings, traceability mapping, and final security gate result."
           outputs={[
             "SecurityReport_vX.json",
             "SecurityReport_vX.md",
             "SecuritySummaryPack",
-            "Security gate",
+            "Security gate result",
           ]}
         />
 
-        <FormSection title="Security Scan Inputs">
+        <FormSection
+          title="Security Scan Input"
+          description="Give the generated application path. The Security Agent will scan the code and generate a security report."
+        >
           <div className="two-column">
             <TextInput
               label="Run ID"
               name="run_id"
               value={form.run_id}
               onChange={handleChange}
+              helper="Example: RUN-0001"
             />
+
             <TextInput
               label="Security Version"
               name="version"
               value={form.version}
               onChange={handleChange}
+              helper="Example: v1"
             />
           </div>
 
           <TextInput
-            label="Target Path"
+            label="Target Code Path"
             name="target_path"
             value={form.target_path}
             onChange={handleChange}
-            helper="Use generated code path such as outputs/runs/RUN-0001/code/v1/generated_app"
+            helper="Use forward slashes. Example: outputs/runs/RUN-0001/code/v1/generated_app"
           />
 
           <label className="checkbox-field">
@@ -111,9 +138,44 @@ export default function SecurityAgentPage() {
           </label>
         </FormSection>
 
+        <section className="agent-info-card">
+          <h3>What this agent checks</h3>
+          <ul>
+            <li>Static security weaknesses in generated code.</li>
+            <li>Dependency vulnerability findings.</li>
+            <li>Optional LLM-assisted security review.</li>
+            <li>Security gate decision and fix suggestions.</li>
+          </ul>
+        </section>
+
+        {output && (
+          <section className="result-summary-grid">
+            <div className="result-summary-card danger">
+              <span>Total Findings</span>
+              <strong>{totalFindings}</strong>
+            </div>
+
+            <div className="result-summary-card">
+              <span>Dependency Issues</span>
+              <strong>{dependencyCount}</strong>
+            </div>
+
+            <div className="result-summary-card">
+              <span>LLM Findings</span>
+              <strong>{llmFindings}</strong>
+            </div>
+
+            <div className="result-summary-card">
+              <span>Security Gate</span>
+              <strong>{securityGate}</strong>
+            </div>
+          </section>
+        )}
+
         <button
+          type="button"
           className="primary-button large"
-          onClick={runAgent}
+          onClick={runSecurityAgent}
           disabled={loading}
         >
           {loading ? "Running Security Agent..." : "Run Security Agent"}
