@@ -982,130 +982,67 @@ textarea {
   }
 }
 
-.code-folder-tree {
+/* -------------------------------------------------------
+   Security + Testing Agent Enhancements
+------------------------------------------------------- */
+
+.agent-info-card {
   background: #ffffff;
-  color: #111827;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border);
   border-radius: 18px;
-  margin: 18px 0;
-  overflow: hidden;
+  padding: 16px;
+  margin-bottom: 14px;
+  box-shadow: 0 8px 26px rgba(15, 23, 42, 0.04);
 }
 
-.folder-tree-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 18px;
-  background: #f8fafc;
-  border-bottom: 1px solid #e5e7eb;
+.agent-info-card h3 {
+  margin: 0 0 10px;
+  font-size: 15px;
 }
 
-.folder-tree-header h3 {
+.agent-info-card ul {
   margin: 0;
-  font-size: 18px;
-}
-
-.folder-tree-header p {
-  margin: 5px 0 0;
-  color: #6b7280;
-  font-size: 12px;
-  word-break: break-all;
-}
-
-.download-code-btn {
-  flex-shrink: 0;
-  background: #16a34a;
-  color: white;
-  text-decoration: none;
-  padding: 11px 14px;
-  border-radius: 12px;
-  font-weight: 800;
+  padding-left: 20px;
+  color: var(--muted);
   font-size: 13px;
+  line-height: 1.7;
 }
 
-.download-code-btn:hover {
-  background: #15803d;
-}
-
-.tree-root {
-  padding: 12px;
-  max-height: 520px;
-  overflow: auto;
-  background: #ffffff;
-}
-
-.tree-root-name {
-  font-weight: 900;
-  padding: 10px;
-  background: #eef2ff;
-  color: #3730a3;
-  border-radius: 12px;
-  margin-bottom: 8px;
-}
-
-.tree-row {
+.result-summary-grid {
   display: grid;
-  grid-template-columns: 28px minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 8px;
-  min-height: 34px;
-  border-radius: 10px;
-  color: #374151;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
 }
 
-.tree-row:hover {
-  background: #f8fafc;
+.result-summary-card {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 14px;
 }
 
-.tree-row.folder {
-  font-weight: 800;
-  color: #111827;
+.result-summary-card span {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 6px;
 }
 
-.tree-row.file {
-  font-weight: 500;
+.result-summary-card strong {
+  display: block;
+  color: var(--text);
+  font-size: 20px;
+  word-break: break-word;
 }
 
-.tree-icon {
-  width: 24px;
-  text-align: center;
+.result-summary-card.danger strong {
+  color: var(--danger);
 }
 
-.tree-name {
-  border: 0;
-  background: transparent;
-  text-align: left;
-  color: inherit;
-  padding: 0;
-  font: inherit;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.tree-row.file .tree-name {
-  cursor: pointer;
-}
-
-.tree-row.file .tree-name:hover {
-  color: #4f46e5;
-  text-decoration: underline;
-}
-
-.tree-size {
-  font-size: 11px;
-  color: #6b7280;
-  padding-right: 8px;
-}
-
-.json-details {
-  margin-top: 16px;
-}
-
-.json-details summary {
-  cursor: pointer;
-  color: #cbd5e1;
-  font-weight: 800;
-  margin-bottom: 10px;
+@media (max-width: 860px) {
+  .result-summary-grid {
+    grid-template-columns: 1fr;
+  }
 }
