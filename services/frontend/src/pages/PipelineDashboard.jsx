@@ -7,6 +7,8 @@ import { getStageById } from "../constants/stages.js";
 import { useProject } from "../context/useProject.js";
 import { Card, CardBody } from "../components/ui/Card.jsx";
 
+import ArchitectAgentPage from "../agents/architect/ArchitectAgentPage.jsx";
+import UIUXAgentPage from "../agents/uiux/UIUXAgentPage.jsx";
 import CoderAgentPage from "../agents/coder/CoderAgentPage.jsx";
 import SecurityAgentPage from "../agents/security/SecurityAgentPage.jsx";
 import QAAgentPage from "../agents/qa/QAAgentPage.jsx";
@@ -21,6 +23,14 @@ export default function PipelineDashboard() {
   }, [stage.id, setActiveStageId]);
 
   function renderAgentPage() {
+    if (stage.id === "architect") {
+      return <ArchitectAgentPage />;
+    }
+
+    if (stage.id === "uiux") {
+      return <UIUXAgentPage />;
+    }
+
     if (stage.id === "coder") {
       return <CoderAgentPage />;
     }

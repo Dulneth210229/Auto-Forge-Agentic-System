@@ -1049,6 +1049,8 @@ from datetime import datetime
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
+from pathlib import Path
+from fastapi.responses import PlainTextResponse
 
 from agents.requirement_agent.agent import RequirementAgent
 from agents.domain_agent.agent import DomainAgent
@@ -2100,3 +2102,50 @@ def run_testing_agent(request: TestingRunRequest):
             status_code=500,
             detail=f"Testing Agent failed: {error}"
         )
+    
+@app.get("/artifacts/read", response_class=PlainTextResponse)
+def read_generated_artifact(path: str):
+    """
+    Safely reads generated artifact files from outputs/ or artifacts/.
+
+    This is useful for the React frontend because most agent endpoints return
+    file paths, but not always the full file content.
+    """
+
+    requested_path = Path(path)
+
+    if not requested_path.is_absolute():
+        requested_path = Path.cwd() / requested_path
+
+    requested_path = requested_path.resolve()
+    project_root = Path.cwd().resolve()
+
+    allowed_roots = [
+        (project_root / "outputs").resolve(),
+        (project_root / "artifacts").resolve(),
+    ]
+
+    is_allowed = any(
+        str(requested_path).startswith(str(root))
+        for root in allowed_roots
+    )
+
+    if not is_allowed:
+        raise HTTPException(
+            status_code=403,
+            detail="Only files inside outputs/ or artifacts/ can be read."
+        )
+
+    if not requested_path.exists():
+        raise HTTPException(
+            status_code=404,
+            detail=f"Artifact not found: {path}"
+        )
+
+    if requested_path.suffix.lower() not in [".json", ".md", ".txt", ".yaml", ".yml", ".mmd", ".html"]:
+        raise HTTPException(
+            status_code=400,
+            detail="Only text-based artifact files can be previewed."
+        )
+
+    return requested_path.read_text(encoding="utf-8", errors="ignore")
