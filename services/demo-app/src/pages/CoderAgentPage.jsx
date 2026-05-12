@@ -23,6 +23,7 @@ export default function CoderAgentPage() {
   const [output, setOutput] = useState(null);
   const [error, setError] = useState("");
   const [artifactContent, setArtifactContent] = useState("");
+  const [selectedArtifactPath, setSelectedArtifactPath] = useState("");
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -72,9 +73,11 @@ export default function CoderAgentPage() {
 
   async function readArtifact(path) {
     try {
+      setSelectedArtifactPath(path);
       const content = await autoForgeApi.readArtifact(path);
       setArtifactContent(content);
     } catch (err) {
+      setSelectedArtifactPath(path);
       setArtifactContent(`Could not read artifact.\n\n${err.message}`);
     }
   }
@@ -86,15 +89,26 @@ export default function CoderAgentPage() {
           badge="Stage 05"
           title="Coder Agent"
           description="Generates runnable application code using approved SRS, DomainPack, Architecture artifacts, and UI/UX outputs. Also supports revision requests for controlled changes."
-          outputs={["Generated app", "CodeManifest", "Generated file count", "Validation warnings"]}
+          outputs={[
+            "Generated app",
+            "CodeManifest",
+            "Generated file count",
+            "Validation warnings",
+          ]}
         />
 
         <FormSection title="Action">
           <div className="segmented-control">
-            <button className={action === "generate" ? "active" : ""} onClick={() => setAction("generate")}>
+            <button
+              className={action === "generate" ? "active" : ""}
+              onClick={() => setAction("generate")}
+            >
               Generate Code
             </button>
-            <button className={action === "revise" ? "active" : ""} onClick={() => setAction("revise")}>
+            <button
+              className={action === "revise" ? "active" : ""}
+              onClick={() => setAction("revise")}
+            >
               Revise Code
             </button>
           </div>
@@ -102,22 +116,62 @@ export default function CoderAgentPage() {
 
         <FormSection title="Code Generation Inputs">
           <div className="two-column">
-            <TextInput label="Run ID" name="run_id" value={form.run_id} onChange={handleChange} />
-            <TextInput label="SRS Version" name="srs_version" value={form.srs_version} onChange={handleChange} />
-            <TextInput label="Domain Version" name="domain_version" value={form.domain_version} onChange={handleChange} />
-            <TextInput label="Architecture Version" name="architecture_version" value={form.architecture_version} onChange={handleChange} />
-            <TextInput label="UI/UX Version" name="uiux_version" value={form.uiux_version} onChange={handleChange} />
+            <TextInput
+              label="Run ID"
+              name="run_id"
+              value={form.run_id}
+              onChange={handleChange}
+            />
+            <TextInput
+              label="SRS Version"
+              name="srs_version"
+              value={form.srs_version}
+              onChange={handleChange}
+            />
+            <TextInput
+              label="Domain Version"
+              name="domain_version"
+              value={form.domain_version}
+              onChange={handleChange}
+            />
+            <TextInput
+              label="Architecture Version"
+              name="architecture_version"
+              value={form.architecture_version}
+              onChange={handleChange}
+            />
+            <TextInput
+              label="UI/UX Version"
+              name="uiux_version"
+              value={form.uiux_version}
+              onChange={handleChange}
+            />
           </div>
 
           {action === "generate" && (
-            <TextInput label="New Code Version" name="code_version" value={form.code_version} onChange={handleChange} />
+            <TextInput
+              label="New Code Version"
+              name="code_version"
+              value={form.code_version}
+              onChange={handleChange}
+            />
           )}
 
           {action === "revise" && (
             <>
               <div className="two-column">
-                <TextInput label="Current Code Version" name="current_code_version" value={form.current_code_version} onChange={handleChange} />
-                <TextInput label="New Code Version" name="new_code_version" value={form.new_code_version} onChange={handleChange} />
+                <TextInput
+                  label="Current Code Version"
+                  name="current_code_version"
+                  value={form.current_code_version}
+                  onChange={handleChange}
+                />
+                <TextInput
+                  label="New Code Version"
+                  name="new_code_version"
+                  value={form.new_code_version}
+                  onChange={handleChange}
+                />
               </div>
 
               <TextInput
@@ -133,17 +187,24 @@ export default function CoderAgentPage() {
           )}
         </FormSection>
 
-        <button className="primary-button large" onClick={runAgent} disabled={loading}>
+        <button
+          className="primary-button large"
+          onClick={runAgent}
+          disabled={loading}
+        >
           {loading ? "Running Coder Agent..." : "Run Coder Agent"}
         </button>
       </div>
 
       <OutputPanel
+        title="Coder Agent Output"
         data={output}
         error={error}
         loading={loading}
         onReadArtifact={readArtifact}
         artifactContent={artifactContent}
+        selectedArtifactPath={selectedArtifactPath}
+        storageKey="autoforge_coder_output"
       />
     </div>
   );

@@ -17,6 +17,7 @@ export default function SecurityAgentPage() {
   const [output, setOutput] = useState(null);
   const [error, setError] = useState("");
   const [artifactContent, setArtifactContent] = useState("");
+  const [selectedArtifactPath, setSelectedArtifactPath] = useState("");
 
   function handleChange(event) {
     const { name, value, type, checked } = event.target;
@@ -51,9 +52,11 @@ export default function SecurityAgentPage() {
 
   async function readArtifact(path) {
     try {
+      setSelectedArtifactPath(path);
       const content = await autoForgeApi.readArtifact(path);
       setArtifactContent(content);
     } catch (err) {
+      setSelectedArtifactPath(path);
       setArtifactContent(`Could not read artifact.\n\n${err.message}`);
     }
   }
@@ -65,13 +68,28 @@ export default function SecurityAgentPage() {
           badge="Stage 07"
           title="Security Agent"
           description="Scans the generated application for security issues, dependency vulnerabilities, LLM-assisted findings, severity summaries, and final security gate results."
-          outputs={["SecurityReport_vX.json", "SecurityReport_vX.md", "SecuritySummaryPack", "Security gate"]}
+          outputs={[
+            "SecurityReport_vX.json",
+            "SecurityReport_vX.md",
+            "SecuritySummaryPack",
+            "Security gate",
+          ]}
         />
 
         <FormSection title="Security Scan Inputs">
           <div className="two-column">
-            <TextInput label="Run ID" name="run_id" value={form.run_id} onChange={handleChange} />
-            <TextInput label="Security Version" name="version" value={form.version} onChange={handleChange} />
+            <TextInput
+              label="Run ID"
+              name="run_id"
+              value={form.run_id}
+              onChange={handleChange}
+            />
+            <TextInput
+              label="Security Version"
+              name="version"
+              value={form.version}
+              onChange={handleChange}
+            />
           </div>
 
           <TextInput
@@ -83,22 +101,34 @@ export default function SecurityAgentPage() {
           />
 
           <label className="checkbox-field">
-            <input type="checkbox" name="enable_llm" checked={form.enable_llm} onChange={handleChange} />
+            <input
+              type="checkbox"
+              name="enable_llm"
+              checked={form.enable_llm}
+              onChange={handleChange}
+            />
             Enable LLM-assisted secure code review
           </label>
         </FormSection>
 
-        <button className="primary-button large" onClick={runAgent} disabled={loading}>
+        <button
+          className="primary-button large"
+          onClick={runAgent}
+          disabled={loading}
+        >
           {loading ? "Running Security Agent..." : "Run Security Agent"}
         </button>
       </div>
 
       <OutputPanel
+        title="Security Agent Output"
         data={output}
         error={error}
         loading={loading}
         onReadArtifact={readArtifact}
         artifactContent={artifactContent}
+        selectedArtifactPath={selectedArtifactPath}
+        storageKey="autoforge_security_output"
       />
     </div>
   );

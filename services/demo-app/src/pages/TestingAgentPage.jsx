@@ -16,6 +16,7 @@ export default function TestingAgentPage() {
   const [output, setOutput] = useState(null);
   const [error, setError] = useState("");
   const [artifactContent, setArtifactContent] = useState("");
+  const [selectedArtifactPath, setSelectedArtifactPath] = useState("");
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -45,9 +46,11 @@ export default function TestingAgentPage() {
 
   async function readArtifact(path) {
     try {
+      setSelectedArtifactPath(path);
       const content = await autoForgeApi.readArtifact(path);
       setArtifactContent(content);
     } catch (err) {
+      setSelectedArtifactPath(path);
       setArtifactContent(`Could not read artifact.\n\n${err.message}`);
     }
   }
@@ -59,13 +62,28 @@ export default function TestingAgentPage() {
           badge="Stage 06"
           title="Testing / QA Agent"
           description="Generates test files, runs pytest, records pass/fail results, calculates testing metrics, and creates QA reports for the generated application."
-          outputs={["TestReport_vX.json", "TestReport_vX.md", "Generated tests", "Quality gate"]}
+          outputs={[
+            "TestReport_vX.json",
+            "TestReport_vX.md",
+            "Generated tests",
+            "Quality gate",
+          ]}
         />
 
         <FormSection title="Testing Inputs">
           <div className="two-column">
-            <TextInput label="Run ID" name="run_id" value={form.run_id} onChange={handleChange} />
-            <TextInput label="Test Version" name="version" value={form.version} onChange={handleChange} />
+            <TextInput
+              label="Run ID"
+              name="run_id"
+              value={form.run_id}
+              onChange={handleChange}
+            />
+            <TextInput
+              label="Test Version"
+              name="version"
+              value={form.version}
+              onChange={handleChange}
+            />
           </div>
 
           <TextInput
@@ -77,17 +95,24 @@ export default function TestingAgentPage() {
           />
         </FormSection>
 
-        <button className="primary-button large" onClick={runAgent} disabled={loading}>
+        <button
+          className="primary-button large"
+          onClick={runAgent}
+          disabled={loading}
+        >
           {loading ? "Running Testing / QA Agent..." : "Run Testing / QA Agent"}
         </button>
       </div>
 
       <OutputPanel
+        title="Testing / QA Output"
         data={output}
         error={error}
         loading={loading}
         onReadArtifact={readArtifact}
         artifactContent={artifactContent}
+        selectedArtifactPath={selectedArtifactPath}
+        storageKey="autoforge_testing_output"
       />
     </div>
   );

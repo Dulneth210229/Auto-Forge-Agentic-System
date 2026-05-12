@@ -37,6 +37,7 @@ export default function RequirementAgentPage() {
   const [output, setOutput] = useState(null);
   const [error, setError] = useState("");
   const [artifactContent, setArtifactContent] = useState("");
+  const [selectedArtifactPath, setSelectedArtifactPath] = useState("");
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -58,7 +59,9 @@ export default function RequirementAgentPage() {
         business_goal: form.business_goal,
         target_users: linesToArray(form.target_users),
         functional_requirements: linesToArray(form.functional_requirements),
-        non_functional_requirements: linesToArray(form.non_functional_requirements),
+        non_functional_requirements: linesToArray(
+          form.non_functional_requirements,
+        ),
         constraints: linesToArray(form.constraints),
         assumptions: linesToArray(form.assumptions),
       },
@@ -76,7 +79,7 @@ export default function RequirementAgentPage() {
 
       if (activeAction === "validate") {
         result = await autoForgeApi.validateRequirementIntake(
-          buildIntakePayload().intake
+          buildIntakePayload().intake,
         );
       }
 
@@ -103,12 +106,12 @@ export default function RequirementAgentPage() {
 
   async function readArtifact(path) {
     try {
+      setSelectedArtifactPath(path);
       const content = await autoForgeApi.readArtifact(path);
       setArtifactContent(content);
     } catch (err) {
-      setArtifactContent(
-        `Could not read artifact. Add /artifacts/read endpoint to api.py.\n\n${err.message}`
-      );
+      setSelectedArtifactPath(path);
+      setArtifactContent(`Could not read artifact.\n\n${err.message}`);
     }
   }
 
@@ -119,7 +122,12 @@ export default function RequirementAgentPage() {
           badge="Stage 01"
           title="Requirement Agent"
           description="Collects real project input and generates the Software Requirements Specification with functional requirements, non-functional requirements, assumptions, constraints, and acceptance details."
-          outputs={["SRS_vX.json", "SRS_vX.md", "Requirement IDs", "Acceptance criteria"]}
+          outputs={[
+            "SRS_vX.json",
+            "SRS_vX.md",
+            "Requirement IDs",
+            "Acceptance criteria",
+          ]}
         />
 
         <FormSection
@@ -152,12 +160,32 @@ export default function RequirementAgentPage() {
           <>
             <FormSection title="Project Details">
               <div className="two-column">
-                <TextInput label="Run ID" name="run_id" value={form.run_id} onChange={handleChange} />
-                <TextInput label="SRS Version" name="version" value={form.version} onChange={handleChange} />
+                <TextInput
+                  label="Run ID"
+                  name="run_id"
+                  value={form.run_id}
+                  onChange={handleChange}
+                />
+                <TextInput
+                  label="SRS Version"
+                  name="version"
+                  value={form.version}
+                  onChange={handleChange}
+                />
               </div>
 
-              <TextInput label="Project Name" name="project_name" value={form.project_name} onChange={handleChange} />
-              <TextInput label="Domain" name="domain" value={form.domain} onChange={handleChange} />
+              <TextInput
+                label="Project Name"
+                name="project_name"
+                value={form.project_name}
+                onChange={handleChange}
+              />
+              <TextInput
+                label="Domain"
+                name="domain"
+                value={form.domain}
+                onChange={handleChange}
+              />
               <TextInput
                 label="Business Goal"
                 name="business_goal"
@@ -172,11 +200,42 @@ export default function RequirementAgentPage() {
               title="Requirement Inputs"
               description="Write one item per line. The frontend will convert these into arrays before sending to FastAPI."
             >
-              <TextInput label="Target Users" name="target_users" textarea value={form.target_users} onChange={handleChange} />
-              <TextInput label="Functional Requirements" name="functional_requirements" textarea rows={6} value={form.functional_requirements} onChange={handleChange} />
-              <TextInput label="Non-Functional Requirements" name="non_functional_requirements" textarea value={form.non_functional_requirements} onChange={handleChange} />
-              <TextInput label="Constraints" name="constraints" textarea value={form.constraints} onChange={handleChange} />
-              <TextInput label="Assumptions" name="assumptions" textarea value={form.assumptions} onChange={handleChange} />
+              <TextInput
+                label="Target Users"
+                name="target_users"
+                textarea
+                value={form.target_users}
+                onChange={handleChange}
+              />
+              <TextInput
+                label="Functional Requirements"
+                name="functional_requirements"
+                textarea
+                rows={6}
+                value={form.functional_requirements}
+                onChange={handleChange}
+              />
+              <TextInput
+                label="Non-Functional Requirements"
+                name="non_functional_requirements"
+                textarea
+                value={form.non_functional_requirements}
+                onChange={handleChange}
+              />
+              <TextInput
+                label="Constraints"
+                name="constraints"
+                textarea
+                value={form.constraints}
+                onChange={handleChange}
+              />
+              <TextInput
+                label="Assumptions"
+                name="assumptions"
+                textarea
+                value={form.assumptions}
+                onChange={handleChange}
+              />
             </FormSection>
           </>
         )}
@@ -184,9 +243,24 @@ export default function RequirementAgentPage() {
         {activeAction === "revise" && (
           <FormSection title="SRS Revision Chat">
             <div className="two-column">
-              <TextInput label="Run ID" name="run_id" value={form.run_id} onChange={handleChange} />
-              <TextInput label="Current Version" name="current_version" value={revision.current_version} onChange={handleRevisionChange} />
-              <TextInput label="New Version" name="new_version" value={revision.new_version} onChange={handleRevisionChange} />
+              <TextInput
+                label="Run ID"
+                name="run_id"
+                value={form.run_id}
+                onChange={handleChange}
+              />
+              <TextInput
+                label="Current Version"
+                name="current_version"
+                value={revision.current_version}
+                onChange={handleRevisionChange}
+              />
+              <TextInput
+                label="New Version"
+                name="new_version"
+                value={revision.new_version}
+                onChange={handleRevisionChange}
+              />
             </div>
 
             <TextInput
@@ -201,17 +275,24 @@ export default function RequirementAgentPage() {
           </FormSection>
         )}
 
-        <button className="primary-button large" onClick={runAgent} disabled={loading}>
+        <button
+          className="primary-button large"
+          onClick={runAgent}
+          disabled={loading}
+        >
           {loading ? "Running Requirement Agent..." : "Run Requirement Agent"}
         </button>
       </div>
 
       <OutputPanel
+        title="Requirement Agent Output"
         data={output}
         error={error}
         loading={loading}
         onReadArtifact={readArtifact}
         artifactContent={artifactContent}
+        selectedArtifactPath={selectedArtifactPath}
+        storageKey="autoforge_requirement_output"
       />
     </div>
   );

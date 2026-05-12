@@ -40,14 +40,18 @@ export default function DashboardPage() {
           badge="Overview"
           title="AutoForge Multi-Agent Dashboard"
           description="This dashboard connects to the FastAPI backend and allows users to run each AutoForge agent through clear forms instead of raw JSON payloads."
-          outputs={["Backend health", "Pipeline visibility", "Agent navigation"]}
+          outputs={[
+            "Backend health",
+            "Pipeline visibility",
+            "Agent navigation",
+          ]}
         />
 
         <section className="pipeline-card">
           <h2>AutoForge Pipeline</h2>
           <p>
-            The user starts with project requirements and moves stage by stage until the
-            generated prototype is tested and scanned.
+            The user starts with project requirements and moves stage by stage
+            until the generated prototype is tested and scanned.
           </p>
 
           <div className="pipeline-steps">
@@ -77,6 +81,7 @@ export default function DashboardPage() {
         data={health}
         error={error}
         loading={loading}
+        storageKey="autoforge_dashboard_output"
       />
     </div>
   );
