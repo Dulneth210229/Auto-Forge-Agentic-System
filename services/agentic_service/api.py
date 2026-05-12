@@ -1050,7 +1050,9 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from pathlib import Path
-from fastapi.responses import PlainTextResponse
+from fastapi.responses import PlainTextResponse,FileResponse
+import zipfile
+import tempfile
 
 from agents.requirement_agent.agent import RequirementAgent
 from agents.domain_agent.agent import DomainAgent
@@ -1061,6 +1063,10 @@ from agents.security_agent.agent import SecurityAgent
 from agents.tester_agent.agent import TesterAgent
 from tools.llm.provider import OllamaProvider
 from agents.architect_agent.agent import ArchitectAgent
+
+
+
+
 
 uiux_agent = UIUXAgent(llm_provider=OllamaProvider())
 
@@ -1915,6 +1921,53 @@ def get_uiux_orchestrator_status(run_id: str, uiux_version: str):
     return job
 
 
+def resolve_safe_artifact_path(path: str) -> Path:
+    """
+    Safely resolves generated artifact paths.
+
+    Only allows access to files/folders inside:
+    - outputs/
+    - artifacts/
+
+    This prevents users from downloading or reading system files.
+    """
+
+    requested_path = Path(path)
+
+    if not requested_path.is_absolute():
+        requested_path = Path.cwd() / requested_path
+
+    requested_path = requested_path.resolve()
+    project_root = Path.cwd().resolve()
+
+    allowed_roots = [
+        (project_root / "outputs").resolve(),
+        (project_root / "artifacts").resolve(),
+    ]
+
+    is_allowed = False
+
+    for root in allowed_roots:
+        try:
+            requested_path.relative_to(root)
+            is_allowed = True
+            break
+        except ValueError:
+            pass
+
+    if not is_allowed:
+        raise HTTPException(
+            status_code=403,
+            detail="Only files or folders inside outputs/ or artifacts/ can be accessed."
+        )
+
+    if not requested_path.exists():
+        raise HTTPException(
+            status_code=404,
+            detail=f"Path not found: {path}"
+        )
+
+    return requested_path
 
 # ---------------------------------------------------------
 # Coder Agent Endpoints
@@ -2106,46 +2159,152 @@ def run_testing_agent(request: TestingRunRequest):
 @app.get("/artifacts/read", response_class=PlainTextResponse)
 def read_generated_artifact(path: str):
     """
-    Safely reads generated artifact files from outputs/ or artifacts/.
-
-    This is useful for the React frontend because most agent endpoints return
-    file paths, but not always the full file content.
+    Reads text-based generated artifact files for frontend preview.
     """
 
-    requested_path = Path(path)
+    requested_path = resolve_safe_artifact_path(path)
 
-    if not requested_path.is_absolute():
-        requested_path = Path.cwd() / requested_path
-
-    requested_path = requested_path.resolve()
-    project_root = Path.cwd().resolve()
-
-    allowed_roots = [
-        (project_root / "outputs").resolve(),
-        (project_root / "artifacts").resolve(),
-    ]
-
-    is_allowed = any(
-        str(requested_path).startswith(str(root))
-        for root in allowed_roots
-    )
-
-    if not is_allowed:
-        raise HTTPException(
-            status_code=403,
-            detail="Only files inside outputs/ or artifacts/ can be read."
-        )
-
-    if not requested_path.exists():
-        raise HTTPException(
-            status_code=404,
-            detail=f"Artifact not found: {path}"
-        )
-
-    if requested_path.suffix.lower() not in [".json", ".md", ".txt", ".yaml", ".yml", ".mmd", ".html"]:
+    if not requested_path.is_file():
         raise HTTPException(
             status_code=400,
-            detail="Only text-based artifact files can be previewed."
+            detail="The provided path must be a file."
+        )
+
+    allowed_extensions = [
+        ".json",
+        ".md",
+        ".txt",
+        ".yaml",
+        ".yml",
+        ".mmd",
+        ".html",
+        ".css",
+        ".js",
+        ".jsx",
+        ".ts",
+        ".tsx",
+        ".py",
+        ".log",
+        ".sh",
+    ]
+
+    allowed_names = [
+        "Dockerfile",
+        ".gitignore",
+        ".dockerignore",
+    ]
+
+    if (
+        requested_path.suffix.lower() not in allowed_extensions
+        and requested_path.name not in allowed_names
+    ):
+        raise HTTPException(
+            status_code=400,
+            detail="Only text-based generated artifact files can be previewed."
         )
 
     return requested_path.read_text(encoding="utf-8", errors="ignore")
+
+@app.get("/artifacts/tree")
+def get_artifact_tree(path: str):
+    """
+    Returns the exact folder/file tree for a generated artifact folder.
+    """
+
+    root_path = resolve_safe_artifact_path(path)
+
+    if not root_path.is_dir():
+        raise HTTPException(
+            status_code=400,
+            detail="The provided path must be a folder."
+        )
+
+    blocked_folders = {
+        "__pycache__",
+        ".pytest_cache",
+        ".git",
+        "node_modules",
+        "dist",
+        "build",
+        ".venv",
+        "venv",
+    }
+
+    def build_tree(current_path: Path):
+        children = []
+
+        for child in sorted(
+            current_path.iterdir(),
+            key=lambda item: (item.is_file(), item.name.lower())
+        ):
+            if child.name in blocked_folders:
+                continue
+
+            item = {
+                "name": child.name,
+                "path": str(child),
+                "type": "folder" if child.is_dir() else "file",
+            }
+
+            if child.is_file():
+                item["size"] = child.stat().st_size
+
+            if child.is_dir():
+                item["children"] = build_tree(child)
+
+            children.append(item)
+
+        return children
+
+    return {
+        "root_name": root_path.name,
+        "root_path": str(root_path),
+        "tree": build_tree(root_path),
+    }
+
+@app.get("/artifacts/download-folder")
+def download_artifact_folder(path: str):
+    """
+    Downloads a generated artifact folder as a ZIP file.
+    """
+
+    folder_path = resolve_safe_artifact_path(path)
+
+    if not folder_path.is_dir():
+        raise HTTPException(
+            status_code=400,
+            detail="The provided path must be a folder."
+        )
+
+    blocked_folders = {
+        "__pycache__",
+        ".pytest_cache",
+        ".git",
+        "node_modules",
+        "dist",
+        "build",
+        ".venv",
+        "venv",
+    }
+
+    zip_file_path = Path(tempfile.gettempdir()) / f"{folder_path.name}.zip"
+
+    if zip_file_path.exists():
+        zip_file_path.unlink()
+
+    with zipfile.ZipFile(zip_file_path, "w", zipfile.ZIP_DEFLATED) as zip_file:
+        for file_path in folder_path.rglob("*"):
+            if not file_path.is_file():
+                continue
+
+            if any(part in blocked_folders for part in file_path.parts):
+                continue
+
+            arcname = file_path.relative_to(folder_path.parent)
+            zip_file.write(file_path, arcname)
+
+    return FileResponse(
+        path=zip_file_path,
+        filename=f"{folder_path.name}.zip",
+        media_type="application/zip"
+    )
