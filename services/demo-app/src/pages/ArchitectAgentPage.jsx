@@ -23,6 +23,7 @@ export default function ArchitectAgentPage() {
   const [output, setOutput] = useState(null);
   const [error, setError] = useState("");
   const [artifactContent, setArtifactContent] = useState("");
+  const [selectedArtifactPath, setSelectedArtifactPath] = useState("");
 
   function handleChange(event) {
     const { name, value, type, checked } = event.target;
@@ -72,9 +73,11 @@ export default function ArchitectAgentPage() {
 
   async function readArtifact(path) {
     try {
+      setSelectedArtifactPath(path);
       const content = await autoForgeApi.readArtifact(path);
       setArtifactContent(content);
     } catch (err) {
+      setSelectedArtifactPath(path);
       setArtifactContent(`Could not read artifact.\n\n${err.message}`);
     }
   }
@@ -86,15 +89,26 @@ export default function ArchitectAgentPage() {
           badge="Stage 03"
           title="Architect Agent"
           description="Generates architecture artifacts from the approved SRS and DomainPack, including SDS, OpenAPI contract, database design, and architecture diagrams."
-          outputs={["SDS JSON/MD", "OpenAPI YAML", "DBPack", "UML / architecture diagrams"]}
+          outputs={[
+            "SDS JSON/MD",
+            "OpenAPI YAML",
+            "DBPack",
+            "UML / architecture diagrams",
+          ]}
         />
 
         <FormSection title="Action">
           <div className="segmented-control">
-            <button className={action === "generate" ? "active" : ""} onClick={() => setAction("generate")}>
+            <button
+              className={action === "generate" ? "active" : ""}
+              onClick={() => setAction("generate")}
+            >
               Generate Architecture
             </button>
-            <button className={action === "revise" ? "active" : ""} onClick={() => setAction("revise")}>
+            <button
+              className={action === "revise" ? "active" : ""}
+              onClick={() => setAction("revise")}
+            >
               Revise Architecture
             </button>
           </div>
@@ -103,15 +117,39 @@ export default function ArchitectAgentPage() {
         {action === "generate" && (
           <FormSection title="Architecture Generation Inputs">
             <div className="two-column">
-              <TextInput label="Run ID" name="run_id" value={form.run_id} onChange={handleChange} />
-              <TextInput label="SRS Version" name="srs_version" value={form.srs_version} onChange={handleChange} />
-              <TextInput label="Domain Version" name="domain_version" value={form.domain_version} onChange={handleChange} />
-              <TextInput label="Architecture Version" name="architecture_version" value={form.architecture_version} onChange={handleChange} />
+              <TextInput
+                label="Run ID"
+                name="run_id"
+                value={form.run_id}
+                onChange={handleChange}
+              />
+              <TextInput
+                label="SRS Version"
+                name="srs_version"
+                value={form.srs_version}
+                onChange={handleChange}
+              />
+              <TextInput
+                label="Domain Version"
+                name="domain_version"
+                value={form.domain_version}
+                onChange={handleChange}
+              />
+              <TextInput
+                label="Architecture Version"
+                name="architecture_version"
+                value={form.architecture_version}
+                onChange={handleChange}
+              />
             </div>
 
             <div className="form-field">
               <label>Architecture Style</label>
-              <select name="architecture_style" value={form.architecture_style} onChange={handleChange}>
+              <select
+                name="architecture_style"
+                value={form.architecture_style}
+                onChange={handleChange}
+              >
                 <option value="modular_monolith">Modular Monolith</option>
                 <option value="microservices">Microservices</option>
                 <option value="layered">Layered Architecture</option>
@@ -119,7 +157,12 @@ export default function ArchitectAgentPage() {
             </div>
 
             <label className="checkbox-field">
-              <input type="checkbox" name="export_visuals" checked={form.export_visuals} onChange={handleChange} />
+              <input
+                type="checkbox"
+                name="export_visuals"
+                checked={form.export_visuals}
+                onChange={handleChange}
+              />
               Export architecture diagrams / visuals
             </label>
           </FormSection>
@@ -128,9 +171,24 @@ export default function ArchitectAgentPage() {
         {action === "revise" && (
           <FormSection title="Architecture Revision Chat">
             <div className="two-column">
-              <TextInput label="Run ID" name="run_id" value={form.run_id} onChange={handleChange} />
-              <TextInput label="Current Version" name="current_version" value={form.current_version} onChange={handleChange} />
-              <TextInput label="New Version" name="new_version" value={form.new_version} onChange={handleChange} />
+              <TextInput
+                label="Run ID"
+                name="run_id"
+                value={form.run_id}
+                onChange={handleChange}
+              />
+              <TextInput
+                label="Current Version"
+                name="current_version"
+                value={form.current_version}
+                onChange={handleChange}
+              />
+              <TextInput
+                label="New Version"
+                name="new_version"
+                value={form.new_version}
+                onChange={handleChange}
+              />
             </div>
 
             <TextInput
@@ -144,23 +202,35 @@ export default function ArchitectAgentPage() {
             />
 
             <label className="checkbox-field">
-              <input type="checkbox" name="export_visuals" checked={form.export_visuals} onChange={handleChange} />
+              <input
+                type="checkbox"
+                name="export_visuals"
+                checked={form.export_visuals}
+                onChange={handleChange}
+              />
               Export revised visuals
             </label>
           </FormSection>
         )}
 
-        <button className="primary-button large" onClick={runAgent} disabled={loading}>
+        <button
+          className="primary-button large"
+          onClick={runAgent}
+          disabled={loading}
+        >
           {loading ? "Running Architect Agent..." : "Run Architect Agent"}
         </button>
       </div>
 
       <OutputPanel
+        title="Architect Agent Output"
         data={output}
         error={error}
         loading={loading}
         onReadArtifact={readArtifact}
         artifactContent={artifactContent}
+        selectedArtifactPath={selectedArtifactPath}
+        storageKey="autoforge_architecture_output"
       />
     </div>
   );

@@ -29,6 +29,7 @@ export default function UIUXAgentPage() {
   const [output, setOutput] = useState(null);
   const [error, setError] = useState("");
   const [artifactContent, setArtifactContent] = useState("");
+  const [selectedArtifactPath, setSelectedArtifactPath] = useState("");
 
   function handleChange(event) {
     const { name, value, type, checked } = event.target;
@@ -85,7 +86,10 @@ export default function UIUXAgentPage() {
       }
 
       if (action === "status") {
-        result = await autoForgeApi.getUiuxStatus(form.run_id, form.uiux_version);
+        result = await autoForgeApi.getUiuxStatus(
+          form.run_id,
+          form.uiux_version,
+        );
       }
 
       if (action === "revise") {
@@ -107,9 +111,11 @@ export default function UIUXAgentPage() {
 
   async function readArtifact(path) {
     try {
+      setSelectedArtifactPath(path);
       const content = await autoForgeApi.readArtifact(path);
       setArtifactContent(content);
     } catch (err) {
+      setSelectedArtifactPath(path);
       setArtifactContent(`Could not read artifact.\n\n${err.message}`);
     }
   }
@@ -121,29 +127,100 @@ export default function UIUXAgentPage() {
           badge="Stage 04"
           title="UI/UX Agent"
           description="Generates user flows, wireframe plans, high-fidelity HTML wireframes, visual outputs, and final UIUXPack from approved upstream artifacts."
-          outputs={["UIUXPlan", "User flows", "Wireframe HTML/PNG", "UIUXPack JSON/MD"]}
+          outputs={[
+            "UIUXPlan",
+            "User flows",
+            "Wireframe HTML/PNG",
+            "UIUXPack JSON/MD",
+          ]}
         />
 
         <FormSection title="Action">
           <div className="segmented-control wrap">
-            <button className={action === "validate" ? "active" : ""} onClick={() => setAction("validate")}>Validate Inputs</button>
-            <button className={action === "orchestrator" ? "active" : ""} onClick={() => setAction("orchestrator")}>Run Full Workflow</button>
-            <button className={action === "status" ? "active" : ""} onClick={() => setAction("status")}>Check Status</button>
-            <button className={action === "plan" ? "active" : ""} onClick={() => setAction("plan")}>Generate Plan</button>
-            <button className={action === "wireframes" ? "active" : ""} onClick={() => setAction("wireframes")}>Generate Wireframes</button>
-            <button className={action === "finalize" ? "active" : ""} onClick={() => setAction("finalize")}>Finalize Pack</button>
-            <button className={action === "revise" ? "active" : ""} onClick={() => setAction("revise")}>Revise UI/UX</button>
+            <button
+              className={action === "validate" ? "active" : ""}
+              onClick={() => setAction("validate")}
+            >
+              Validate Inputs
+            </button>
+            <button
+              className={action === "orchestrator" ? "active" : ""}
+              onClick={() => setAction("orchestrator")}
+            >
+              Run Full Workflow
+            </button>
+            <button
+              className={action === "status" ? "active" : ""}
+              onClick={() => setAction("status")}
+            >
+              Check Status
+            </button>
+            <button
+              className={action === "plan" ? "active" : ""}
+              onClick={() => setAction("plan")}
+            >
+              Generate Plan
+            </button>
+            <button
+              className={action === "wireframes" ? "active" : ""}
+              onClick={() => setAction("wireframes")}
+            >
+              Generate Wireframes
+            </button>
+            <button
+              className={action === "finalize" ? "active" : ""}
+              onClick={() => setAction("finalize")}
+            >
+              Finalize Pack
+            </button>
+            <button
+              className={action === "revise" ? "active" : ""}
+              onClick={() => setAction("revise")}
+            >
+              Revise UI/UX
+            </button>
           </div>
         </FormSection>
 
         <FormSection title="UI/UX Inputs">
           <div className="two-column">
-            <TextInput label="Run ID" name="run_id" value={form.run_id} onChange={handleChange} />
-            <TextInput label="SRS Version" name="srs_version" value={form.srs_version} onChange={handleChange} />
-            <TextInput label="Domain Version" name="domain_version" value={form.domain_version} onChange={handleChange} />
-            <TextInput label="Architecture Version" name="architecture_version" value={form.architecture_version} onChange={handleChange} />
-            <TextInput label="UI/UX Version" name="uiux_version" value={form.uiux_version} onChange={handleChange} />
-            <TextInput label="Maximum Screens" name="max_screens" type="number" value={form.max_screens} onChange={handleChange} />
+            <TextInput
+              label="Run ID"
+              name="run_id"
+              value={form.run_id}
+              onChange={handleChange}
+            />
+            <TextInput
+              label="SRS Version"
+              name="srs_version"
+              value={form.srs_version}
+              onChange={handleChange}
+            />
+            <TextInput
+              label="Domain Version"
+              name="domain_version"
+              value={form.domain_version}
+              onChange={handleChange}
+            />
+            <TextInput
+              label="Architecture Version"
+              name="architecture_version"
+              value={form.architecture_version}
+              onChange={handleChange}
+            />
+            <TextInput
+              label="UI/UX Version"
+              name="uiux_version"
+              value={form.uiux_version}
+              onChange={handleChange}
+            />
+            <TextInput
+              label="Maximum Screens"
+              name="max_screens"
+              type="number"
+              value={form.max_screens}
+              onChange={handleChange}
+            />
           </div>
 
           <TextInput
@@ -158,22 +235,42 @@ export default function UIUXAgentPage() {
 
           <div className="checkbox-grid">
             <label className="checkbox-field">
-              <input type="checkbox" name="include_admin" checked={form.include_admin} onChange={handleChange} />
+              <input
+                type="checkbox"
+                name="include_admin"
+                checked={form.include_admin}
+                onChange={handleChange}
+              />
               Include admin screens
             </label>
 
             <label className="checkbox-field">
-              <input type="checkbox" name="render_images" checked={form.render_images} onChange={handleChange} />
+              <input
+                type="checkbox"
+                name="render_images"
+                checked={form.render_images}
+                onChange={handleChange}
+              />
               Render images
             </label>
 
             <label className="checkbox-field">
-              <input type="checkbox" name="skip_existing" checked={form.skip_existing} onChange={handleChange} />
+              <input
+                type="checkbox"
+                name="skip_existing"
+                checked={form.skip_existing}
+                onChange={handleChange}
+              />
               Skip existing wireframes
             </label>
 
             <label className="checkbox-field">
-              <input type="checkbox" name="fail_fast" checked={form.fail_fast} onChange={handleChange} />
+              <input
+                type="checkbox"
+                name="fail_fast"
+                checked={form.fail_fast}
+                onChange={handleChange}
+              />
               Fail fast
             </label>
           </div>
@@ -182,8 +279,18 @@ export default function UIUXAgentPage() {
         {action === "revise" && (
           <FormSection title="Revision Chat">
             <div className="two-column">
-              <TextInput label="Current Version" name="current_version" value={form.current_version} onChange={handleChange} />
-              <TextInput label="New Version" name="new_version" value={form.new_version} onChange={handleChange} />
+              <TextInput
+                label="Current Version"
+                name="current_version"
+                value={form.current_version}
+                onChange={handleChange}
+              />
+              <TextInput
+                label="New Version"
+                name="new_version"
+                value={form.new_version}
+                onChange={handleChange}
+              />
             </div>
 
             <TextInput
@@ -198,17 +305,24 @@ export default function UIUXAgentPage() {
           </FormSection>
         )}
 
-        <button className="primary-button large" onClick={runAgent} disabled={loading}>
+        <button
+          className="primary-button large"
+          onClick={runAgent}
+          disabled={loading}
+        >
           {loading ? "Running UI/UX Agent..." : "Run UI/UX Agent"}
         </button>
       </div>
 
       <OutputPanel
+        title="UI/UX Agent Output"
         data={output}
         error={error}
         loading={loading}
         onReadArtifact={readArtifact}
         artifactContent={artifactContent}
+        selectedArtifactPath={selectedArtifactPath}
+        storageKey="autoforge_uiux_output"
       />
     </div>
   );

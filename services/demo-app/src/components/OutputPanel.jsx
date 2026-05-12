@@ -1,8 +1,10 @@
+import { useEffect, useMemo, useState } from "react";
 import ArtifactList from "./ArtifactList";
+import MarkdownPreview from "./MarkdownPreview";
 
 /**
- * Finds generated artifact file paths from the backend response.
- * This allows users to see paths like SRS_v1.md, SecurityReport_v1.json, etc.
+ * Finds generated artifact file paths from any backend response.
+ * It searches nested JSON objects and arrays.
  */
 function extractArtifactPaths(data) {
   const paths = [];
@@ -44,6 +46,13 @@ function extractArtifactPaths(data) {
   return [...new Set(paths)];
 }
 
+/**
+ * Checks whether preview content is probably Markdown.
+ */
+function isMarkdownPath(path = "") {
+  return path.toLowerCase().endsWith(".md");
+}
+
 export default function OutputPanel({
   title = "Generated Output",
   data,
@@ -51,55 +60,166 @@ export default function OutputPanel({
   loading,
   onReadArtifact,
   artifactContent,
+  selectedArtifactPath,
+  storageKey,
 }) {
-  const paths = extractArtifactPaths(data);
+  const [cachedData, setCachedData] = useState(null);
+  const [cachedError, setCachedError] = useState("");
+  const [cachedArtifactContent, setCachedArtifactContent] = useState("");
+  const [cachedArtifactPath, setCachedArtifactPath] = useState("");
+
+  /**
+   * Load previous output from localStorage when page refreshes.
+   */
+  useEffect(() => {
+    if (!storageKey) return;
+
+    const saved = localStorage.getItem(storageKey);
+
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        setCachedData(parsed.data || null);
+        setCachedError(parsed.error || "");
+        setCachedArtifactContent(parsed.artifactContent || "");
+        setCachedArtifactPath(parsed.selectedArtifactPath || "");
+      } catch {
+        localStorage.removeItem(storageKey);
+      }
+    }
+  }, [storageKey]);
+
+  /**
+   * Save latest output to localStorage.
+   */
+  useEffect(() => {
+    if (!storageKey) return;
+
+    const hasSomethingToSave =
+      data || error || artifactContent || selectedArtifactPath;
+
+    if (!hasSomethingToSave) return;
+
+    localStorage.setItem(
+      storageKey,
+      JSON.stringify({
+        data: data || cachedData,
+        error: error || "",
+        artifactContent: artifactContent || cachedArtifactContent,
+        selectedArtifactPath: selectedArtifactPath || cachedArtifactPath,
+      }),
+    );
+  }, [
+    storageKey,
+    data,
+    error,
+    artifactContent,
+    selectedArtifactPath,
+    cachedData,
+    cachedArtifactContent,
+    cachedArtifactPath,
+  ]);
+
+  const displayData = data || cachedData;
+  const displayError = error || cachedError;
+  const displayArtifactContent = artifactContent || cachedArtifactContent;
+  const displayArtifactPath = selectedArtifactPath || cachedArtifactPath;
+
+  const paths = useMemo(() => {
+    return extractArtifactPaths(displayData);
+  }, [displayData]);
+
+  function clearSavedOutput() {
+    if (storageKey) {
+      localStorage.removeItem(storageKey);
+    }
+
+    setCachedData(null);
+    setCachedError("");
+    setCachedArtifactContent("");
+    setCachedArtifactPath("");
+
+    window.location.reload();
+  }
 
   return (
     <aside className="output-panel">
       <div className="output-panel-header">
-        <h2>{title}</h2>
+        <div>
+          <h2>{title}</h2>
+          <p>Agent response, generated files, and readable Markdown output.</p>
+        </div>
 
-        {loading && <span className="status-pill running">Running</span>}
-        {!loading && data && <span className="status-pill success">Success</span>}
-        {!loading && error && <span className="status-pill failed">Failed</span>}
+        <div className="output-header-actions">
+          {loading && <span className="status-pill running">Running</span>}
+          {!loading && displayData && (
+            <span className="status-pill success">Success</span>
+          )}
+          {!loading && displayError && (
+            <span className="status-pill failed">Failed</span>
+          )}
+
+          {(displayData || displayError || displayArtifactContent) && (
+            <button
+              type="button"
+              className="clear-output-btn"
+              onClick={clearSavedOutput}
+            >
+              Clear
+            </button>
+          )}
+        </div>
       </div>
 
       {loading && (
         <div className="empty-state">
           <div className="loader" />
-          <p>The selected AutoForge agent is running. Please wait until the backend responds.</p>
+          <p>
+            The selected AutoForge agent is running. The output will appear
+            here.
+          </p>
         </div>
       )}
 
-      {!loading && error && (
+      {!loading && displayError && (
         <div className="error-box">
           <strong>Error</strong>
-          <p>{error}</p>
+          <p>{displayError}</p>
         </div>
       )}
 
-      {!loading && !error && !data && (
+      {!loading && !displayError && !displayData && !displayArtifactContent && (
         <div className="empty-state">
-          <p>No output yet. Fill the form and run the agent.</p>
+          <p>
+            No output yet. Fill the small form on the left and run the agent.
+          </p>
         </div>
       )}
 
-      {!loading && data && (
+      {!loading && displayData && (
         <>
           <ArtifactList paths={paths} onReadArtifact={onReadArtifact} />
 
-          {artifactContent && (
-            <div className="artifact-preview">
-              <h3>Artifact Preview</h3>
-              <pre>{artifactContent}</pre>
-            </div>
-          )}
-
-          <div className="json-preview">
-            <h3>Raw Backend Response</h3>
-            <pre>{JSON.stringify(data, null, 2)}</pre>
+          <div className="json-preview compact-json">
+            <h3>Backend Response Summary</h3>
+            <pre>{JSON.stringify(displayData, null, 2)}</pre>
           </div>
         </>
+      )}
+
+      {displayArtifactContent && (
+        <div className="artifact-preview">
+          <h3>
+            Human-readable Artifact Preview
+            {displayArtifactPath && <span>{displayArtifactPath}</span>}
+          </h3>
+
+          {isMarkdownPath(displayArtifactPath) ? (
+            <MarkdownPreview content={displayArtifactContent} />
+          ) : (
+            <pre>{displayArtifactContent}</pre>
+          )}
+        </div>
       )}
     </aside>
   );
