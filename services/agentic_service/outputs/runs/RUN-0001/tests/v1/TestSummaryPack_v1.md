@@ -3,7 +3,7 @@
 **Run ID:** RUN-0001  
 **Stage:** testing  
 **Version:** v1  
-**Generated At:** 2026-05-03T23:06:50.307987+00:00  
+**Generated At:** 2026-05-11T19:12:37.552205+00:00  
 **Target Path:** ./sample_ecommerce_app
 
 ---
@@ -36,7 +36,7 @@
 |---|---:|
 | Test Coverage | 1.0 |
 | Pass Rate | 1.0 |
-| Execution Efficiency | 439.0 ms |
+| Execution Efficiency | 5479.0 ms |
 
 ---
 

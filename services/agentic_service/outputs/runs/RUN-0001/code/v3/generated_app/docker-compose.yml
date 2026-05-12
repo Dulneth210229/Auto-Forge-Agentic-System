@@ -1,9 +1,0 @@
-version: '3'
-
-services:
-  autoforge:
-    build: .
-    ports:
-      - "9000:9000"
-    environment:
-      - FASTAPI_ENV=development

@@ -1,9 +1,0 @@
-{
-  "method": "POST",
-  "path": "/auth/register",
-  "tags": [
-    "Identity"
-  ],
-  "summary": "Register user",
-  "description": "Creates a new customer account.\n\nRelated requirements: FR-001"
-}
