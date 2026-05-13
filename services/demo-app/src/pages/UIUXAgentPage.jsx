@@ -2,11 +2,12 @@ import { useState } from "react";
 import PageHeader from "../components/PageHeader";
 import FormSection from "../components/FormSection";
 import TextInput from "../components/TextInput";
-import OutputPanel from "../components/OutputPanel";
+import UIUXOutputPanel from "../components/UIUXOutputPanel";
 import { autoForgeApi } from "../api/autoForgeApi";
 
 export default function UIUXAgentPage() {
   const [action, setAction] = useState("orchestrator");
+
   const [form, setForm] = useState({
     run_id: "RUN-0001",
     srs_version: "v1",
@@ -28,8 +29,6 @@ export default function UIUXAgentPage() {
   const [loading, setLoading] = useState(false);
   const [output, setOutput] = useState(null);
   const [error, setError] = useState("");
-  const [artifactContent, setArtifactContent] = useState("");
-  const [selectedArtifactPath, setSelectedArtifactPath] = useState("");
 
   function handleChange(event) {
     const { name, value, type, checked } = event.target;
@@ -60,13 +59,23 @@ export default function UIUXAgentPage() {
     setLoading(true);
     setError("");
     setOutput(null);
-    setArtifactContent("");
 
     try {
       let result;
 
       if (action === "validate") {
         result = await autoForgeApi.validateUiuxInputs(commonPayload());
+      }
+
+      if (action === "orchestrator") {
+        result = await autoForgeApi.runUiuxOrchestrator(commonPayload());
+      }
+
+      if (action === "status") {
+        result = await autoForgeApi.getUiuxStatus(
+          form.run_id,
+          form.uiux_version
+        );
       }
 
       if (action === "plan") {
@@ -79,17 +88,6 @@ export default function UIUXAgentPage() {
 
       if (action === "finalize") {
         result = await autoForgeApi.finalizeUiuxDesignPack(commonPayload());
-      }
-
-      if (action === "orchestrator") {
-        result = await autoForgeApi.runUiuxOrchestrator(commonPayload());
-      }
-
-      if (action === "status") {
-        result = await autoForgeApi.getUiuxStatus(
-          form.run_id,
-          form.uiux_version,
-        );
       }
 
       if (action === "revise") {
@@ -109,16 +107,8 @@ export default function UIUXAgentPage() {
     }
   }
 
-  async function readArtifact(path) {
-    try {
-      setSelectedArtifactPath(path);
-      const content = await autoForgeApi.readArtifact(path);
-      setArtifactContent(content);
-    } catch (err) {
-      setSelectedArtifactPath(path);
-      setArtifactContent(`Could not read artifact.\n\n${err.message}`);
-    }
-  }
+  const activeUiuxVersion =
+    action === "revise" ? form.new_version : form.uiux_version;
 
   return (
     <div className="page-grid">
@@ -128,52 +118,66 @@ export default function UIUXAgentPage() {
           title="UI/UX Agent"
           description="Generates user flows, wireframe plans, high-fidelity HTML wireframes, visual outputs, and final UIUXPack from approved upstream artifacts."
           outputs={[
-            "UIUXPlan",
-            "User flows",
-            "Wireframe HTML/PNG",
-            "UIUXPack JSON/MD",
+            "UIUXPlan JSON",
+            "User flow PNG / MMD / JSON",
+            "Wireframe HTML / PNG",
+            "UIUXPack JSON / Markdown",
+            "Downloadable UI/UX pack",
           ]}
         />
 
         <FormSection title="Action">
           <div className="segmented-control wrap">
             <button
+              type="button"
               className={action === "validate" ? "active" : ""}
               onClick={() => setAction("validate")}
             >
               Validate Inputs
             </button>
+
             <button
+              type="button"
               className={action === "orchestrator" ? "active" : ""}
               onClick={() => setAction("orchestrator")}
             >
               Run Full Workflow
             </button>
+
             <button
+              type="button"
               className={action === "status" ? "active" : ""}
               onClick={() => setAction("status")}
             >
               Check Status
             </button>
+
             <button
+              type="button"
               className={action === "plan" ? "active" : ""}
               onClick={() => setAction("plan")}
             >
               Generate Plan
             </button>
+
             <button
+              type="button"
               className={action === "wireframes" ? "active" : ""}
               onClick={() => setAction("wireframes")}
             >
               Generate Wireframes
             </button>
+
             <button
+              type="button"
               className={action === "finalize" ? "active" : ""}
               onClick={() => setAction("finalize")}
             >
               Finalize Pack
             </button>
+
             <button
+              type="button"
               className={action === "revise" ? "active" : ""}
               onClick={() => setAction("revise")}
             >
@@ -190,30 +194,35 @@ export default function UIUXAgentPage() {
               value={form.run_id}
               onChange={handleChange}
             />
+
             <TextInput
               label="SRS Version"
               name="srs_version"
               value={form.srs_version}
               onChange={handleChange}
             />
+
             <TextInput
               label="Domain Version"
               name="domain_version"
               value={form.domain_version}
               onChange={handleChange}
             />
+
             <TextInput
               label="Architecture Version"
               name="architecture_version"
               value={form.architecture_version}
               onChange={handleChange}
             />
+
             <TextInput
               label="UI/UX Version"
               name="uiux_version"
               value={form.uiux_version}
               onChange={handleChange}
             />
+
             <TextInput
               label="Maximum Screens"
               name="max_screens"
@@ -251,7 +260,7 @@ export default function UIUXAgentPage() {
                 checked={form.render_images}
                 onChange={handleChange}
               />
-              Render images
+              Render user flow / wireframe images
             </label>
 
             <label className="checkbox-field">
@@ -285,6 +294,7 @@ export default function UIUXAgentPage() {
                 value={form.current_version}
                 onChange={handleChange}
               />
+
               <TextInput
                 label="New Version"
                 name="new_version"
@@ -306,23 +316,28 @@ export default function UIUXAgentPage() {
         )}
 
         <button
+          type="button"
           className="primary-button large"
           onClick={runAgent}
           disabled={loading}
         >
           {loading ? "Running UI/UX Agent..." : "Run UI/UX Agent"}
         </button>
+
+        {action === "orchestrator" && (
+          <p className="helper-note">
+            After clicking Run Full Workflow, wait until generation finishes and
+            then click Check Status to load all generated files.
+          </p>
+        )}
       </div>
 
-      <OutputPanel
-        title="UI/UX Agent Output"
+      <UIUXOutputPanel
         data={output}
         error={error}
         loading={loading}
-        onReadArtifact={readArtifact}
-        artifactContent={artifactContent}
-        selectedArtifactPath={selectedArtifactPath}
-        storageKey="autoforge_uiux_output"
+        runId={form.run_id}
+        uiuxVersion={activeUiuxVersion}
       />
     </div>
   );

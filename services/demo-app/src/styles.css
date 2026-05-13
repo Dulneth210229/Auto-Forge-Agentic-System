@@ -1563,3 +1563,123 @@ textarea {
 .page-content {
   max-width: 680px;
 }
+
+/* -------------------------------------------------------
+   UI/UX Agent Human Output Panel
+------------------------------------------------------- */
+
+.uiux-output-panel {
+  min-width: 0;
+}
+
+.human-output-section {
+  background: rgba(255, 255, 255, 0.055);
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 20px;
+  padding: 18px;
+  margin-bottom: 18px;
+}
+
+.human-output-title {
+  margin-bottom: 14px;
+}
+
+.human-output-title h3 {
+  margin: 0;
+  font-size: 17px;
+  color: #ffffff;
+}
+
+.human-output-title p {
+  margin: 5px 0 0;
+  color: #cbd5e1;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.muted-preview {
+  opacity: 0.75;
+}
+
+.soft-note {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px dashed rgba(255, 255, 255, 0.18);
+  color: #cbd5e1;
+  padding: 14px;
+  border-radius: 14px;
+  line-height: 1.5;
+}
+
+.uiux-loading-card {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  padding: 20px;
+  border-radius: 18px;
+  margin-top: 18px;
+  margin-bottom: 18px;
+}
+
+.uiux-loading-card h3 {
+  margin: 0 0 8px;
+  color: #ffffff;
+}
+
+.uiux-loading-card p {
+  margin: 0 0 8px;
+  color: #cbd5e1;
+  line-height: 1.5;
+}
+
+.uiux-loading-card small {
+  color: #93c5fd;
+}
+
+.uiux-progress-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.uiux-progress-item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px dashed rgba(255, 255, 255, 0.14);
+  padding: 16px;
+  border-radius: 16px;
+}
+
+.uiux-progress-item span {
+  width: 28px;
+  height: 28px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  background: rgba(79, 70, 229, 0.4);
+  color: white;
+  font-weight: 900;
+  flex-shrink: 0;
+}
+
+.uiux-progress-item strong {
+  color: white;
+}
+
+.uiux-progress-item p {
+  margin: 4px 0 0;
+  color: #cbd5e1;
+  line-height: 1.5;
+}
+
+.soft-note {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px dashed rgba(255, 255, 255, 0.18);
+  color: #cbd5e1;
+  padding: 14px;
+  border-radius: 14px;
+  line-height: 1.5;
+}
