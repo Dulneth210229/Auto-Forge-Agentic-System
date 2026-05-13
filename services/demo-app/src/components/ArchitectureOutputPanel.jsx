@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from "react";
-import ArtifactList from "./ArtifactList";
 import DiagramPreview from "./DiagramPreview";
 import MarkdownPreview from "./MarkdownPreview";
 import { autoForgeApi } from "../api/autoForgeApi";
@@ -70,17 +69,6 @@ function getFileName(path = "") {
   return path.split(/[\\/]/).pop() || path;
 }
 
-/**
- * Special output panel for Architect Agent.
- *
- * Shows:
- * - UML image diagrams
- * - HTML previews
- * - SDS Markdown report
- * - OpenAPI YAML
- * - DBPack JSON
- * - Download Pack button
- */
 export default function ArchitectureOutputPanel({
   data,
   error,
@@ -277,8 +265,6 @@ export default function ArchitectureOutputPanel({
               )}
             </section>
           )}
-
-          <ArtifactList paths={paths} onReadArtifact={readArtifact} />
 
           <details className="raw-response-details">
             <summary>Raw backend response</summary>
