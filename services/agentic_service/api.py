@@ -1417,3 +1417,83 @@ def download_artifact_folder(path: str):
         filename=f"{folder_path.name}.zip",
         media_type="application/zip",
     )
+
+@app.get("/uiux/download-pack")
+def download_uiux_pack(
+    run_id: str = "RUN-0001",
+    uiux_version: str = "v1"
+):
+    """
+    Downloads all UI/UX Agent outputs as a ZIP file.
+
+    Includes:
+    - UIUXPack JSON/Markdown
+    - User flow JSON
+    - User flow Mermaid .mmd
+    - User flow PNG images
+    - Wireframe HTML files
+    - Wireframe PNG images
+    - Any other UI/UX generated artifacts
+    """
+
+    project_root = Path.cwd().resolve()
+
+    uiux_dir = (
+        project_root
+        / "outputs"
+        / "runs"
+        / run_id
+        / "uiux"
+        / uiux_version
+    ).resolve()
+
+    if not uiux_dir.exists():
+        raise HTTPException(
+            status_code=404,
+            detail=f"UI/UX folder not found: {uiux_dir}"
+        )
+
+    exports_dir = (
+        project_root
+        / "outputs"
+        / "runs"
+        / run_id
+        / "exports"
+    ).resolve()
+
+    exports_dir.mkdir(parents=True, exist_ok=True)
+
+    zip_file_path = exports_dir / f"UIUXPack_{uiux_version}.zip"
+
+    if zip_file_path.exists():
+        zip_file_path.unlink()
+
+    blocked_folders = {
+        "__pycache__",
+        ".pytest_cache",
+        ".git",
+        "node_modules",
+        "dist",
+        "build",
+        ".venv",
+        "venv",
+    }
+
+    with zipfile.ZipFile(zip_file_path, "w", zipfile.ZIP_DEFLATED) as zip_file:
+        for file_path in uiux_dir.rglob("*"):
+            if not file_path.is_file():
+                continue
+
+            if any(part in blocked_folders for part in file_path.parts):
+                continue
+
+            zip_file.write(
+                file_path,
+                arcname=file_path.relative_to(uiux_dir)
+            )
+
+    return FileResponse(
+        path=zip_file_path,
+        media_type="application/zip",
+        filename=f"UIUXPack_{run_id}_{uiux_version}.zip"
+    )
