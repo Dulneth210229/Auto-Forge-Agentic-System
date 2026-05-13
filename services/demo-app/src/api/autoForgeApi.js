@@ -121,4 +121,13 @@ export const autoForgeApi = {
 
   getFolderDownloadUrl: (path) =>
     `${API_BASE_URL}/artifacts/download-folder?path=${encodeURIComponent(path)}`,
+
+  getArtifactFileUrl: (path) =>
+    `${API_BASE_URL}/artifacts/file?path=${encodeURIComponent(path)}`,
+  
+  getArchitecturePackDownloadUrl: (runId, architectureVersion) =>
+    `${API_BASE_URL}/architecture/download-pack?run_id=${encodeURIComponent(
+      runId
+    )}&architecture_version=${encodeURIComponent(architectureVersion)}`,
 };
+

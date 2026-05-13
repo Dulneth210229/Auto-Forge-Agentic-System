@@ -2,11 +2,12 @@ import { useState } from "react";
 import PageHeader from "../components/PageHeader";
 import FormSection from "../components/FormSection";
 import TextInput from "../components/TextInput";
-import OutputPanel from "../components/OutputPanel";
+import ArchitectureOutputPanel from "../components/ArchitectureOutputPanel";
 import { autoForgeApi } from "../api/autoForgeApi";
 
 export default function ArchitectAgentPage() {
   const [action, setAction] = useState("generate");
+
   const [form, setForm] = useState({
     run_id: "RUN-0001",
     srs_version: "v1",
@@ -22,11 +23,10 @@ export default function ArchitectAgentPage() {
   const [loading, setLoading] = useState(false);
   const [output, setOutput] = useState(null);
   const [error, setError] = useState("");
-  const [artifactContent, setArtifactContent] = useState("");
-  const [selectedArtifactPath, setSelectedArtifactPath] = useState("");
 
   function handleChange(event) {
     const { name, value, type, checked } = event.target;
+
     setForm((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
@@ -37,7 +37,6 @@ export default function ArchitectAgentPage() {
     setLoading(true);
     setError("");
     setOutput(null);
-    setArtifactContent("");
 
     try {
       let result;
@@ -71,16 +70,8 @@ export default function ArchitectAgentPage() {
     }
   }
 
-  async function readArtifact(path) {
-    try {
-      setSelectedArtifactPath(path);
-      const content = await autoForgeApi.readArtifact(path);
-      setArtifactContent(content);
-    } catch (err) {
-      setSelectedArtifactPath(path);
-      setArtifactContent(`Could not read artifact.\n\n${err.message}`);
-    }
-  }
+  const activeArchitectureVersion =
+    action === "generate" ? form.architecture_version : form.new_version;
 
   return (
     <div className="page-grid">
@@ -88,24 +79,29 @@ export default function ArchitectAgentPage() {
         <PageHeader
           badge="Stage 03"
           title="Architect Agent"
-          description="Generates architecture artifacts from the approved SRS and DomainPack, including SDS, OpenAPI contract, database design, and architecture diagrams."
+          description="Generates architecture artifacts from the approved SRS and DomainPack, including SDS, OpenAPI contract, database design, UML diagrams, and human-readable reports."
           outputs={[
-            "SDS JSON/MD",
+            "SDS JSON / Markdown",
             "OpenAPI YAML",
-            "DBPack",
-            "UML / architecture diagrams",
+            "DBPack JSON",
+            "UML diagrams",
+            "HTML diagram previews",
+            "Architecture ZIP pack",
           ]}
         />
 
         <FormSection title="Action">
           <div className="segmented-control">
             <button
+              type="button"
               className={action === "generate" ? "active" : ""}
               onClick={() => setAction("generate")}
             >
               Generate Architecture
             </button>
+
             <button
+              type="button"
               className={action === "revise" ? "active" : ""}
               onClick={() => setAction("revise")}
             >
@@ -123,18 +119,21 @@ export default function ArchitectAgentPage() {
                 value={form.run_id}
                 onChange={handleChange}
               />
+
               <TextInput
                 label="SRS Version"
                 name="srs_version"
                 value={form.srs_version}
                 onChange={handleChange}
               />
+
               <TextInput
                 label="Domain Version"
                 name="domain_version"
                 value={form.domain_version}
                 onChange={handleChange}
               />
+
               <TextInput
                 label="Architecture Version"
                 name="architecture_version"
@@ -163,7 +162,7 @@ export default function ArchitectAgentPage() {
                 checked={form.export_visuals}
                 onChange={handleChange}
               />
-              Export architecture diagrams / visuals
+              Export UML diagrams and HTML visual outputs
             </label>
           </FormSection>
         )}
@@ -177,12 +176,14 @@ export default function ArchitectAgentPage() {
                 value={form.run_id}
                 onChange={handleChange}
               />
+
               <TextInput
                 label="Current Version"
                 name="current_version"
                 value={form.current_version}
                 onChange={handleChange}
               />
+
               <TextInput
                 label="New Version"
                 name="new_version"
@@ -198,7 +199,7 @@ export default function ArchitectAgentPage() {
               rows={5}
               value={form.change_request}
               onChange={handleChange}
-              placeholder="Example: Add separate services for catalog, cart, order, and identity while keeping deployment simple."
+              placeholder="Example: Add a separate inventory module and update the class diagram."
             />
 
             <label className="checkbox-field">
@@ -208,12 +209,13 @@ export default function ArchitectAgentPage() {
                 checked={form.export_visuals}
                 onChange={handleChange}
               />
-              Export revised visuals
+              Export revised UML diagrams and HTML visual outputs
             </label>
           </FormSection>
         )}
 
         <button
+          type="button"
           className="primary-button large"
           onClick={runAgent}
           disabled={loading}
@@ -222,15 +224,12 @@ export default function ArchitectAgentPage() {
         </button>
       </div>
 
-      <OutputPanel
-        title="Architect Agent Output"
+      <ArchitectureOutputPanel
         data={output}
         error={error}
         loading={loading}
-        onReadArtifact={readArtifact}
-        artifactContent={artifactContent}
-        selectedArtifactPath={selectedArtifactPath}
-        storageKey="autoforge_architecture_output"
+        runId={form.run_id}
+        architectureVersion={activeArchitectureVersion}
       />
     </div>
   );
