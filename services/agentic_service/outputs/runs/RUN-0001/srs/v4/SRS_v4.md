@@ -1,6 +1,6 @@
 # Software Requirements Specification: AutoForge E-commerce Demo
 
-**Version:** v3  
+**Version:** v4  
 **Domain:** E-commerce
 
 ---
@@ -22,6 +22,7 @@ To build a functional web platform enabling customers to browse, purchase, and t
 - Order placement and confirmation
 - Customer order history viewing
 - Basic Admin product and order management
+- User registration and profile management
 
 ### Out of Scope
 
@@ -162,6 +163,28 @@ Admin users must be able to view all placed orders and update their fulfillment 
 
 - **AC-014:** Admin must be able to change the order status (e.g., Pending -> Shipped).
 - **AC-015:** The system must log the user who changed the order status and the timestamp.
+
+### FR-009 — User Account Management
+
+**Priority:** Must
+
+The system must allow customers to register, log in, and manage their personal profile and shipping addresses.
+
+**Acceptance Criteria:**
+
+- **AC-016:** The user must be able to register an account using a unique email and password.
+- **AC-017:** The user must be able to view, edit, and save multiple shipping addresses.
+
+### FR-010 — Advanced Search and Filtering
+
+**Priority:** Should
+
+The system must enhance product browsing by allowing users to filter results by attributes (e.g., brand, price range) and sort by criteria (e.g., rating, price).
+
+**Acceptance Criteria:**
+
+- **AC-018:** The system must allow filtering of products by brand name.
+- **AC-019:** The system must allow sorting of the product list by price (ascending/descending).
 
 
 ---

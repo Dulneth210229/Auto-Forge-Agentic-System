@@ -1,6 +1,6 @@
 {
   "project_name": "AutoForge E-commerce Demo",
-  "version": "v3",
+  "version": "v4",
   "domain": "E-commerce",
   "purpose": "To build a functional web platform enabling customers to browse, purchase, and track products, and allowing administrators to manage inventory and orders.",
   "scope_in": [
@@ -10,7 +10,8 @@
     "Multi-step checkout process",
     "Order placement and confirmation",
     "Customer order history viewing",
-    "Basic Admin product and order management"
+    "Basic Admin product and order management",
+    "User registration and profile management"
   ],
   "scope_out": [
     "Advanced marketing integrations (e.g., loyalty points)",
@@ -163,6 +164,38 @@
         {
           "id": "AC-015",
           "description": "The system must log the user who changed the order status and the timestamp."
+        }
+      ]
+    },
+    {
+      "id": "FR-009",
+      "title": "User Account Management",
+      "description": "The system must allow customers to register, log in, and manage their personal profile and shipping addresses.",
+      "priority": "Must",
+      "acceptance_criteria": [
+        {
+          "id": "AC-016",
+          "description": "The user must be able to register an account using a unique email and password."
+        },
+        {
+          "id": "AC-017",
+          "description": "The user must be able to view, edit, and save multiple shipping addresses."
+        }
+      ]
+    },
+    {
+      "id": "FR-010",
+      "title": "Advanced Search and Filtering",
+      "description": "The system must enhance product browsing by allowing users to filter results by attributes (e.g., brand, price range) and sort by criteria (e.g., rating, price).",
+      "priority": "Should",
+      "acceptance_criteria": [
+        {
+          "id": "AC-018",
+          "description": "The system must allow filtering of products by brand name."
+        },
+        {
+          "id": "AC-019",
+          "description": "The system must allow sorting of the product list by price (ascending/descending)."
         }
       ]
     }
