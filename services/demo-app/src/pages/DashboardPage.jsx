@@ -9,8 +9,8 @@ const stages = [
   "Architect Agent",
   "UI/UX Agent",
   "Coder Agent",
-  "Testing / QA Agent",
   "Security Agent",
+  "Testing / QA Agent",
 ];
 
 export default function DashboardPage() {
