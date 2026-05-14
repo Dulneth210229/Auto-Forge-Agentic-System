@@ -38,16 +38,16 @@ const navItems = [
     icon: "C",
   },
   {
-    path: "/testing",
-    label: "Testing / QA Agent",
-    description: "Generate and run tests",
-    icon: "Q",
-  },
-  {
     path: "/security",
     label: "Security Agent",
     description: "Scan generated code",
     icon: "S",
+  },
+  {
+    path: "/testing",
+    label: "Testing / QA Agent",
+    description: "Generate and run tests",
+    icon: "Q",
   },
 ];
 
@@ -83,7 +83,7 @@ export default function Sidebar() {
 
       <div className="sidebar-footer">
         <p>Pipeline</p>
-        <strong>Requirements → Prototype → QA → Security</strong>
+        <strong>Requirements → Prototype → Security → QA</strong>
       </div>
     </aside>
   );

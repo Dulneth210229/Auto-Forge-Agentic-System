@@ -1179,3 +1179,507 @@ textarea {
   font-weight: 800;
   margin-bottom: 10px;
 }
+
+/* -------------------------------------------------------
+   Architect Agent: Large Human Output Panel
+------------------------------------------------------- */
+
+.architecture-output-panel {
+  min-width: 0;
+}
+
+.output-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* -------------------------------------------------------
+   Diagram + HTML Preview Section
+------------------------------------------------------- */
+
+.diagram-preview-section {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 16px;
+  border-radius: 18px;
+  margin-bottom: 18px;
+}
+
+.section-title-row h3,
+.diagram-preview-section h3 {
+  margin: 0 0 6px;
+  font-size: 16px;
+  color: #ffffff;
+}
+
+.section-title-row p,
+.diagram-preview-section p {
+  margin: 0 0 14px;
+  color: #cbd5e1;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.sub-output-heading {
+  margin: 16px 0 10px;
+  color: #e5e7eb;
+  font-size: 14px;
+}
+
+.diagram-empty {
+  background: rgba(217, 119, 6, 0.12);
+  border: 1px solid rgba(251, 191, 36, 0.24);
+  border-radius: 16px;
+  padding: 14px;
+  margin-bottom: 18px;
+}
+
+.diagram-empty p {
+  margin: 0 0 4px;
+  color: #fde68a;
+  font-weight: 700;
+}
+
+.diagram-empty small {
+  color: #fef3c7;
+  line-height: 1.5;
+}
+
+/* Image diagrams */
+.diagram-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.diagram-card,
+.html-preview-card {
+  background: #ffffff;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+}
+
+.diagram-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 12px 14px;
+  border-bottom: 1px solid #e5e7eb;
+  color: #111827;
+}
+
+.diagram-card-header strong {
+  text-transform: capitalize;
+  font-size: 14px;
+}
+
+.diagram-card-header a,
+.mini-actions a,
+.mini-actions button {
+  background: #4f46e5;
+  color: white;
+  text-decoration: none;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  border: none;
+}
+
+.mini-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.mini-actions button {
+  background: #0f172a;
+}
+
+.diagram-card img {
+  display: block;
+  width: 100%;
+  max-height: 520px;
+  object-fit: contain;
+  background: #f8fafc;
+  padding: 14px;
+}
+
+.diagram-card > span,
+.html-preview-card > span {
+  display: block;
+  padding: 10px 14px;
+  color: #6b7280;
+  font-size: 11px;
+  word-break: break-all;
+  border-top: 1px solid #e5e7eb;
+}
+
+/* HTML previews */
+.html-preview-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.html-preview-frame {
+  width: 100%;
+  height: 520px;
+  border: none;
+  background: #ffffff;
+}
+
+/* Diagram source files */
+.source-file-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.source-file-list button {
+  width: 100%;
+  text-align: left;
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  background: rgba(148, 163, 184, 0.12);
+  color: white;
+  border-radius: 14px;
+  padding: 12px;
+}
+
+.source-file-list strong {
+  display: block;
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.source-file-list span {
+  display: block;
+  color: #cbd5e1;
+  font-size: 12px;
+  word-break: break-all;
+}
+
+/* -------------------------------------------------------
+   Report selector
+------------------------------------------------------- */
+
+.architecture-report-tabs {
+  margin: 18px 0;
+}
+
+.architecture-report-tabs h3 {
+  color: #ffffff;
+  margin: 0 0 10px;
+  font-size: 16px;
+}
+
+.report-button-group {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.report-button-group button {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.07);
+  color: #e5e7eb;
+  border-radius: 14px;
+  padding: 10px;
+  text-align: left;
+  font-weight: 800;
+}
+
+.report-button-group button.active {
+  background: rgba(99, 102, 241, 0.35);
+  border-color: rgba(129, 140, 248, 0.7);
+}
+
+.report-button-group button span {
+  display: block;
+  margin-top: 4px;
+  font-size: 11px;
+  color: #bfdbfe;
+  font-weight: 500;
+  word-break: break-all;
+}
+
+/* -------------------------------------------------------
+   Download Pack Button
+------------------------------------------------------- */
+
+.download-pack-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #16a34a;
+  color: white;
+  text-decoration: none;
+  border-radius: 999px;
+  padding: 7px 12px;
+  font-size: 12px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.download-pack-btn:hover {
+  background: #15803d;
+}
+
+.raw-response-details {
+  margin-top: 18px;
+  background: rgba(255, 255, 255, 0.055);
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 16px;
+  padding: 14px;
+}
+
+.raw-response-details summary {
+  cursor: pointer;
+  font-weight: 800;
+  color: #e5e7eb;
+}
+
+.raw-response-details pre {
+  background: #020617;
+  color: #d1d5db;
+  padding: 14px;
+  border-radius: 12px;
+  overflow: auto;
+  max-height: 320px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* -------------------------------------------------------
+   GitHub README-like Markdown rendering
+------------------------------------------------------- */
+
+.markdown-preview {
+  background: #ffffff;
+  color: #111827;
+  border-radius: 18px;
+  padding: 28px;
+  line-height: 1.75;
+  font-size: 15px;
+  border: 1px solid #e5e7eb;
+  max-height: 650px;
+  overflow: auto;
+}
+
+.markdown-preview h1 {
+  font-size: 30px;
+  margin: 0 0 18px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.markdown-preview h2 {
+  font-size: 23px;
+  margin: 28px 0 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #eef2f7;
+}
+
+.markdown-preview h3 {
+  font-size: 18px;
+  margin: 22px 0 10px;
+}
+
+.markdown-preview p {
+  margin: 10px 0;
+  color: #374151;
+}
+
+.markdown-preview ul,
+.markdown-preview ol {
+  padding-left: 24px;
+}
+
+.markdown-preview li {
+  margin: 6px 0;
+}
+
+.markdown-preview code {
+  background: #f3f4f6;
+  color: #be123c;
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+.markdown-preview pre {
+  background: #0f172a;
+  color: #e5e7eb;
+  padding: 16px;
+  border-radius: 14px;
+  overflow: auto;
+}
+
+.markdown-preview pre code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+}
+
+.markdown-preview table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 18px 0;
+  font-size: 14px;
+}
+
+.markdown-preview th,
+.markdown-preview td {
+  border: 1px solid #e5e7eb;
+  padding: 10px 12px;
+  text-align: left;
+}
+
+.markdown-preview th {
+  background: #f8fafc;
+  font-weight: 800;
+}
+
+@media (max-width: 1250px) {
+  .report-button-group {
+    grid-template-columns: 1fr;
+  }
+
+  .html-preview-frame {
+    height: 420px;
+  }
+}
+.page-grid {
+  display: grid;
+  grid-template-columns: minmax(330px, 0.75fr) minmax(680px, 1.75fr);
+  gap: 22px;
+  align-items: start;
+}
+
+.page-content {
+  max-width: 680px;
+}
+
+/* -------------------------------------------------------
+   UI/UX Agent Human Output Panel
+------------------------------------------------------- */
+
+.uiux-output-panel {
+  min-width: 0;
+}
+
+.human-output-section {
+  background: rgba(255, 255, 255, 0.055);
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 20px;
+  padding: 18px;
+  margin-bottom: 18px;
+}
+
+.human-output-title {
+  margin-bottom: 14px;
+}
+
+.human-output-title h3 {
+  margin: 0;
+  font-size: 17px;
+  color: #ffffff;
+}
+
+.human-output-title p {
+  margin: 5px 0 0;
+  color: #cbd5e1;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.muted-preview {
+  opacity: 0.75;
+}
+
+.soft-note {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px dashed rgba(255, 255, 255, 0.18);
+  color: #cbd5e1;
+  padding: 14px;
+  border-radius: 14px;
+  line-height: 1.5;
+}
+
+.uiux-loading-card {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  padding: 20px;
+  border-radius: 18px;
+  margin-top: 18px;
+  margin-bottom: 18px;
+}
+
+.uiux-loading-card h3 {
+  margin: 0 0 8px;
+  color: #ffffff;
+}
+
+.uiux-loading-card p {
+  margin: 0 0 8px;
+  color: #cbd5e1;
+  line-height: 1.5;
+}
+
+.uiux-loading-card small {
+  color: #93c5fd;
+}
+
+.uiux-progress-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.uiux-progress-item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px dashed rgba(255, 255, 255, 0.14);
+  padding: 16px;
+  border-radius: 16px;
+}
+
+.uiux-progress-item span {
+  width: 28px;
+  height: 28px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  background: rgba(79, 70, 229, 0.4);
+  color: white;
+  font-weight: 900;
+  flex-shrink: 0;
+}
+
+.uiux-progress-item strong {
+  color: white;
+}
+
+.uiux-progress-item p {
+  margin: 4px 0 0;
+  color: #cbd5e1;
+  line-height: 1.5;
+}
+
+.soft-note {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px dashed rgba(255, 255, 255, 0.18);
+  color: #cbd5e1;
+  padding: 14px;
+  border-radius: 14px;
+  line-height: 1.5;
+}
