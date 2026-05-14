@@ -2,7 +2,7 @@
   "run_id": "RUN-0001",
   "stage": "security",
   "version": "v1",
-  "generated_at": "2026-05-12T15:28:23.859105+00:00",
+  "generated_at": "2026-05-13T05:17:53.233812+00:00",
   "target_path": "./sample_ecommerce_app",
   "security_gate": {
     "status": "FAIL",

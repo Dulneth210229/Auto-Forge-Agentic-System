@@ -1,7 +1,7 @@
 from pathlib import Path
 
 
-TARGET_PATH = Path(r"outputs/runs/RUN-0001/code/v1/generated_app")
+TARGET_PATH = Path(r"./sample_ecommerce_app")
 
 
 def test_target_project_folder_exists():

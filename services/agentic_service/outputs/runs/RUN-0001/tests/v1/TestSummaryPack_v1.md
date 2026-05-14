@@ -3,8 +3,8 @@
 **Run ID:** RUN-0001  
 **Stage:** testing  
 **Version:** v1  
-**Generated At:** 2026-05-12T15:25:05.472372+00:00  
-**Target Path:** outputs/runs/RUN-0001/code/v1/generated_app
+**Generated At:** 2026-05-13T05:19:28.821200+00:00  
+**Target Path:** ./sample_ecommerce_app
 
 ---
 
@@ -12,9 +12,9 @@
 
 | Field | Value |
 |---|---|
-| Status | **FAIL** |
-| Reason | 4 test(s) failed. |
-| Policy | FAIL if any generated test fails. |
+| Status | **PASS** |
+| Reason | All generated tests passed. |
+| Policy | PASS when pytest succeeds and no tests fail or skip. |
 
 ---
 
@@ -22,9 +22,9 @@
 
 | Metric | Count |
 |---|---:|
-| Total Tests | 33 |
-| Passed | 29 |
-| Failed | 4 |
+| Total Tests | 1 |
+| Passed | 1 |
+| Failed | 0 |
 | Skipped | 0 |
 | Not Run | 0 |
 
@@ -35,8 +35,8 @@
 | Metric | Value |
 |---|---:|
 | Test Coverage | 1.0 |
-| Pass Rate | 0.88 |
-| Execution Efficiency | 556.0 ms |
+| Pass Rate | 1.0 |
+| Execution Efficiency | 428.0 ms |
 
 ---
 
@@ -58,27 +58,21 @@
 |---|---:|
 | Generated Test Files | 8 |
 | Test Cases | 8 |
-| Execution Results | 33 |
+| Execution Results | 1 |
 | Regression Test Cases | 5 |
 | Security Validation Cases | 4 |
-| Failed Results | 4 |
+| Failed Results | 0 |
 
 ---
 
 ## 6. Failed Results
 
-| Test ID | Status | Duration | Message |
-|---|---|---:|---|
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_regression_cases.py::test_regression_negative_quantity_is_rejected | failed | 16 ms | Test failed. See pytest stdout/stderr for details. |
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_regression_cases.py::test_regression_missing_payment_or_customer_is_rejected | failed | 16 ms | Test failed. See pytest stdout/stderr for details. |
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_validation_edge_cases.py::test_customer_or_payment_validation_exists | failed | 16 ms | Test failed. See pytest stdout/stderr for details. |
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_validation_edge_cases.py::test_out_of_stock_handling_exists | failed | 16 ms | Test failed. See pytest stdout/stderr for details. |
+No failed test results.
 
 ---
 
 ## 7. Recommendations
 
-- Some generated tests failed. Review pytest stdout/stderr in TestReport_v1.json.
 - Generated pytest files were executed.
 - Functional API-style tests were generated for catalog, cart, checkout, and order.
 - Integration workflow tests were generated for Product -> Cart -> Checkout -> Order.
