@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order History & Confirmation | AutoForge E-commerce Demo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; /* slate-300 */
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; /* slate-400 */
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans antialiased">
+
+    <div class="min-h-screen max-w-full mx-auto bg-white shadow-lg">
+        
+        <!-- Top Navigation Header -->
+        <header class="bg-white border-b border-gray-200 sticky top-0 z-30 shadow-sm">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
+                <div class="text-2xl font-bold text-indigo-600">
+                    AutoForge <span class="text-gray-800">E-commerce</span>
+                </div>
+                
+                <!-- Search Bar (Functional Element) -->
+                <div class="hidden md:block flex-grow max-w-md mx-8">
+                    <div class="relative">
+                        <input type="text" placeholder="Search products, orders, or help..." class="w-full py-2 pl-10 pr-4 border border-gray-300 rounded-full focus:ring-indigo-500 focus:border-indigo-500 transition duration-150">
+                        <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    </div>
+                </div>
+
+                <!-- User Actions -->
+                <div class="flex items-center space-x-4">
+                    <button class="text-gray-600 hover:text-indigo-600 transition duration-150 hidden sm:block">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4z"></path></svg>
+                    </button>
+                    <div class="flex items-center space-x-2 cursor-pointer">
+                        <div class="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-700 font-semibold text-sm">JD</div>
+                        <span class="text-sm text-gray-700 hidden sm:inline">John Doe</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+            
+            <!-- Page Title and Subtitle -->
+            <div class="mb-8 border-b pb-4">
+                <h1 class="text-3xl font-extrabold text-gray-900">Order History & Confirmation</h1>
+                <p class="text-lg text-gray-500 mt-1">Review your past purchases and track your current orders. (UI-SCR-05 | FR-006, FR-005)</p>
+            </div>
+
+            <!-- Main Layout Grid: History Table (Left) and Detail/Summary (Right) -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                
+                <!-- Left Column: Order History List (2/3 width on large screens) -->
+                <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-lg border border-gray-100">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-6 border-b pb-2">Your Past Orders</h2>
+                    
+                    <!-- Filter/Sorting Bar -->
+                    <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-100">
+                        <div class="flex space-x-3 text-sm text-gray-600">
+                            <span class="font-medium">Filter By:</span>
+                            <button class="px-3 py-1 border border-indigo-200 text-indigo-600 rounded-full hover:bg-indigo-50 transition">Last 30 Days</button>
+                            <button class="px-3 py-1 border border-gray-200 text-gray-600 rounded-full hover:bg-gray-50 transition">All Time</button>
+                            <button class="px-3 py-1 border border-gray-200 text-gray-600 rounded-full hover:bg-gray-50 transition">Cancelled</button>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <label for="sort" class="text-sm text-gray-600">Sort By:</label>
+                            <select id="sort" class="border border-gray-300 rounded-lg py-1 px-2 text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                <option>Newest First</option>
+                                <option>Highest Total</option>
+                                <option>Oldest First</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Order History Table/Card List -->
+                    <div class="space-y-4">
+                        
+                        <!-- Order Card 1: Confirmed (Most Recent) -->
+                        <div class="p-4 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition duration-200 bg-indigo-50/50 cursor-pointer order-card" data-order-id="ORD-9001">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="text-xs font-semibold text-indigo-600 uppercase tracking-wider">Order #ORD-9001</p>
+                                    <h3 class="text-xl font-bold text-gray-900">Tech Gear Bundle</h3>
+                                    <p class="text-sm text-gray-500 mt-1">Placed on: October 25, 2023</p>
+                                    <p class="text-sm text-gray-500">Items: 3 | Total: $459.99</p>
+                                </div>
+                                <div class="text-right">
+                                    <span class="inline-flex items-center px-3 py-1 text-sm font-medium rounded-full bg-green-100 text-green-800 status-badge">
+                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                        Shipped
+                                    </span>
+                                    <div class="flex space-x-2 mt-2">
+                                        <button class="text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center">
+                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12.432a2 2 0 003.032 0l8.944 8.944c.53.53 1.26 1.03 1.92 1.03h.01c.66 0 1.39-.5 1.92-1.03l8.944-8.944a2 2 0 000-3.032z"></path></svg>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Separator -->
+                    <div class="my-8 border-t border-gray-100"></div>
+
+                    <!-- Order Card 2: Delivered -->
+                    <div class="p-4 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition duration-200 bg-white cursor-pointer order-card" data-order-id="ORD-8550">
+                        <div class="flex justify-between items-start">
+                            <div class="flex-grow">
+                                <p class="text-xs font-semibold text-indigo-600 uppercase tracking-wider">Order #ORD-8550</p>
+                                <h3 class="text-xl font-bold text-gray-900">Ergonomic Mouse Pad Set</h3>
+                                <p class="text-sm text-gray-500 mt-1">Placed on: September 1, 2023</p>
+                                <p class="text-sm text-gray-500">Items: 1 | Total: $49.99</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="inline-flex items-center px-3 py-1 text-sm font-medium rounded-full bg-green-100 text-green-800 status-badge">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                    Delivered
+                                </span>
+                                <div class="flex space-x-2 mt-2">
+                                    <button class="text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center">
+                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12.432a2 2 0 003.032 0l8.944 8.944c.53.53 1.26 1.03 1.92 1.03h.01c.66 0 1.39-.5 1.92-1.03l8.944-8.944a2 2 0 000-3.032z"></path></svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Separator -->
+                    <div class="my-8 border-t border-gray-100"></div>
+
+                    <!-- Order Card 3: Processing -->
+                    <div class="p-4 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition duration-200 bg-yellow-50/50 cursor-pointer order-card" data-order-id="ORD-7112">
+                        <div class="flex justify-between items-start">
+                            <div class="flex-grow">
+                                <p class="text-xs font-semibold text-indigo-600 uppercase tracking-wider">Order #ORD-7112</p>
+                                <h3 class="text-xl font-bold text-gray-900">Wireless Charging Hub</h3>
+                                <p class="text-sm text-gray-500 mt-1">Placed on: August 15, 2023</p>
+                                <p class="text-sm text-gray-500">Items: 1 | Total: $89.99</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="inline-flex items-center px-3 py-1 text-sm font-medium rounded-full bg-yellow-100 text-yellow-800 status-badge">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    Processing
+                                </span>
+                                <div class="flex space-x-2 mt-2">
+                                    <button class="text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center opacity-70 cursor-not-allowed">
+                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12.432a2 2 0 003.032 0l8.944 8.944c.53.53 1.26 1.03 1.92 1.03h.01c.66 0 1.39-.5 1.92-1.03l8.944-8.944a2 2 0 000-3.032z"></path></svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Order Card 4: Cancelled -->
+                    <div class="p-4 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition duration-200 bg-red-50/50 cursor-pointer order-card" data-order-id="ORD-5003">
+                        <div class="flex justify-between items-start">
+                            <div class="flex-grow">
+                                <p class="text-xs font-semibold text-indigo-600 uppercase tracking-wider">Order #ORD-5003</p>
+                                <h3 class="text-xl font-bold text-gray-900">Premium Keyboard Kit</h3>
+                                <p class="text-sm text-gray-500 mt-1">Placed on: May 10, 2023</p>
+                                <p class="text-sm text-gray-500">Items: 1 | Total: $199.00</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="inline-flex items-center px-3 py-1 text-sm font-medium rounded-full bg-red-100 text-red-800 status-badge">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                    Cancelled
+                                </span>
+                                <div class="flex space-x-2 mt-2">
+                                    <button class="text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center opacity-50 cursor-not-allowed">
+                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12.432a2 2 0 003.032 0l8.944 8.944c.53.53 1.26 1.03 1.92 1.03h.01c.66 0 1.39-.5 1.92-1.03l8.944-8.944a2 2 0 000-3.032z"></path></svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Right Column: Order Details / Confirmation View (1/3 width on large screens) -->
+                <div class="lg:col-span-1">
+                    <div class="sticky top-24 bg-white p-6 rounded-xl shadow-2xl border border-indigo-100/50">
+                        
+                        <!-- Confirmation Header -->
+                        <div class="mb-6 pb-4 border-b border-gray-200">
+                            <h2 class="text-2xl font-bold text-indigo-700">Order Confirmation</h2>
+                            <p class="text-sm text-gray-500 mt-1">Order #ORD-9001 | Confirmed & Shipped</p>
+                            <p class="text-xs text-gray-400 mt-1">View details for the Tech Gear Bundle purchased on October 25, 2023.</p>
+                        </div>
+
+                        <!-- Order Summary Card -->
+                        <div class="bg-indigo-50 p-4 rounded-lg mb-6 border border-indigo-200">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-medium text-indigo-700">Order Status:</span>
+                                <span class="text-sm font-bold text-green-700 flex items-center">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                    Shipped (Tracking: 9273492)
+                                </span>
+                            </div>
+                            <div class="flex justify-between items-center pt-2 border-t border-indigo-200">
+                                <span class="text-lg font-semibold text-indigo-700">Total Paid:</span>
+                                <span class="text-2xl font-extrabold text-indigo-800">$459.99</span>
+                            </div>
+                        </div>
+
+                        <!-- Shipping/Billing Info Panel -->
+                        <div class="mb-8">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-3 flex items-center">
+                                <svg class="w-5 h-5 mr-2 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 

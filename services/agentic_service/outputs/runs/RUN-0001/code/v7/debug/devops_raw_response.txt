@@ -1,0 +1,129 @@
+<file path="docker-compose.yml">
+version: '3.8'
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: autoforge_mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    restart: always
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: autoforge_backend
+    ports:
+      - "9000:9000"
+    environment:
+      NODE_ENV: development
+      MONGO_URI: mongodb://mongo:27017/autoforge
+    depends_on:
+      - mongodb
+    volumes:
+      - ./backend:/app/backend
+      - /app/backend/node_modules
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: autoforge_frontend
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_API_URL: http://localhost:9000
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app/frontend
+      - /app/frontend/node_modules
+
+volumes:
+  mongo_data:
+</file>
+<file path=".gitignore">
+# Dependencies
+/node_modules
+/backend/node_modules
+/frontend/node_modules
+
+# Environment Variables
+.env
+.env.*
+
+# Build and Output Directories
+/dist
+/build
+/logs
+
+# OS and Editor Files
+.DS_Store
+npm-debug.log*
+yarn-error.log*
+.vscode/
+.idea/
+</file>
+<file path="README.md">
+# AutoForge Shop E-commerce Platform
+
+## Project Overview
+AutoForge Shop is a modular monolith e-commerce platform built using the MERN stack (MongoDB, Express, React, Node.js). It provides a full-featured online shop experience, including product catalog management, user authentication, and shopping cart functionality.
+
+## Architecture
+The application follows a modular monolith structure, separating concerns into distinct backend (API) and frontend (Client) services, while sharing a common MongoDB database.
+
+## Prerequisites
+*   Docker Engine (Docker Desktop recommended)
+*   Docker Compose
+*   Node.js and npm (for manual setup)
+
+## Setup and Running with Docker Compose (Recommended)
+This method sets up the entire environment (MongoDB, Backend API, Frontend Client) using Docker containers, ensuring dependency isolation.
+
+1.  **Clone the repository:**
+    git clone <repository-url>
+    cd AutoForge-Shop
+
+2.  **Build and Run:**
+    Run the following command in the root directory:
+    docker-compose up --build
+
+    This command will:
+    *   Build the necessary images for the backend and frontend.
+    *   Start the MongoDB container.
+    *   Start the backend API on port 9000.
+    *   Start the frontend client on port 5173.
+
+## Manual Local Setup (Development)
+
+If you prefer running services directly on your machine:
+
+### 1. Backend (API)
+Navigate to the `backend` directory and run:
+npm install
+npm run dev
+
+The API will run on `http://localhost:9000`.
+
+### 2. Frontend (Client)
+Navigate to the `frontend` directory and run:
+npm install
+npm run dev
+
+The client will run on `http://localhost:5173`.
+
+## Environment Variable Setup
+The application uses environment variables for configuration. For local development, create a `.env` file in the root directory or within the respective service directories (if required by the build process).
+
+**Required Variables (Example):**
+*   `MONGO_URI`: The connection string for MongoDB (e.g., `mongodb://localhost:27017/autoforge`).
+*   `JWT_SECRET`: A strong secret key for signing authentication tokens.
+
+## Useful URLs
+*   **Frontend Client:** http://localhost:5173
+*   **Backend API:** http://localhost:9000
+*   **Database:** mongodb://localhost:27017
+</file>

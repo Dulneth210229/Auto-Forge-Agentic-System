@@ -3,8 +3,8 @@
 **Run ID:** RUN-0001  
 **Stage:** security  
 **Version:** v1  
-**Generated At:** 2026-05-14T06:37:48.412890+00:00  
-**Target Path:** outputs/runs/RUN-0001/code/v1/generated_app
+**Generated At:** 2026-05-14T21:50:41.561970+00:00  
+**Target Path:** outputs/runs/RUN-0001/code/v7/generated_app
 
 ---
 
@@ -12,9 +12,9 @@
 
 | Field | Value |
 |---|---|
-| Status | **WARN** |
-| Reason | Security gate warning because Medium severity findings were detected. |
-| Policy | WARN if Medium findings exist and no Critical or blocking High findings exist. |
+| Status | **FAIL** |
+| Reason | Security gate failed because Critical vulnerabilities were detected. |
+| Policy | FAIL if one or more Critical findings exist. |
 
 ---
 
@@ -22,11 +22,11 @@
 
 | Severity | Count |
 |---|---:|
-| Critical | 0 |
-| High | 0 |
+| Critical | 1 |
+| High | 4 |
 | Medium | 2 |
-| Low | 0 |
-| **Total** | **2** |
+| Low | 1 |
+| **Total** | **8** |
 
 ---
 
@@ -34,10 +34,10 @@
 
 | Metric | Count |
 |---|---:|
-| Dependency Vulnerabilities | 54 |
-| LLM Findings | 1 |
-| Fix Suggestions | 2 |
-| Top Blocking Findings | 0 |
+| Dependency Vulnerabilities | 10 |
+| LLM Findings | 0 |
+| Fix Suggestions | 8 |
+| Top Blocking Findings | 5 |
 
 ---
 
@@ -46,8 +46,8 @@
 | Metric | Value |
 |---|---:|
 | Coverage Percentage | 100.0% |
-| Mapped Findings | 2 |
-| Total Findings | 2 |
+| Mapped Findings | 8 |
+| Total Findings | 8 |
 
 ---
 
@@ -55,15 +55,21 @@
 
 | Metric | Value |
 |---|---:|
-| Before Deduplication | 2 |
-| After Deduplication | 2 |
-| Duplicates Removed | 0 |
+| Before Deduplication | 10 |
+| After Deduplication | 8 |
+| Duplicates Removed | 2 |
 
 ---
 
 ## 6. Top Blocking Findings
 
-No blocking findings.
+| ID | Title | Severity | File | Method | Requirement | Module |
+|---|---|---|---|---|---|---|
+| SEC-003 | Vulnerable dependency detected: mongoose | Critical | outputs\runs\RUN-0001\code\v7\generated_app\backend\package.json | Dependency | FR-001 | catalog |
+| SEC-004 | Vulnerable dependency detected: mongoose | High | outputs\runs\RUN-0001\code\v7\generated_app\backend\package.json | Dependency | FR-001 | catalog |
+| SEC-005 | Vulnerable dependency detected: mongoose | High | outputs\runs\RUN-0001\code\v7\generated_app\backend\package.json | Dependency | NFR-002 | dependency_management |
+| SEC-006 | Vulnerable dependency detected: vite | High | outputs\runs\RUN-0001\code\v7\generated_app\frontend\package.json | Dependency | NFR-002 | dependency_management |
+| SEC-007 | Vulnerable dependency detected: vite | High | outputs\runs\RUN-0001\code\v7\generated_app\frontend\package.json | Dependency | NFR-002 | dependency_management |
 
 ---
 

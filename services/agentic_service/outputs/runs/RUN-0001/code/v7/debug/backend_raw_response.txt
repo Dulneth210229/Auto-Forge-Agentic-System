@@ -1,0 +1,604 @@
+<file path="backend/package.json">
+{
+  "name": "autoforge-shop-backend",
+  "version": "1.0.0",
+  "description": "Backend for AutoForge E-commerce Shop",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "mongoose": "^8.0.0",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
+</file>
+<file path="backend/.env.example">
+# Server Configuration
+PORT=9000
+
+# MongoDB Connection String
+MONGO_URI=mongodb://localhost:27017/autoforge_shop
+
+# JWT Secret Key (for authentication)
+JWT_SECRET=your_super_secret_key
+</file>
+<file path="backend/config/db.js">
+const mongoose = require('mongoose');
+
+const connectDB = async () => {
+    try {
+        await mongoose.connect(process.env.MONGO_URI, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        });
+        console.log('MongoDB Connected successfully.');
+    } catch (err) {
+        console.error('MongoDB Connection Error:', err.message);
+        process.exit(1); // Exit process with failure
+    }
+};
+
+module.exports = connectDB;
+</file>
+<file path="backend/models/index.js">
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+
+// --- 1. User Schema ---
+const UserSchema = new Schema({
+    name: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    password_hash: { type: String, required: true },
+    role: { type: String, enum: ['customer', 'admin'], default: 'customer' },
+    created_at: { type: Date, default: Date.now }
+});
+const User = mongoose.model('User', UserSchema);
+
+// --- 2. Category Schema ---
+const CategorySchema = new Schema({
+    name: { type: String, required: true, unique: true },
+    description: { type: String }
+});
+const Category = mongoose.model('Category', CategorySchema);
+
+// --- 3. Product Schema ---
+const ProductSchema = new Schema({
+    category_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true },
+    name: { type: String, required: true },
+    description: { type: String, required: true },
+    price: { type: Number, required: true }, // Using Number for decimal representation
+    stock_quantity: { type: Number, required: true, default: 0 },
+    image_url: { type: String },
+    is_active: { type: Boolean, default: true }
+});
+const Product = mongoose.model('Product', ProductSchema);
+
+// --- 4. Address Schema ---
+const AddressSchema = new Schema({
+    line1: { type: String, required: true },
+    city: { type: String, required: true },
+    postal_code: { type: String, required: true },
+    country: { type: String, required: true }
+});
+// Embedding Address within User for simplicity in MVP
+UserSchema.virtual('address').embedSchema(AddressSchema);
+
+
+// --- 5. Cart Schema ---
+const CartSchema = new Schema({
+    user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, unique: true },
+    created_at: { type: Date, default: Date.now },
+    updated_at: { type: Date, default: Date.now }
+}, { timestamps: true });
+const Cart = mongoose.model('Cart', CartSchema);
+
+// --- 6. CartItem Schema ---
+const CartItemSchema = new Schema({
+    product_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
+    quantity: { type: Number, required: true, min: 1 },
+    unit_price: { type: Number, required: true }
+}, { _id: false }); // Composite key handling
+CartSchema.virtual('items').add({ type: [CartItemSchema] });
+const CartItem = mongoose.model('CartItem', CartSchema); // Using Cart model for items
+
+// --- 7. Order Schema ---
+const OrderSchema = new Schema({
+    user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    status: { type: String, enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled'], default: 'pending' },
+    total_amount: { type: Number, required: true },
+    shipping_address: { type: Schema.Types.Mixed, required: true }, // Using mixed type for embedded address
+    created_at: { type: Date, default: Date.now }
+});
+const Order = mongoose.model('Order', OrderSchema);
+
+// --- 8. OrderItem Schema ---
+const OrderItemSchema = new Schema({
+    product_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
+    quantity: { type: Number, required: true },
+    unit_price: { type: Number, required: true }
+});
+OrderSchema.virtual('items').add({ type: [OrderItemSchema] });
+const OrderItemModel = mongoose.model('OrderItem', OrderSchema);
+
+// --- 9. Payment Schema ---
+const PaymentSchema = new Schema({
+    order_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Order', required: true, unique: true },
+    method: { type: String, enum: ['credit_card', 'paypal', 'cash'], required: true },
+    status: { type: String, enum: ['pending', 'success', 'failed'], default: 'pending' },
+    transaction_reference: { type: String, unique: true, sparse: true },
+    paid_at: { type: Date, default: Date.now }
+});
+const Payment = mongoose.model('Payment', PaymentSchema);
+
+
+module.exports = {
+    User,
+    Category,
+    Product,
+    Cart,
+    CartItem,
+    Order,
+    Payment,
+    // Exporting models for easier access in controllers/services
+    models: {
+        User,
+        Category,
+        Product,
+        Cart,
+        Order,
+        Payment
+    }
+};
+</file>
+<file path="backend/services/businessService.js">
+const { User, Product, Cart, Order, Payment, models } = require('../models');
+const mongoose = require('mongoose');
+
+// Helper function to calculate total price of cart items
+const calculateCartTotal = async (cart) => {
+    let total = 0;
+    const items = cart.items;
+    for (const item of items) {
+        total += item.unit_price * item.quantity;
+    }
+    return parseFloat(total.toFixed(2));
+};
+
+/**
+ * Authentication Service
+ */
+const authService = {
+    registerUser: async (name, email, password) => {
+        // In a real app, hash the password here. Mocking for MVP.
+        const user = new User({ name, email, password_hash: 'mock_hash' });
+        await user.save();
+        return user;
+    },
+
+    loginUser: async (email, password) => {
+        // Mock login: Assume successful login if email exists
+        const user = await User.findOne({ email });
+        if (!user) {
+            throw new Error('Invalid credentials');
+        }
+        // In a real app, compare hashed password
+        return user;
+    }
+};
+
+/**
+ * Catalog Service
+ */
+const catalogService = {
+    getProducts: async (category = null, search = null, minPrice = null, maxPrice = null) => {
+        let query = {};
+        let filter = {};
+
+        if (category) {
+            query.category_id = category;
+        }
+
+        if (search) {
+            query.$or = [
+                { name: { $regex: search, $options: 'i' } },
+                { description: { $regex: search, $options: 'i' } }
+            ];
+        }
+
+        if (minPrice !== null && maxPrice !== null) {
+            query.price = { $gte: parseFloat(minPrice), $lte: parseFloat(maxPrice) };
+        }
+
+        const products = await Product.find(query).select('-__v');
+        return products;
+    },
+
+    getProductById: async (productId) => {
+        return Product.findById(productId).select('-__v');
+    }
+};
+
+/**
+ * Cart Service
+ */
+const cartService = {
+    getCart: async (userId) => {
+        const cart = await Cart.findOne({ user_id: userId }).populate('items.product_id');
+        if (!cart) {
+            // Initialize cart if it doesn't exist
+            const newCart = new Cart({ user_id: userId });
+            await newCart.save();
+            return newCart;
+        }
+        return cart;
+    },
+
+    addItemToCart: async (userId, productId, quantity, unitPrice) => {
+        const cart = await cartService.getCart(userId);
+        const product = await Product.findById(productId);
+
+        if (!product || product.stock_quantity < quantity) {
+            throw new Error('Product out of stock or invalid product.');
+        }
+
+        // Check if item already exists in cart
+        let existingItem = cart.items.find(item => item.product_id.toString() === productId);
+
+        if (existingItem) {
+            // Update quantity and ensure stock check is maintained
+            if (existingItem.quantity + quantity > product.stock_quantity) {
+                throw new Error('Cannot add this quantity. Stock limit exceeded.');
+            }
+            existingItem.quantity += quantity;
+        } else {
+            // Add new item
+            cart.items.push({
+                product_id: productId,
+                quantity: quantity,
+                unit_price: unitPrice
+            });
+        }
+
+        await cart.save();
+        return cart;
+    },
+
+    updateItemQuantity: async (userId, productId, newQuantity) => {
+        const cart = await cartService.getCart(userId);
+        const product = await Product.findById(productId);
+
+        if (!product) {
+            throw new Error('Product not found.');
+        }
+
+        if (newQuantity <= 0) {
+            // If quantity is 0 or less, remove the item
+            cart.items = cart.items.filter(item => item.product_id.toString() !== productId);
+            await cart.save();
+            return cart;
+        }
+
+        if (newQuantity > product.stock_quantity) {
+            throw new Error('Requested quantity exceeds available stock.');
+        }
+
+        // Update the item quantity
+        const item = cart.items.find(item => item.product_id.toString() === productId);
+        if (item) {
+            item.quantity = newQuantity;
+            await cart.save();
+        } else {
+            throw new Error('Item not found in cart.');
+        }
+        return cart;
+    },
+
+    removeItemFromCart: async (userId, productId) => {
+        const cart = await cartService.getCart(userId);
+        const initialLength = cart.items.length;
+        
+        // Filter out the item to be removed
+        cart.items = cart.items.filter(item => item.product_id.toString() !== productId);
+
+        if (cart.items.length === initialLength) {
+            throw new Error('Item not found in cart.');
+        }
+
+        await cart.save();
+        return cart;
+    }
+};
+
+/**
+ * Order/Checkout Service
+ */
+const orderService = {
+    checkout: async (userId, cartItems, shippingAddress) => {
+        // 1. Validate Stock and Calculate Total
+        let totalAmount = 0;
+        const itemsToOrder = [];
+
+        // Transaction start
+        const session = await mongoose.startSession();
+        session.startTransaction();
+
+        try {
+            // 2. Check Stock and Prepare Order Items
+            for (const item of cartItems) {
+                const product = await Product.findById(item.product_id).session(session);
+                if (!product || product.stock_quantity < item.quantity) {
+                    throw new Error(`Insufficient stock for ${product ? product.name : 'product'}.`);
+                }
+                
+                // Calculate item cost
+                const itemTotal = product.price * item.quantity;
+                totalAmount += itemTotal;
+                
+                itemsToOrder.push({
+                    product_id: product._id,
+                    quantity: item.quantity,
+                    unit_price: product.price
+                });
+            }
+
+            // 3. Create Order
+            const newOrder = new Order({
+                user_id: userId,
+                status: 'processing',
+                total_amount: totalAmount,
+                shipping_address: shippingAddress
+            });
+            await newOrder.save({ session });
+
+            // 4. Update Stock (Crucial step)
+            for (const item of itemsToOrder) {
+                await Product.findByIdAndUpdate(
+                    item.product_id,
+                    { $inc: { stock_quantity: -item.quantity } },
+                    { session }
+                );
+            }
+
+            // 5. Create Order Items Records
+            const orderItemRecords = itemsToOrder.map(item => ({
+                product_id: item.product_id,
+                quantity: item.quantity,
+                unit_price: item.unit_price
+            }));
+            await OrderItemModel.insertMany(orderItemRecords, { session });
+
+            // 6. Process Payment (Mocked)
+            const paymentReference = `TXN-${Date.now()}`;
+            const newPayment = new Payment({
+                order_id: newOrder._id,
+                method: 'mock_card',
+                status: 'success',
+                transaction_reference: paymentReference
+            });
+            await newPayment.save({ session });
+
+            // 7. Commit Transaction
+            await session.commitTransaction();
+            await session.endSession();
+
+            return {
+                order: newOrder,
+                payment: newPayment,
+                message: 'Order placed successfully.'
+            };
+
+        } catch (error) {
+            await session.abortTransaction();
+            throw error;
+        }
+    },
+
+    getOrderHistory: async (userId) => {
+        const orders = await Order.find({ user_id: userId }).populate('items');
+        return orders;
+    }
+};
+
+module.exports = {
+    authService,
+    catalogService,
+    cartService,
+    orderService
+};
+</file>
+<file path="backend/controllers/apiController.js">
+const { models } = require('../models');
+const { authService, catalogService, cartService, orderService } = require('../services/businessService');
+
+// --- Auth Controller ---
+exports.registerUser = async (req, res) => {
+    try {
+        const { name, email, password } = req.body;
+        if (!name || !email || !password) {
+            return res.status(400).json({ message: 'All fields are required.' });
+        }
+        const user = await authService.registerUser(name, email, password);
+        res.status(201).json({ message: 'User registered successfully', user: user });
+    } catch (error) {
+        res.status(500).json({ message: error.message || 'Registration failed.' });
+    }
+};
+
+exports.loginUser = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        const user = await authService.loginUser(email, password);
+        // In a real app, generate and return a JWT token here
+        res.status(200).json({ message: 'Login successful', user: user, token: 'mock_jwt_token' });
+    } catch (error) {
+        res.status(401).json({ message: error.message || 'Login failed.' });
+    }
+};
+
+// --- Catalog Controller ---
+exports.listProducts = async (req, res) => {
+    try {
+        const { category, search, minPrice, maxPrice } = req.query;
+        const products = await catalogService.getProducts(category, search, minPrice, maxPrice);
+        res.status(200).json(products);
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to retrieve products.', error: error.message });
+    }
+};
+
+exports.getProductDetails = async (req, res) => {
+    try {
+        const productId = req.params.productId;
+        const product = await catalogService.getProductById(productId);
+        if (!product) {
+            return res.status(404).json({ message: 'Product not found.' });
+        }
+        res.status(200).json(product);
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to retrieve product details.', error: error.message });
+    }
+};
+
+// --- Cart Controller ---
+exports.getCart = async (req, res) => {
+    try {
+        // Assuming user ID is passed via authentication middleware (req.user.id)
+        const userId = req.user ? req.user.id : req.params.userId; 
+        const cart = await cartService.getCart(userId);
+        res.status(200).json(cart);
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to retrieve cart.', error: error.message });
+    }
+};
+
+exports.addItemToCart = async (req, res) => {
+    try {
+        // Assuming user ID is passed via authentication middleware (req.user.id)
+        const userId = req.user ? req.user.id : req.params.userId;
+        const { productId, quantity } = req.body;
+        
+        // Fetch product price to ensure accuracy
+        const product = await models.Product.findById(productId);
+        if (!product) {
+            return res.status(404).json({ message: 'Product not found.' });
+        }
+
+        const cart = await cartService.addItemToCart(userId, productId, quantity, product.price);
+        res.status(200).json({ message: 'Item added to cart successfully.', cart });
+    } catch (error) {
+        res.status(400).json({ message: error.message || 'Failed to add item to cart.' });
+    }
+};
+
+exports.updateCartItem = async (req, res) => {
+    try {
+        // Assuming user ID is passed via authentication middleware (req.user.id)
+        const userId = req.user ? req.user.id : req.params.userId;
+        const { productId, quantity } = req.body;
+
+        const cart = await cartService.updateItemQuantity(userId, productId, parseInt(quantity));
+        res.status(200).json({ message: 'Cart updated successfully.', cart });
+    } catch (error) {
+        res.status(400).json({ message: error.message || 'Failed to update cart item.' });
+    }
+};
+
+exports.removeItemFromCart = async (req, res) => {
+    try {
+        // Assuming user ID is passed via authentication middleware (req.user.id)
+        const userId = req.user ? req.user.id : req.params.userId;
+        const { productId } = req.params;
+
+        const cart = await cartService.removeItemFromCart(userId, productId);
+        res.status(200).json({ message: 'Item removed from cart successfully.', cart });
+    } catch (error) {
+        res.status(400).json({ message: error.message || 'Failed to remove item from cart.' });
+    }
+};
+
+// --- Order Controller ---
+exports.placeOrder = async (req, res) => {
+    try {
+        // Assuming user ID is passed via authentication middleware (req.user.id)
+        const userId = req.user ? req.user.id : req.params.userId;
+        const { cartItems, shippingAddress } = req.body;
+
+        if (!cartItems || cartItems.length === 0 || !shippingAddress) {
+            return res.status(400).json({ message: 'Missing cart items or shipping address.' });
+        }
+
+        const result = await orderService.checkout(userId, cartItems, shippingAddress);
+        
+        // Mock email sending logic here
+        console.log(`[EMAIL MOCK] Sending order confirmation email to user ${userId} for Order ID: ${result.order._id}`);
+
+        res.status(201).json({ 
+            message: result.message, 
+            order: result.order, 
+            payment: result.payment 
+        });
+
+    } catch (error) {
+        res.status(400).json({ message: error.message || 'Order placement failed.' });
+    }
+};
+
+exports.getOrderHistory = async (req, res) => {
+    try {
+        // Assuming user ID is passed via authentication middleware (req.user.id)
+        const userId = req.user ? req.user.id : req.params.userId;
+        const history = await orderService.getOrderHistory(userId);
+        res.status(200).json(history);
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to retrieve order history.', error: error.message });
+    }
+};
+</file>
+<file path="backend/routes/apiRoutes.js">
+const express = require('express');
+const router = express.Router();
+const apiController = require('../controllers/apiController');
+
+// Middleware to simulate user authentication (for protected routes)
+// In a real app, this would verify JWT token
+const authMiddleware = (req, res, next) => {
+    // Mock user ID retrieval for testing purposes
+    req.user = { id: '60c72b2f9b1d8c0015e4d2c1' }; // Mock User ID
+    next();
+};
+
+// --- Authentication Routes ---
+router.post('/auth/register', apiController.registerUser);
+router.post('/auth/login', apiController.loginUser);
+
+// --- Catalog Routes ---
+router.get('/products', apiController.listProducts);
+router.get('/products/:productId', apiController.getProductDetails);
+
+// --- Cart Routes (Requires Auth) ---
+router.use(authMiddleware); // Apply auth middleware to cart routes
+router.get('/cart', apiController.getCart);
+router.post('/cart/items', apiController.addItemToCart);
+router.put('/cart/items/:productId', apiController.updateCartItem);
+router.delete('/cart/items/:productId', apiController.removeItemFromCart);
+
+// --- Order Routes (Requires Auth) ---
+router.post('/checkout', apiController.placeOrder);
+router.get('/orders', apiController.getOrderHistory);
+
+// --- Admin Routes (Mocked for completeness) ---
+// Note: Admin routes should ideally be protected by role-based middleware
+router.post('/admin/products', async (req, res) => {
+    // Mock implementation for POST /admin/products
+    try {
+        const { name, description, price, stock_quantity, category_id } = req.body;
+        const newProduct = await models.Product.create({
+            name, description

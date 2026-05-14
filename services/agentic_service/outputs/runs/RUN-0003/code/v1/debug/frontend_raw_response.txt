@@ -1,0 +1,410 @@
+<file path="frontend/package.json">
+{
+  "name": "autoforge-ecommerce-frontend",
+  "private": true,
+  "version": "0.0.0",
+  "type": "react-scripts",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint . --ext js,jsx --report-unused-directives --max-warnings 0",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.22.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.6",
+    "@types/react-dom": "^18.2.22",
+    "@vitejs/plugin-react": "^4.2.1",
+    "vite": "^5.2.0"
+  }
+}
+</file>
+<file path="frontend/index.html">
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AutoForge E-commerce Demo</title>
+    <link rel="stylesheet" href="/src/styles.css">
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
+</file>
+<file path="frontend/vite.config.js">
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+
+// https://vitejs.dev/config
+export default defineConfig({
+  plugins: [react()],
+});
+</file>
+<file path="frontend/src/styles.css">
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom utility classes for consistency */
+.btn-primary {
+    @apply bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-6 rounded-lg transition duration-150 ease-in-out shadow-md;
+}
+.btn-secondary {
+    @apply bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2 px-6 rounded-lg transition duration-150 ease-in-out border border-gray-300;
+}
+.card-shadow {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+</file>
+<file path="frontend/src/api.js">
+const API_BASE_URL = 'http://127.0.0.1:9000';
+
+/**
+ * Generic fetch wrapper for API calls.
+ * @param {string} endpoint - The API endpoint path.
+ * @param {object} [body] - The JSON body to send (for POST/PUT).
+ * @param {string} method - HTTP method (GET, POST, PUT, DELETE).
+ * @returns {Promise<object>} The JSON response data.
+ */
+async function apiFetch(endpoint, method = 'GET', body = null) {
+    const url = `${API_BASE_URL}${endpoint}`;
+    console.log(`[API Call] ${method} ${url}`);
+
+    const options = {
+        method: method,
+        headers: {
+            'Content-Type': 'application/json',
+            // Mocking basic authorization header
+            'Authorization': 'Bearer mock-token' 
+        },
+        body: body ? JSON.stringify(body) : null,
+    };
+
+    try {
+        const response = await fetch(url, options);
+
+        if (!response.ok) {
+            // Attempt to read error message from body
+            const errorBody = await response.json().catch(() => ({ message: 'Unknown error' }));
+            throw new Error(`API Error (${response.status}): ${errorBody.message || 'Failed to fetch data.'}`);
+        }
+
+        // Handle 204 No Content case
+        if (response.status === 204) {
+            return null;
+        }
+
+        return response.json();
+    } catch (error) {
+        console.error("API Fetch Error:", error);
+        // Throw a more user-friendly error
+        throw new Error(`Could not connect to the backend API. Please ensure the server is running at ${API_BASE_URL}. Details: ${error.message}`);
+    }
+}
+
+export const api = {
+    // Product Catalog & Details
+    getProducts: () => apiFetch('/products'),
+    getProductById: (productId) => apiFetch(`/products/${productId}`),
+
+    // Cart Management
+    getCart: () => apiFetch('/cart'),
+    addToCart: (productId, quantity = 1) => apiFetch('/cart/items', 'POST', { productId, quantity }),
+    updateCartItem: (itemId, quantity) => apiFetch(`/cart/items/${itemId}`, 'PUT', { quantity }),
+    removeFromCart: (itemId) => apiFetch(`/cart/items/${itemId}`, 'DELETE'),
+
+    // Checkout & Orders
+    checkout: (cartItems, shippingInfo, paymentInfo) => apiFetch('/checkout', 'POST', { cartItems, shippingInfo, paymentInfo }),
+    placeOrder: (orderData) => apiFetch('/orders', 'POST', orderData),
+    getOrderHistory: () => apiFetch('/orders'),
+
+    // Admin (Mocked for frontend structure)
+    createProduct: (productData) => apiFetch('/admin/products', 'POST', productData),
+};
+</file>
+<file path="frontend/src/main.jsx">
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App.jsx';
+import './styles.css';
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+);
+</file>
+<file path="frontend/src/App.jsx">
+import React, { useState, useEffect, useCallback } from 'react';
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
+import { api } from './api';
+
+// --- Components ---
+
+// 1. Layout/Header Component
+const Header = ({ cartCount, setPage }) => {
+    const navigate = useNavigate();
+    return (
+        <header className="bg-white shadow-md sticky top-0 z-30 border-b border-gray-200">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
+                {/* Logo/Brand */}
+                <div className="flex items-center space-x-2">
+                    <svg className="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 20l4-16m4 0l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                    <h1 className="text-2xl font-bold text-gray-900">AutoForge <span className="text-indigo-600">E-commerce</span></h1>
+                </div>
+
+                {/* Search Bar (Central) */}
+                <div className="flex-grow max-w-xl mx-8 hidden md:block">
+                    <div className="relative">
+                        <input type="text" placeholder="Search products, brands, or categories..." className="w-full py-2 pl-10 pr-4 border border-gray-300 rounded-full focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 shadow-sm" />
+                        <svg className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    </div>
+                </div>
+
+                {/* User Actions */}
+                <div className="flex items-center space-x-4">
+                    <button onClick={() => setPage('catalog')} className="text-gray-600 hover:text-indigo-600 transition duration-150 hidden sm:block">Catalog</button>
+                    <button onClick={() => setPage('orderHistory')} className="text-gray-600 hover:text-indigo-600 transition duration-150 hidden sm:block">Orders</button>
+                    <button onClick={() => setPage('cart')} className="relative p-2 text-gray-600 hover:text-indigo-600 transition duration-150">
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4z"></path></svg>
+                        {cartCount > 0 && (
+                            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">{cartCount}</span>
+                        )}
+                    </button>
+                    <button className="btn-primary text-sm py-2 px-4">Sign In</button>
+                </div>
+            </div>
+        </header>
+    );
+};
+
+// 2. Product Card Component
+const ProductCard = ({ product, onSelectProduct }) => (
+    <div className="bg-white rounded-xl overflow-hidden card-shadow flex flex-col hover:shadow-lg transition duration-300">
+        <img src={product.imageUrl || 'https://via.placeholder.com/400x300?text=AutoForge+Product'} alt={product.name} className="w-full h-48 object-cover" />
+        <div className="p-4 flex flex-col flex-grow">
+            <h3 className="text-xl font-semibold text-gray-900 mb-1">{product.name}</h3>
+            <p className="text-sm text-gray-500 mb-3 flex-grow">{product.description.substring(0, 80)}...</p>
+            <div className="flex justify-between items-center mt-auto pt-2 border-t border-gray-100">
+                <span className="text-2xl font-bold text-indigo-600">${product.price.toFixed(2)}</span>
+                <button 
+                    onClick={() => onSelectProduct(product.id)}
+                    className="btn-primary text-sm py-2 px-4"
+                >
+                    View Details
+                </button>
+            </div>
+        </div>
+    </div>
+);
+
+// 3. Product Catalog View (FR-001)
+const ProductCatalog = ({ setPage, setProduct, cartItems, addToCart }) => {
+    const [products, setProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [filter, setFilter] = useState('');
+    const [sortBy, setSortBy] = useState('price_asc');
+
+    useEffect(() => {
+        fetchProducts();
+    }, []);
+
+    const fetchProducts = async () => {
+        setLoading(true);
+        try {
+            const data = await api.getProducts();
+            setProducts(data);
+        } catch (error) {
+            console.error("Failed to fetch products:", error);
+            alert("Failed to load products. Check console for API details.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleAddToCart = async (product) => {
+        try {
+            await addToCart(product.id, 1);
+            alert(`${product.name} added to cart!`);
+        } catch (error) {
+            alert(`Error adding to cart: ${error.message}`);
+        }
+    };
+
+    const filteredAndSortedProducts = products
+        .filter(product => 
+            product.name.toLowerCase().includes(filter.toLowerCase()) || 
+            product.category.toLowerCase().includes(filter.toLowerCase())
+        )
+        .sort((a, b) => {
+            if (sortBy === 'price_asc') return a.price - b.price;
+            if (sortBy === 'price_desc') return b.price - a.price;
+            return 0;
+        });
+
+    if (loading) return <div className="p-8 text-center text-xl">Loading products...</div>;
+
+    return (
+        <div className="max-w-7xl mx-auto p-6">
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">Browse Our Forge</h2>
+
+            {/* Filtering and Sorting Controls */}
+            <div className="flex flex-col md:flex-row justify-between items-center mb-8 p-4 bg-gray-50 rounded-lg shadow-inner">
+                <input
+                    type="text"
+                    placeholder="Filter by name or category..."
+                    value={filter}
+                    onChange={(e) => setFilter(e.target.value)}
+                    className="p-2 border border-gray-300 rounded-lg w-full md:w-1/3 mb-4 md:mb-0"
+                />
+                <select
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                    className="p-2 border border-gray-300 rounded-lg w-full md:w-1/4"
+                >
+                    <option value="price_asc">Sort by: Price (Low to High)</option>
+                    <option value="price_desc">Sort by: Price (High to Low)</option>
+                    <option value="default">Default</option>
+                </select>
+            </div>
+
+            {/* Product Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                {filteredAndSortedProducts.length > 0 ? (
+                    filteredAndSortedProducts.map(product => (
+                        <div key={product.id} className="flex flex-col">
+                            <ProductCard 
+                                product={product} 
+                                onSelectProduct={setProduct} 
+                            />
+                            <button 
+                                onClick={() => handleAddToCart(product)}
+                                className="btn-primary mt-4 w-full"
+                            >
+                                Add to Cart
+                            </button>
+                        </div>
+                    ))
+                ) : (
+                    <p className="col-span-full text-center text-xl text-gray-500">No products found matching your criteria.</p>
+                )}
+            </div>
+        </div>
+    );
+};
+
+// 4. Product Details View (FR-002)
+const ProductDetails = ({ product, addToCart }) => {
+    if (!product) {
+        return <div className="max-w-7xl mx-auto p-10 text-center text-xl">Product not found.</div>;
+    }
+
+    return (
+        <div className="max-w-7xl mx-auto p-6 bg-gray-50 rounded-xl shadow-lg">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
+                {/* Image Gallery */}
+                <div className="relative">
+                    <img 
+                        src={product.imageUrl || 'https://via.placeholder.com/800x600?text=AutoForge+Product+Image'} 
+                        alt={product.name} 
+                        className="w-full h-auto object-cover rounded-xl shadow-xl"
+                    />
+                    {/* Mock Image Thumbnails */}
+                    <div className="flex space-x-3 mt-4">
+                        <img src="https://via.placeholder.com/100x100?text=View+1" alt="Thumbnail 1" className="w-20 h-20 object-cover rounded-lg border-2 border-indigo-600 cursor-pointer">
+                        <img src="https://via.placeholder.com/100x100?text=View+2" alt="Thumbnail 2" className="w-20 h-20 object-cover rounded-lg border-gray-200 cursor-pointer">
+                        <img src="https://via.placeholder.com/100x100?text=View+3" alt="Thumbnail 3" className="w-20 h-20 object-cover rounded-lg border-gray-200 cursor-pointer">
+                    </div>
+                </div>
+
+                {/* Product Info */}
+                <div className="flex flex-col justify-between">
+                    <div>
+                        <p className="text-sm font-medium text-indigo-600 uppercase tracking-wider mb-2">{product.category}</p>
+                        <h1 className="text-4xl font-extrabold text-gray-900 mb-4">{product.name}</h1>
+                        
+                        <div className="flex items-baseline mb-6">
+                            <span className="text-5xl font-bold text-indigo-600 mr-4">${product.price.toFixed(2)}</span>
+                            <span className="text-xl text-gray-400 line-through">${product.originalPrice ? product.originalPrice.toFixed(2) : 'N/A'}</span>
+                        </div>
+
+                        <h2 className="text-2xl font-semibold text-gray-800 mb-3">Description</h2>
+                        <p className="text-gray-700 mb-6 leading-relaxed">{product.description}</p>
+
+                        <div className="mb-8">
+                            <h3 className="text-xl font-semibold text-gray-800 mb-3">Specifications</h3>
+                            <ul className="list-disc list-inside text-gray-600 space-y-1">
+                                <li>Material: {product.material || 'Mixed'}</li>
+                                <li>Weight: {product.weight || '2 kg'}</li>
+                                <li>Availability: {product.inventory > 0 ? 'In Stock' : 'Out of Stock'}</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    {/* Add to Cart Section */}
+                    <div className="sticky top-24 bg-white p-6 rounded-xl shadow-lg border border-indigo-100">
+                        <div className="flex items-center space-x-4 mb-4">
+                            <label htmlFor="quantity" className="text-gray-700 font-medium">Quantity:</label>
+                            <input
+                                id="quantity"
+                                type="number"
+                                min="1"
+                                value={1}
+                                onChange={(e) => {}} // State management for quantity would go here
+                                className="w-20 p-2 border border-gray-300 rounded-lg text-center"
+                            />
+                        </div>
+                        <button 
+                            onClick={() => addToCart(product.id, 1)}
+                            className="btn-primary w-full text-lg py-3"
+                        >
+                            Add to Cart
+                        </button>
+                        <p className="text-sm text-center text-gray-500 mt-3">
+                            {product.inventory <= 0 ? 'Currently out of stock.' : 'Free returns within 30 days.'}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+// 5. Shopping Cart View (FR-003)
+const ShoppingCart = ({ cartItems, updateCartItem, removeFromCart, setPage }) => {
+    const cartTotal = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+    const shippingCost = 10.00;
+    const taxRate = 0.05;
+    const grandTotal = cartTotal + shippingCost + (cartTotal * taxRate);
+
+    return (
+        <div className="max-w-7xl mx-auto p-6">
+            <h2 className="text-3xl font-bold text-gray-900 mb-8">Your Shopping Cart</h2>
+
+            <div className="grid grid-cols-3 gap-8">
+                {/* Cart Items List (2/3 width) */}
+                <div className="col-span-2 bg-white p-6 rounded-xl shadow-lg">
+                    {cartItems.length === 0 ? (
+                        <div className="text-center py-12">
+                            <svg className="w-16 h-16 mx-auto text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4z"></path></svg>
+                            <h3 className="mt-4 text-xl font-semibold">Your cart is empty</h3>
+                            <p className="text-gray-500">Start shopping by browsing our amazing products.</p>
+                            <button onClick={() => setPage('catalog')} className="mt-6 btn-primary">
+                                Continue Shopping
+                            </button>
+                        </div>
+                    ) : (
+                        <div className="space-y-6">
+                            {cartItems.map(item => (
+                                <div key={item.id} className="flex items-center border-b pb-4 last:border-b-0">
+                                    {/* Product Image */}
+                                    <img src={item.imageUrl || 'https://via.placeholder.com/100x100?text=Product'} alt={item.name} className="w-24 h-24 object-cover rounded-lg mr-6">
+                                    
+                                    {/* Details */}

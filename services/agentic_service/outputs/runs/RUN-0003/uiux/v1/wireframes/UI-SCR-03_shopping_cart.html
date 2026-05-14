@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart | AutoForge E-commerce Demo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for better visual separation and professional look */
+        .card-shadow {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        .btn-primary {
+            @apply bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-6 rounded-lg transition duration-150 ease-in-out shadow-md;
+        }
+        .btn-secondary {
+            @apply bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2 px-6 rounded-lg transition duration-150 ease-in-out border border-gray-300;
+        }
+        .input-field {
+            @apply w-full p-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 transition duration-150;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+    <!-- Header/Navigation (Section 1) -->
+    <header class="bg-white shadow-sm sticky top-0 z-30 border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <div class="text-2xl font-bold text-indigo-600">
+                AutoForge <span class="text-gray-800">Demo</span>
+            </div>
+            <nav class="flex space-x-8 text-lg font-medium">
+                <a href="#" class="text-gray-600 hover:text-indigo-600 transition duration-150">Products</a>
+                <a href="#" class="text-gray-600 hover:text-indigo-600 transition duration-150">Order History</a>
+                <a href="#" class="text-gray-600 hover:text-indigo-600 transition duration-150">Contact</a>
+            </nav>
+            <div class="flex items-center space-x-4">
+                <button class="text-gray-600 hover:text-indigo-600 transition duration-150">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4z"></path></svg>
+                </button>
+                <button class="btn-primary text-sm py-2 px-4">
+                    Checkout (3 Items)
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Wrapper -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        
+        <!-- Breadcrumbs and Title (Section 2) -->
+        <div class="mb-8 border-b pb-4">
+            <p class="text-sm text-gray-500 mb-1">
+                <a href="#" class="hover:text-indigo-600">Home</a> / 
+                <a href="#" class="hover:text-indigo-600">Shopping Cart</a>
+            </p>
+            <h1 class="text-3xl font-extrabold text-gray-900">Your Shopping Cart</h1>
+            <p class="text-xl text-gray-500 mt-1">
+                Review your items before proceeding to secure checkout. (Screen ID: UI-SCR-03 | FR ID: FR-003)
+            </p>
+        </div>
+
+        <!-- Main Grid Layout (Cart Items + Summary) -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- Left/Center Panel: Cart Items List (2/3 width) (Section 3) -->
+            <div class="lg:col-span-2 space-y-6">
+                <h2 class="text-2xl font-bold text-gray-800 border-b pb-2 mb-4">Items in Cart (3)</h2>
+
+                <!-- Cart Item Card 1 -->
+                <div class="flex bg-white p-6 rounded-xl card-shadow border border-gray-100 items-center justify-between">
+                    <div class="flex items-center space-x-6 flex-grow">
+                        <!-- Product Image Placeholder -->
+                        <div class="w-24 h-24 bg-gray-200 flex-shrink-0 rounded-lg flex items-center justify-center text-gray-500 text-xs">
+                            [Image Placeholder]
+                        </div>
+                        
+                        <!-- Product Details -->
+                        <div class="flex-grow">
+                            <h3 class="text-xl font-semibold text-indigo-700">Premium Wireless Mechanical Keyboard</h3>
+                            <p class="text-sm text-gray-500 mb-2">Brand: AutoForge | Category: Electronics</p>
+                            <p class="text-gray-700 text-sm max-w-md">
+                                Experience flawless typing with our mechanical keyboard. Featuring customizable RGB backlighting and durable PBT keycaps. Perfect for gaming and professional use.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Quantity and Price Controls -->
+                    <div class="flex items-center space-x-8 flex-shrink-0">
+                        <!-- Quantity Selector -->
+                        <div class="flex items-center border border-gray-300 rounded-lg overflow-hidden">
+                            <button class="p-2 text-gray-600 hover:bg-gray-100 border-r"><span class="text-xl">−</span></button>
+                            <input type="number" value="2" min="1" class="w-12 text-center border-none focus:ring-0 p-2 text-lg" readonly>
+                            <button class="p-2 text-gray-600 hover:bg-gray-100 border-l"><span class="text-xl">＋</span></button>
+                        </div>
+                        
+                        <!-- Price and Total -->
+                        <div class="text-right">
+                            <p class="text-lg font-bold text-indigo-600">$149.99</p>
+                            <p class="text-sm text-gray-500">Unit Price</p>
+                        </div>
+
+                        <!-- Remove Button -->
+                        <button class="text-red-500 hover:text-red-700 transition duration-150 p-2 rounded-full hover:bg-red-50" title="Remove item">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Cart Item Card 2 -->
+                <div class="flex bg-white p-6 rounded-xl card-shadow border border-gray-100 items-center justify-between">
+                    <div class="flex items-center space-x-6 flex-grow">
+                        <!-- Product Image Placeholder -->
+                        <div class="w-24 h-24 bg-gray-200 flex-shrink-0 rounded-lg flex items-center justify-center text-gray-500 text-xs">
+                            [Image Placeholder]
+                        </div>
+                        
+                        <!-- Product Details -->
+                        <div class="flex-grow">
+                            <h3 class="text-xl font-semibold text-indigo-700">Ergonomic Vertical Mouse Pad</h3>
+                            <p class="text-sm text-gray-500 mb-2">Brand: AutoForge | Category: Accessories</p>
+                            <p class="text-gray-700 text-sm max-w-md">
+                                Designed for comfort and precision. Reduces wrist strain while offering superior tracking performance for all devices.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Quantity and Price Controls -->
+                    <div class="flex items-center space-x-8 flex-shrink-0">
+                        <!-- Quantity Selector -->
+                        <div class="flex items-center border border-gray-300 rounded-lg overflow-hidden">
+                            <button class="p-2 text-gray-600 hover:bg-gray-100 border-r"><span class="text-xl">−</span></button>
+                            <input type="number" value="1" min="1" class="w-12 text-center border-none focus:ring-0 p-2 text-lg" readonly>
+                            <button class="p-2 text-gray-600 hover:bg-gray-100 border-l"><span class="text-xl">＋</span></button>
+                        </div>
+                        
+                        <!-- Price and Total -->
+                        <div class="text-right">
+                            <p class="text-lg font-bold text-indigo-600">$45.00</p>
+                            <p class="text-sm text-gray-500">Unit Price</p>
+                        </div>
+
+                        <!-- Remove Button -->
+                        <button class="text-red-500 hover:text-red-700 transition duration-150 p-2 rounded-full hover:bg-red-50" title="Remove item">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Cart Item Card 3 -->
+                <div class="flex bg-white p-6 rounded-xl card-shadow border border-gray-100 items-center justify-between">
+                    <div class="flex items-center space-x-6 flex-grow">
+                        <!-- Product Image Placeholder -->
+                        <div class="w-24 h-24 bg-gray-200 flex-shrink-0 rounded-lg flex items-center justify-center text-gray-500 text-xs">
+                            [Image Placeholder]
+                        </div>
+                        
+                        <!-- Product Details -->
+                        <div class="flex-grow">
+                            <h3 class="text-xl font-semibold text-indigo-700">Ultra-Fast USB-C Charging Cable (3-Pack)</h3>
+                            <p class="text-sm text-gray-500 mb-2">Brand: AutoForge | Category: Cables & Chargers</p>
+                            <p class="text-gray-700 text-sm max-w-md">
+                                Durable braided cable set supporting PD 3.0 charging. Ideal for laptops, phones, and tablets.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Quantity and Price Controls -->
+                    <div class="flex items-center space-x-8 flex-shrink-0">
+                        <!-- Quantity Selector -->
+                        <div class="flex items-center border border-gray-300 rounded-lg overflow-hidden">
+                            <button class="p-2 text-gray-600 hover:bg-gray-100 border-r"><span class="text-xl">−</span></button>
+                            <input type="number" value="3" min="1" class="w-12 text-center border-none focus:ring-0 p-2 text-lg" readonly>
+                            <button class="p-2 text-gray-600 hover:bg-gray-100 border-l"><span class="text-xl">＋</span></button>
+                        </div>
+                        
+                        <!-- Price and Total -->
+                        <div class="text-right">
+                            <p class="text-lg font-bold text-indigo-600">$29.97</p>
+                            <p class="text-sm text-gray-500">Unit Price</p>
+                        </div>
+
+                        <!-- Remove Button -->
+                        <button class="text-red-500 hover:text-red-700 transition duration-150 p-2 rounded-full hover:bg-red-50" title="Remove item">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Informational/Help Section (Section 4) -->
+                <div class="p-6 bg-indigo-50 border-l-4 border-indigo-500 rounded-lg shadow-sm">
+                    <div class="flex items-start space-x-3">
+                        <svg class="w-6 h-6 text-indigo-600 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <div>
+                            <h4 class="text-lg font-semibold text-indigo-800">Need Help with Your Order?</h4>
+                            <p class="text-sm text-indigo-700">
+                                We offer 24/7 support. Check our FAQ or contact customer service for shipping estimates and returns policy.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Right Panel: Order Summary & Checkout (1/3 width) (Section 5) -->
+            <div class="lg:col-span-1 sticky top-24 h-fit">
+                <div class="bg-white p-8 rounded-xl card-shadow border border-gray-100 sticky top-0">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-3">Order Summary</h2>
+
+                    <!-- Summary Items List -->
+                    <div class="space-y-3 text-gray-600">
+                        <div class="flex justify-between">
+                            <span>Subtotal (3 items)</span>
+                            <span class="font-medium">$225.96</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Shipping Estimate (Standard)</span>
+                            <span class="font-medium">$10.00</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Taxes (Est.)</span>
+                            <span class="font-medium">$15.00</span>
+                        </div>
+                        <div class="flex justify-between pt-4 border-t border-dashed">
+                            <span class="text-xl font-bold text-gray-900">Order Total</span>
+                            <span class="text-xl font-bold text-indigo-600">$250.96</span>
+                        </div>
+                    </div>
+
+                    <!-- Coupon Code Area -->
+                    <div class="mt-8 pt-6 border-t border-gray-200">
+                        <label for="couponCode" class="block text-sm font-medium text-gray-700 mb-2">
+                            Have a discount code?
+                        </label>
+                        <div class="flex space-x-3">
+                            <input type="text" id="couponCode" placeholder="Enter code (e.g., SAVE10)" class="flex-grow input-field text-sm">
+                            <button class="bg-gray-200 text-gray-700 hover:bg-gray-300 px-4 py-2 rounded-lg text-sm font-medium transition duration-150">
+                                Apply
+                            </button>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-2">
+                            *Coupon codes must be valid and not expired. Max discount: $50.
+                        </p>
+                    </div>
+
+                    <!-- Primary CTA -->
+                    <button class="w-full mt-8 btn-primary text-lg py-3" onclick="alert('Proceeding to Checkout (FR-004)')">
+                        Proceed to Checkout &rarr;
+                    </button>
+
+                    <!-- Security Notice -->
+                    <div class="mt-6 text-center text-sm text-green-600 bg-green-50 p-3 rounded-lg border border-green-200">
+                        <p class="font-semibold">🔒 Secure Checkout:</p>
+                        <p class="text-xs">Your payment information is encrypted and processed securely by our trusted partners.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer/Metadata Area -->
+        <div class="mt-16 pt-8 border-t border-gray-200 text-center text-sm text-gray-400">
+            <p>
+                &copy; 2024 AutoForge E-commerce Demo. All rights reserved. | 
+                <span class="text-gray-500">Screen ID: UI-SCR-03</span> | 
+                <span class="text-gray-500">Related Requirement: FR-003</span>
+            </p>
+            <p class="mt-1">
+                <a href="#" class="hover:text-indigo-600">Privacy Policy</a> | 
+                <a href="#" class="hover:text-indigo-600">Terms of Service</a>
+            </p>
+        </div>
+
+    </main>
+
+</body>
+</html>

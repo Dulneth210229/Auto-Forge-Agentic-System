@@ -1,0 +1,613 @@
+<file path="frontend/package.json">
+{
+  "name": "autoforge-shop-frontend",
+  "private": true,
+  "version": "0.0.0",
+  "type": "react-scripts",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint . --ext js,jsx --report-unused-directives --max-warnings 0",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.6",
+    "@types/react-dom": "^18.2.22",
+    "@vitejs/plugin-react": "^4.2.1",
+    "vite": "^5.2.0"
+  }
+}
+</file>
+<file path="frontend/vite.config.js">
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+
+// https://vitejs.dev/config/
+export default defineConfig({
+  plugins: [react()],
+});
+</file>
+<file path="frontend/index.html">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoForge Shop - Premium Gear</title>
+    <link rel="stylesheet" href="./src/styles.css">
+</head>
+<body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+</body>
+</html>
+</file>
+<file path="frontend/src/styles.css">
+:root {
+    --primary-color: #333;
+    --secondary-color: #007bff;
+    --accent-color: #ff6b6b;
+    --light-bg: #f9f9f9;
+    --white: #ffffff;
+    --text-color: #444;
+    --border-color: #ddd;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--light-bg);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+/* Utility Classes */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Header */
+header {
+    background-color: var(--white);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    padding: 15px 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.logo {
+    font-size: 1.8em;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.nav-menu a {
+    text-decoration: none;
+    color: var(--primary-color);
+    margin-left: 25px;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.nav-menu a:hover {
+    color: var(--secondary-color);
+}
+
+.nav-icons button {
+    background: none;
+    border: none;
+    font-size: 1.2em;
+    cursor: pointer;
+    margin-left: 20px;
+    color: var(--primary-color);
+}
+
+/* Buttons */
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+.btn-primary {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.btn-secondary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #333;
+}
+
+/* Product Grid */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    padding: 20px 0;
+}
+
+.product-card {
+    background: var(--white);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    overflow: hidden;
+    text-align: center;
+    transition: box-shadow 0.3s;
+}
+
+.product-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.product-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.product-info {
+    padding: 15px;
+}
+
+.product-info h3 {
+    font-size: 1.2em;
+    margin-bottom: 5px;
+}
+
+.product-info p {
+    color: #777;
+    font-size: 0.9em;
+    margin-bottom: 10px;
+}
+
+.product-price {
+    font-size: 1.4em;
+    color: var(--secondary-color);
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+/* Layout Specifics */
+.page-section {
+    padding: 40px 0;
+}
+
+.cart-layout {
+    display: flex;
+    gap: 30px;
+    padding: 40px 0;
+}
+
+.cart-items-list {
+    flex: 3;
+}
+
+.cart-summary-sidebar {
+    flex: 1;
+    background: var(--white);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    height: fit-content;
+}
+
+.cart-item {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    padding: 15px 0;
+}
+
+.cart-item img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    margin-right: 15px;
+    border-radius: 4px;
+}
+
+.cart-item-details {
+    flex-grow: 1;
+}
+
+.cart-item-details h4 {
+    margin-bottom: 5px;
+}
+
+.cart-item-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.cart-item-controls input {
+    width: 50px;
+    padding: 5px;
+    text-align: center;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+}
+
+.cart-item-controls button {
+    background: none;
+    border: none;
+    color: var(--accent-color);
+    cursor: pointer;
+    font-size: 1.2em;
+}
+
+/* Checkout Form */
+.checkout-form-group {
+    margin-bottom: 20px;
+}
+
+.checkout-form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.checkout-form-group input,
+.checkout-form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 1em;
+}
+
+/* Order History */
+.order-history-list {
+    margin-top: 20px;
+}
+
+.order-card {
+    background: var(--white);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.order-card h3 {
+    color: var(--secondary-color);
+    margin-bottom: 10px;
+}
+
+.order-details p {
+    margin-bottom: 5px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        padding: 15px 20px;
+    }
+    .nav-menu {
+        margin: 10px 0;
+    }
+    .nav-menu a {
+        margin: 0 10px;
+        display: inline-block;
+    }
+    .cart-layout {
+        flex-direction: column;
+    }
+    .cart-summary-sidebar {
+        margin-top: 0;
+    }
+}
+</file>
+<file path="frontend/src/api.js">
+const API_BASE_URL = 'http://127.0.0.1:9000';
+
+/**
+ * Utility function to simulate API delay
+ * @returns {Promise<void>}
+ */
+const delay = () => new Promise(resolve => setTimeout(resolve, 500));
+
+/**
+ * Fetches all products for browsing.
+ * @returns {Promise<Array>} List of products.
+ */
+export const fetchProducts = async () => {
+    console.log('API Call: GET /products');
+    await delay();
+    // Mock data structure matching expected API response
+    return [
+        { id: 1, name: "Turbo Charger Kit", category: "Engine", price: 499.99, description: "High-performance kit for maximum horsepower.", stock: 15, imageUrl: "https://via.placeholder.com/400x200/333333/FFFFFF?text=Turbo+Charger" },
+        { id: 2, name: "Carbon Fiber Spoiler", category: "Body Kits", price: 199.50, description: "Lightweight and aggressive spoiler design.", stock: 30, imageUrl: "https://via.placeholder.com/400x200/666666/FFFFFF?text=Spoiler" },
+        { id: 3, name: "Performance Oil Filter", category: "Maintenance", price: 29.99, description: "Optimized filtration for clean engine operation.", stock: 100, imageUrl: "https://via.placeholder.com/400x200/999999/FFFFFF?text=Oil+Filter" },
+        { id: 4, name: "Racing Brake Pads", category: "Braking", price: 89.00, description: "Superior stopping power for track use.", stock: 22, imageUrl: "https://via.placeholder.com/400x200/cc6666/FFFFFF?text=Brake+Pads" },
+        { id: 5, name: "Steering Wheel Grip", category: "Interior", price: 75.00, description: "Ergonomic grip for better control.", stock: 50, imageUrl: "https://via.placeholder.com/400x200/3399ff/FFFFFF?text=Grip" },
+    ];
+};
+
+/**
+ * Fetches details for a specific product.
+ * @param {number} productId
+ * @returns {Promise<Object>} Product details.
+ */
+export const fetchProductDetails = async (productId) => {
+    console.log(`API Call: GET /products/${productId}`);
+    await delay();
+    // Mock detailed product data
+    if (productId === 1) {
+        return {
+            id: 1,
+            name: "Turbo Charger Kit",
+            category: "Engine",
+            price: 499.99,
+            description: "The ultimate upgrade for your engine. This kit includes a high-efficiency turbocharger, intercooler, and necessary piping, guaranteeing maximum horsepower and reliable performance under extreme conditions. Perfect for enthusiasts who demand the best.",
+            stock: 15,
+            imageUrl: "https://via.placeholder.com/800x500/333333/FFFFFF?text=Turbo+Charger+Kit",
+            specs: ["Material: Aircraft Aluminum", "Boost: 1.5 Bar", "Compatibility: V6/V8"],
+        };
+    }
+    return {
+        id: productId,
+        name: "Product Not Found",
+        category: "N/A",
+        price: 0.00,
+        description: "Product details could not be loaded.",
+        stock: 0,
+        imageUrl: "https://via.placeholder.com/800x500/cccccc/333333?text=Image+Unavailable",
+        specs: [],
+    };
+};
+
+/**
+ * Adds an item to the cart.
+ * @param {number} productId
+ * @param {number} quantity
+ * @returns {Promise<Object>} Updated cart state.
+ */
+export const addToCart = async (productId, quantity) => {
+    console.log(`API Call: POST /cart/items (Product ${productId}, Qty ${quantity})`);
+    await delay();
+    // Mock successful addition
+    return { success: true, message: "Item added to cart successfully." };
+};
+
+/**
+ * Gets the current cart contents.
+ * @returns {Promise<Array>} List of items in the cart.
+ */
+export const getCart = async () => {
+    console.log('API Call: GET /cart');
+    await delay();
+    // Mock cart data
+    return [
+        { id: 101, productId: 1, name: "Turbo Charger Kit", price: 499.99, quantity: 1, imageUrl: "https://via.placeholder.com/80x80/333333/FFFFFF?text=Turbo" },
+        { id: 102, productId: 3, name: "Performance Oil Filter", price: 29.99, quantity: 2, imageUrl: "https://via.placeholder.com/80x80/999999/FFFFFF?text=Filter" },
+    ];
+};
+
+/**
+ * Updates the quantity of an item in the cart.
+ * @param {number} itemId
+ * @param {number} quantity
+ * @returns {Promise<Object>} Updated cart state.
+ */
+export const updateCartItem = async (itemId, quantity) => {
+    console.log(`API Call: PUT /cart/items/${itemId} (Qty ${quantity})`);
+    await delay();
+    return { success: true, message: "Cart updated." };
+};
+
+/**
+ * Removes an item from the cart.
+ * @param {number} itemId
+ * @returns {Promise<Object>} Updated cart state.
+ */
+export const removeFromCart = async (itemId) => {
+    console.log(`API Call: DELETE /cart/items/${itemId}`);
+    await delay();
+    return { success: true, message: "Item removed from cart." };
+};
+
+/**
+ * Processes the checkout and places the order.
+ * @param {Object} cartItems - Items to purchase.
+ * @param {number} discountCode - Optional discount code.
+ * @param {Object} shippingInfo - Shipping details.
+ * @returns {Promise<Object>} Order confirmation details.
+ */
+export const placeOrder = async (cartItems, discountCode, shippingInfo) => {
+    console.log('API Call: POST /checkout');
+    await delay();
+
+    // Mock calculation logic
+    let subtotal = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+    let total = subtotal;
+    let discountAmount = 0;
+
+    if (discountCode === "SAVE10") {
+        discountAmount = subtotal * 0.10;
+        total = subtotal - discountAmount;
+    }
+
+    const orderConfirmation = {
+        success: true,
+        orderId: Math.floor(Math.random() * 1000000) + 500000,
+        totalPrice: total.toFixed(2),
+        discountApplied: discountAmount.toFixed(2),
+        message: "Order placed successfully! Confirmation email sent.",
+        orderDate: new Date().toLocaleDateString(),
+    };
+
+    console.log('API Call: POST /orders');
+    await delay();
+    return orderConfirmation;
+};
+
+/**
+ * Fetches the user's order history.
+ * @returns {Promise<Array>} List of past orders.
+ */
+export const fetchOrderHistory = async () => {
+    console.log('API Call: GET /orders');
+    await delay();
+    // Mock order history data
+    return [
+        {
+            orderId: 500123,
+            date: "2024-07-20",
+            total: 1250.00,
+            status: "Delivered",
+            items: [{ name: "Turbo Charger Kit", qty: 1, price: 499.99 }, { name: "Carbon Fiber Spoiler", qty: 1, price: 199.50 }, { name: "Racing Brake Pads", qty: 1, price: 89.00 }],
+        },
+        {
+            orderId: 500987,
+            date: "2024-06-15",
+            total: 159.98,
+            status: "Shipped",
+            items: [{ name: "Performance Oil Filter", qty: 2, price: 29.99 }],
+        }
+    ];
+};
+</file>
+<file path="frontend/src/main.jsx">
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App.jsx';
+import './styles.css';
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+);
+</file>
+<file path="frontend/src/App.jsx">
+import React, { useState, useEffect, useCallback } from 'react';
+import { fetchProducts, fetchProductDetails, addToCart, getCart, updateCartItem, removeFromCart, placeOrder, fetchOrderHistory } from './api';
+
+// --- Components ---
+
+/**
+ * Global Header Component
+ * Handles navigation and cart display.
+ */
+const Header = ({ cartCount, setView, userRole }) => {
+    const handleCartClick = () => {
+        setView('cart');
+    };
+
+    return (
+        <header>
+            <div className="logo">AutoForge Shop</div>
+            <nav className="nav-menu">
+                <a href="#" onClick={() => setView('home')}>Home</a>
+                <a href="#" onClick={() => setView('browse')}>Shop</a>
+                <a href="#" onClick={() => setView('orderHistory')}>Orders</a>
+                {userRole === 'customer' && <a href="#" onClick={() => setView('profile')}>Profile</a>}
+            </nav>
+            <div className="nav-icons">
+                <button onClick={() => setView('profile')}>👤</button>
+                <button onClick={handleCartClick} style={{ position: 'relative' }}>
+                    🛒 Cart ({cartCount})
+                </button>
+            </div>
+        </header>
+    );
+};
+
+/**
+ * Product Card Component for listing pages.
+ */
+const ProductCard = ({ product, onSelectProduct }) => (
+    <div className="product-card">
+        <img src={product.imageUrl} alt={product.name} />
+        <div className="product-info">
+            <h3>{product.name}</h3>
+            <p>{product.category}</p>
+            <p>{product.description.substring(0, 60)}...</p>
+            <div className="product-price">${product.price.toFixed(2)}</div>
+            <button 
+                className="btn btn-primary" 
+                onClick={() => onSelectProduct(product.id)}
+            >
+                View Details
+            </button>
+        </div>
+    </div>
+);
+
+/**
+ * Product Listing/Browsing View (FR-001, FR-007)
+ */
+const ProductListing = ({ products, onSelectProduct }) => {
+    const [searchTerm, setSearchTerm] = useState('');
+    const [selectedCategory, setSelectedCategory] = useState('All');
+
+    const filteredProducts = products.filter(product => {
+        const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                              product.category.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesCategory = selectedCategory === 'All' || product.category === selectedCategory;
+        return matchesSearch && matchesCategory;
+    });
+
+    return (
+        <div className="page-section">
+            <h1 style={{ margin-bottom: 20px }}>Browse Our Gear</h1>
+            
+            {/* Search and Filter Bar */}
+            <div style={{ display: 'flex', gap: '20px', marginBottom: '30px', padding: '20px', background: 'white', border-radius: '8px', box-shadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+                <input
+                    type="text"
+                    placeholder="Search by name or category..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    style={{ flexGrow: 1, padding: '10px', border: '1px solid #ccc', borderRadius: '4px' }}
+                />
+                <select
+                    value={selectedCategory}
+                    onChange={(e) => setSelectedCategory(e.target.value)}
+                    style={{ padding: '10px', border: '1px solid #ccc', borderRadius: '4px' }}
+                >
+                    <option value="All">All Categories</option>
+                    {['Engine', 'Body Kits', 'Maintenance', 'Braking', 'Interior'].map(cat => (
+                        <option key={cat} value={cat}>{cat}</option>
+                    ))}
+                </select>
+                <button className="btn btn-secondary" style={{ cursor: 'default' }}>Search</button>
+            </div>
+
+            {/* Product Grid */}
+            <div className="product-grid">
+                {filteredProducts.length > 0 ? (
+                    filteredProducts.map(product => (
+                        <ProductCard key={

@@ -3,7 +3,7 @@
 **Run ID:** RUN-0001  
 **Stage:** testing  
 **Version:** v1  
-**Generated At:** 2026-05-14T06:38:26.630491+00:00  
+**Generated At:** 2026-05-14T21:57:37.941446+00:00  
 **Target Path:** outputs/runs/RUN-0001/code/v1/generated_app
 
 ---
@@ -13,7 +13,7 @@
 | Field | Value |
 |---|---|
 | Status | **FAIL** |
-| Reason | 4 test(s) failed. |
+| Reason | 1 test(s) failed. |
 | Policy | FAIL if any generated test fails. |
 
 ---
@@ -22,9 +22,9 @@
 
 | Metric | Count |
 |---|---:|
-| Total Tests | 33 |
-| Passed | 29 |
-| Failed | 4 |
+| Total Tests | 1 |
+| Passed | 0 |
+| Failed | 1 |
 | Skipped | 0 |
 | Not Run | 0 |
 
@@ -35,8 +35,8 @@
 | Metric | Value |
 |---|---:|
 | Test Coverage | 1.0 |
-| Pass Rate | 0.88 |
-| Execution Efficiency | 472.0 ms |
+| Pass Rate | 0.0 |
+| Execution Efficiency | 392.0 ms |
 
 ---
 
@@ -58,10 +58,10 @@
 |---|---:|
 | Generated Test Files | 8 |
 | Test Cases | 8 |
-| Execution Results | 33 |
+| Execution Results | 1 |
 | Regression Test Cases | 5 |
 | Security Validation Cases | 4 |
-| Failed Results | 4 |
+| Failed Results | 1 |
 
 ---
 
@@ -69,10 +69,7 @@
 
 | Test ID | Status | Duration | Message |
 |---|---|---:|---|
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_regression_cases.py::test_regression_negative_quantity_is_rejected | failed | 14 ms | Test failed. See pytest stdout/stderr for details. |
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_regression_cases.py::test_regression_missing_payment_or_customer_is_rejected | failed | 14 ms | Test failed. See pytest stdout/stderr for details. |
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_validation_edge_cases.py::test_customer_or_payment_validation_exists | failed | 14 ms | Test failed. See pytest stdout/stderr for details. |
-| outputs/runs/RUN-0001/tests/v1/generated_tests/test_validation_edge_cases.py::test_out_of_stock_handling_exists | failed | 14 ms | Test failed. See pytest stdout/stderr for details. |
+| PYTEST-RUN-001 | failed | 392 ms | 4 failed, 29 passed in 0.17s |
 
 ---
 

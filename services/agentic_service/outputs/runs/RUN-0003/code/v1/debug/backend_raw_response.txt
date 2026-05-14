@@ -1,0 +1,593 @@
+<file path="backend/package.json">
+{
+  "name": "autoforge-ecommerce-backend",
+  "version": "1.0.0",
+  "description": "Backend for AutoForge E-commerce Demo",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "mongoose": "^8.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
+</file>
+<file path="backend/.env.example">
+# Server Configuration
+PORT=9000
+
+# MongoDB Connection String
+MONGO_URI=mongodb://localhost:27017/autoforge_db
+
+# Secret Keys
+JWT_SECRET=your_super_secret_key
+</file>
+<file path="backend/config/db.js">
+const mongoose = require('mongoose');
+
+const connectDB = async () => {
+    try {
+        await mongoose.connect(process.env.MONGO_URI, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+            useCreateIndex: true,
+            useFindAndModify: false
+        });
+        console.log('MongoDB Connected successfully.');
+    } catch (err) {
+        console.error('MongoDB Connection Error:', err.message);
+        process.exit(1);
+    }
+};
+
+module.exports = connectDB;
+</file>
+<file path="backend/models/index.js">
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+
+// 1. User Schema
+const UserSchema = new Schema({
+    name: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    password_hash: { type: String, required: true },
+    role: { type: String, enum: ['customer', 'admin'], default: 'customer' },
+    created_at: { type: Date, default: Date.utc }
+});
+const User = mongoose.model('User', UserSchema);
+
+// 2. Category Schema
+const CategorySchema = new Schema({
+    name: { type: String, required: true, unique: true },
+    description: { type: String }
+});
+const Category = mongoose.model('Category', CategorySchema);
+
+// 3. Product Schema
+const ProductSchema = new Schema({
+    category_id: { type: Schema.Types.ObjectId, ref: 'Category', required: true },
+    name: { type: String, required: true },
+    description: { type: String, required: true },
+    price: { type: Number, required: true }, // Stored as decimal/float
+    stock_quantity: { type: Number, required: true, default: 0 },
+    image_url: { type: String },
+    is_active: { type: Boolean, default: true }
+});
+const Product = mongoose.model('Product', ProductSchema);
+
+// 4. Address Schema
+const AddressSchema = new Schema({
+    user_id: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    line1: { type: String, required: true },
+    city: { type: String, required: true },
+    postal_code: { type: String, required: true },
+    country: { type: String, required: true }
+});
+const Address = mongoose.model('Address', AddressSchema);
+
+// 5. Cart Schema
+const CartSchema = new Schema({
+    user_id: { type: Schema.Types.ObjectId, ref: 'User', required: true, unique: true },
+    created_at: { type: Date, default: Date.utc },
+    updated_at: { type: Date, default: Date.utc }
+});
+const Cart = mongoose.model('Cart', CartSchema);
+
+// 6. CartItem Schema
+const CartItemSchema = new Schema({
+    cart_id: { type: Schema.Types.ObjectId, ref: 'Cart', required: true },
+    product_id: { type: Schema.Types.ObjectId, ref: 'Product', required: true },
+    quantity: { type: Number, required: true, min: 1 },
+    unit_price: { type: Number, required: true }
+});
+const CartItem = mongoose.model('CartItem', CartItemSchema);
+
+// 7. Order Schema
+const OrderSchema = new Schema({
+    user_id: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    status: { type: String, enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled'], default: 'pending' },
+    total_amount: { type: Number, required: true },
+    shipping_address: { type: Schema.Types.ObjectId, ref: 'Address', required: true },
+    created_at: { type: Date, default: Date.utc }
+});
+const Order = mongoose.model('Order', OrderSchema);
+
+// 8. OrderItem Schema
+const OrderItemSchema = new Schema({
+    order_id: { type: Schema.Types.ObjectId, ref: 'Order', required: true },
+    product_id: { type: Schema.Types.ObjectId, ref: 'Product', required: true },
+    quantity: { type: Number, required: true },
+    unit_price: { type: Number, required: true }
+});
+const OrderItem = mongoose.model('OrderItem', OrderItemSchema);
+
+// 9. Payment Schema
+const PaymentSchema = new Schema({
+    order_id: { type: Schema.Types.ObjectId, ref: 'Order', required: true, unique: true },
+    method: { type: String, enum: ['credit_card', 'paypal', 'cash'], required: true },
+    status: { type: String, enum: ['pending', 'paid', 'failed', 'refunded'], default: 'pending' },
+    transaction_reference: { type: String, unique: true, sparse: true },
+    paid_at: { type: Date }
+});
+const Payment = mongoose.model('Payment', PaymentSchema);
+
+module.exports = {
+    User,
+    Category,
+    Product,
+    Address,
+    Cart,
+    CartItem,
+    Order,
+    OrderItem,
+    Payment
+};
+</file>
+<file path="backend/services/businessService.js">
+const { Product, Cart, CartItem, Order, OrderItem, Payment } = require('../models');
+const mongoose = require('mongoose');
+
+/**
+ * Helper function to calculate total cost of items in the cart.
+ * @param {Array} items - Array of CartItem documents.
+ * @returns {number} Total amount.
+ */
+const calculateCartTotal = async (items) => {
+    let total = 0;
+    for (const item of items) {
+        total += item.quantity * item.unit_price;
+    }
+    return parseFloat(total.toFixed(2));
+};
+
+/**
+ * FR-001: Browse Products
+ * @param {Object} filters - Filtering criteria (e.g., categoryId, minPrice).
+ * @param {Object} sort - Sorting criteria (e.g., sortBy, direction).
+ * @returns {Promise<Array>} List of products.
+ */
+const getProducts = async (filters = {}, sort = {}) => {
+    let query = {};
+    let filterConditions = [];
+
+    if (filters.categoryId) {
+        query.category_id = filters.categoryId;
+        filterConditions.push({ category_id: filters.categoryId });
+    }
+    if (filters.minPrice) {
+        filterConditions.push({ price: { $gte: parseFloat(filters.minPrice) } });
+    }
+    if (filters.maxPrice) {
+        filterConditions.push({ price: { $lte: parseFloat(filters.maxPrice) } });
+    }
+
+    if (filterConditions.length > 0) {
+        query = { $and: filterConditions };
+    }
+
+    const productList = await Product.find(query)
+        .select('name description price image_url stock_quantity')
+        .sort(sort.sortBy ? { [sort.sortBy]: sort.direction === 'asc' ? 1 : -1 } : { createdAt: -1 })
+        .limit(sort.limit || 20);
+
+    return productList;
+};
+
+/**
+ * FR-002: View Product Details
+ * @param {string} productId - ID of the product.
+ * @returns {Promise<Object>} Detailed product information.
+ */
+const getProductDetails = async (productId) => {
+    const product = await Product.findById(productId).select('-stock_quantity');
+    if (!product) {
+        throw new Error('Product not found');
+    }
+    return product;
+};
+
+/**
+ * FR-003: Manage Shopping Cart - Get Cart
+ * @param {string} userId - ID of the user.
+ * @returns {Promise<{cart: Object, items: Array}>} Cart details and items.
+ */
+const getCartDetails = async (userId) => {
+    const cart = await Cart.findOne({ user_id: userId });
+    if (!cart) {
+        throw new Error('Cart not found');
+    }
+    const items = await CartItem.find({ cart_id: cart._id }).populate('product_id', 'name price image_url');
+    
+    const cartItemsWithDetails = await Promise.all(items.map(async (item) => {
+        const product = await Product.findById(item.product_id);
+        return {
+            ...item.toObject(),
+            productName: product ? product.name : 'Unknown Product',
+            productImage: product ? product.image_url : null,
+            productPrice: product ? product.price : item.unit_price
+        };
+    }));
+
+    return { cart: cart, items: cartItemsWithDetails };
+};
+
+/**
+ * FR-003: Manage Shopping Cart - Add/Update Item
+ * @param {string} userId - ID of the user.
+ * @param {string} productId - ID of the product.
+ * @param {number} quantity - Quantity to add/update.
+ * @returns {Promise<CartItem>} Updated cart item.
+ */
+const updateCartItem = async (userId, productId, quantity) => {
+    const cart = await Cart.findOne({ user_id: userId });
+    if (!cart) {
+        throw new Error('Cart not found');
+    }
+
+    const product = await Product.findById(productId);
+    if (!product || product.stock_quantity < quantity) {
+        throw new Error('Product unavailable or insufficient stock.');
+    }
+
+    let cartItem = await CartItem.findOne({ cart_id: cart._id, product_id: productId });
+
+    if (cartItem) {
+        // Update quantity
+        cartItem.quantity += quantity;
+        await cartItem.save();
+    } else {
+        // Create new item
+        const unitPrice = product.price;
+        const newItem = new CartItem({
+            cart_id: cart._id,
+            product_id: productId,
+            quantity: quantity,
+            unit_price: unitPrice
+        });
+        await newItem.save();
+    }
+    return await CartItem.findOne({ cart_id: cart._id, product_id: productId });
+};
+
+/**
+ * FR-003: Manage Shopping Cart - Remove Item
+ * @param {string} cartId - ID of the cart.
+ * @param {string} productId - ID of the product to remove.
+ * @returns {Promise<Boolean>} Success status.
+ */
+const removeItemFromCart = async (cartId, productId) => {
+    const result = await CartItem.deleteOne({ cart_id: cartId, product_id: productId });
+    if (result.deletedCount === 0) {
+        throw new Error('Item not found in cart.');
+    }
+    // Optionally, clear the cart if it becomes empty
+    // await Cart.findByIdAndUpdate(cartId, { $set: 'empty' });
+    return true;
+};
+
+/**
+ * FR-004 & FR-005: Checkout Process & Place Order
+ * @param {string} userId - ID of the user.
+ * @param {Object} shippingAddressData - Address details.
+ * @param {string} paymentMethod - Payment method used.
+ * @param {string} paymentToken - Mock payment token/reference.
+ * @returns {Promise<{order: Object, payment: Object}>} Confirmed order and payment details.
+ */
+const placeOrder = async (userId, shippingAddressData, paymentMethod, paymentToken) => {
+    // 1. Get current cart items
+    const cartDetails = await getCartDetails(userId);
+    const cartItems = cartDetails.items;
+
+    if (cartItems.length === 0) {
+        throw new Error('Cannot place order: Cart is empty.');
+    }
+
+    // 2. Calculate totals (BR-004)
+    const totalAmount = await calculateCartTotal(cartItems);
+    
+    // 3. Create Order (BR-006: Snapshotting)
+    const orderItems = cartItems.map(item => ({
+        product_id: item.product_id,
+        quantity: item.quantity,
+        unit_price: item.productPrice
+    }));
+
+    const newOrder = new Order({
+        user_id: userId,
+        status: 'pending', // Initial status
+        total_amount: totalAmount,
+        shipping_address: shippingAddressData.id // Assuming address ID is passed
+    });
+    const savedOrder = await newOrder.save();
+
+    // 4. Create OrderItems
+    const orderItemPromises = orderItems.map(item => new OrderItem({
+        order_id: savedOrder._id,
+        product_id: item.product_id,
+        quantity: item.quantity,
+        unit_price: item.unit_price
+    })).then(item => item.save());
+    await Promise.all(orderItemPromises);
+
+    // 5. Process Payment (Mocked)
+    const payment = new Payment({
+        order_id: savedOrder._id,
+        method: paymentMethod,
+        status: 'paid', // Assume success for MVP
+        transaction_reference: paymentToken
+    });
+    const savedPayment = await payment.save();
+
+    // 6. Update Inventory (BR-001)
+    const inventoryUpdatePromises = cartItems.map(async (item) => {
+        await Product.findByIdAndUpdate(
+            item.product_id,
+            { $inc: { stock_quantity: -item.quantity } }
+        );
+    });
+    await Promise.all(inventoryUpdatePromises);
+
+    // 7. Update Order Status (BR-003)
+    await Order.findByIdAndUpdate(savedOrder._id, { status: 'processing' });
+
+    // 8. Clear Cart (BR-002)
+    await CartItem.deleteMany({ cart_id: cartDetails.cart._id });
+    
+    return { order: savedOrder, payment: savedPayment };
+};
+
+/**
+ * FR-006: View Order History
+ * @param {string} userId - ID of the user.
+ * @returns {Promise<Array>} List of orders.
+ */
+const getOrderHistory = async (userId) => {
+    const orders = await Order.find({ user_id: userId })
+        .populate('shipping_address', 'line1 city postal_code country')
+        .sort({ created_at: -1 });
+    
+    return orders;
+};
+
+/**
+ * FR-007: Admin Product Management - Create Product
+ * @param {Object} productData - Product details.
+ * @returns {Promise<Product>} Created product.
+ */
+const createProduct = async (productData) => {
+    // Basic validation and default setting
+    const newProduct = new Product({
+        category_id: productData.category_id,
+        name: productData.name,
+        description: productData.description,
+        price: productData.price,
+        stock_quantity: productData.stock_quantity || 0,
+        image_url: productData.image_url,
+        is_active: productData.is_active !== undefined ? productData.is_active : true
+    });
+    return newProduct.save();
+};
+
+/**
+ * FR-007: Admin Product Management - Update Product
+ * @param {string} productId - ID of the product.
+ * @param {Object} updateData - Fields to update.
+ * @returns {Promise<Product>} Updated product.
+ */
+const updateProduct = async (productId, updateData) => {
+    const updatedProduct = await Product.findByIdAndUpdate(
+        productId,
+        { $set: updateData },
+        { new: true, runValidators: true }
+    );
+    if (!updatedProduct) {
+        throw new Error('Product not found');
+    }
+    return updatedProduct;
+};
+
+/**
+ * FR-007: Admin Product Management - Delete Product
+ * @param {string} productId - ID of the product.
+ * @returns {Promise<Boolean>} Deletion status.
+ */
+const deleteProduct = async (productId) => {
+    const result = await Product.deleteOne({ _id: productId });
+    if (result.deletedCount === 0) {
+        throw new Error('Product not found');
+    }
+    return true;
+};
+
+
+module.exports = {
+    getProducts,
+    getProductDetails,
+    getCartDetails,
+    updateCartItem,
+    removeItemFromCart,
+    placeOrder,
+    getOrderHistory,
+    createProduct,
+    updateProduct,
+    deleteProduct
+};
+</file>
+<file path="backend/controllers/apiController.js">
+const {
+    getProducts,
+    getProductDetails,
+    getCartDetails,
+    updateCartItem,
+    removeItemFromCart,
+    placeOrder,
+    getOrderHistory,
+    createProduct,
+    updateProduct,
+    deleteProduct
+} = require('../services/businessService');
+
+// --- Auth/User Controllers (Mocked for MVP) ---
+exports.loginUser = async (req, res) => {
+    // Mock authentication logic
+    const { email, password } = req.body;
+    if (email === 'test@example.com' && password === 'password') {
+        // In a real app, generate and return JWT
+        res.status(200).json({ message: 'Login successful', user: { id: 'mock-user-id', role: 'customer' } });
+    } else {
+        res.status(401).json({ message: 'Invalid credentials' });
+    }
+};
+
+exports.registerUser = async (req, res) => {
+    // Mock registration logic
+    const { name, email, password } = req.body;
+    // In a real app, hash password and save user
+    res.status(201).json({ message: 'User registered successfully', user: { id: 'mock-user-id', role: 'customer' } });
+};
+
+// --- Catalog Controllers ---
+exports.listProducts = async (req, res) => {
+    try {
+        const filters = req.query;
+        const sort = { sortBy: req.query.sortBy, direction: req.query.sortDirection };
+        
+        const products = await getProducts(filters, sort);
+        res.status(200).json(products);
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to retrieve products', error: error.message });
+    }
+};
+
+exports.getProductDetailsController = async (req, res) => {
+    try {
+        const productId = req.params.productId;
+        const product = await getProductDetails(productId);
+        res.status(200).json(product);
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+};
+
+// --- Cart Controllers ---
+exports.getCartController = async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        const cartDetails = await getCartDetails(userId);
+        res.status(200).json(cartDetails);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+
+exports.addItemToCartController = async (req, res) => {
+    try {
+        const { productId, quantity } = req.body;
+        const userId = req.params.userId;
+        
+        const updatedItem = await updateCartItem(userId, productId, quantity);
+        res.status(200).json({ message: 'Item added/updated in cart', item: updatedItem });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+
+exports.updateCartItemController = async (req, res) => {
+    try {
+        const { productId, quantity } } = req.body;
+        const userId = req.params.userId;
+        
+        // Reusing updateCartItem logic for simplicity, assuming quantity update is handled by the service
+        const updatedItem = await updateCartItem(userId, productId, quantity);
+        res.status(200).json({ message: 'Cart item updated', item: updatedItem });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+
+exports.removeItemFromCartController = async (req, res) => {
+    try {
+        const { productId } = req.params;
+        const userId = req.params.userId;
+        
+        await removeItemFromCart(userId, productId);
+        res.status(200).json({ message: 'Item removed successfully' });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+
+// --- Checkout/Order Controllers ---
+exports.checkoutController = async (req, res) => {
+    try {
+        const { shippingAddressData, paymentMethod, paymentToken } = req.body;
+        const userId = req.params.userId;
+
+        const result = await placeOrder(userId, shippingAddressData, paymentMethod, paymentToken);
+        
+        res.status(201).json({ 
+            message: 'Order placed successfully and payment confirmed.', 
+            order: result.order, 
+            payment: result.payment 
+        });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+
+exports.getOrderHistoryController = async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        const history = await getOrderHistory(userId);
+        res.status(200).json(history);
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to retrieve order history', error: error.message });
+    }
+};
+
+// --- Admin Controllers ---
+exports.createProductController = async (req, res) => {
+    try {
+        // Admin role check should happen via middleware
+        const productData = req.body;
+        const newProduct = await createProduct(productData);
+        res.status(201).json(newProduct);
+    } catch (error) {
+        res.status(400).json({ message: 'Failed to create product', error: error.message });
+    }
+};
+
+exports.updateProductController = async (req, res) => {
+    try {
+        const productId = req.params.productId;
+        const updateData = req.body;
+        
+        const updatedProduct = await updateProduct(productId, updateData);
+        res.status(200).json(

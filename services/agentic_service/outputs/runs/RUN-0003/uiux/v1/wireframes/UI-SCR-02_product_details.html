@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Generated Wireframe</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 font-sans">
+
+    <!-- Global Container for 1366x768 simulation -->
+    <div class="max-w-[1366px] mx-auto bg-white shadow-xl min-h-screen">
+
+        <!-- 1. Top Navigation/Header (Global Context) -->
+        <header class="sticky top-0 z-30 bg-white shadow-md border-b border-gray-200">
+            <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
+                <!-- Logo/Brand -->
+                <div class="text-2xl font-bold text-gray-900 flex items-center">
+                    <span class="text-primary-color mr-1">Auto</span>Forge
+                </div>
+                
+                <!-- Search Bar (Central Feature) -->
+                <div class="hidden lg:block flex-grow max-w-xl mx-8">
+                    <div class="relative">
+                        <input type="text" placeholder="Search products, categories, or SKUs..." class="w-full py-2 pl-10 pr-4 border border-gray-300 rounded-full focus:ring-2 focus:ring-primary-color focus:border-primary-color transition duration-150">
+                        <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    </div>
+                </div>
+
+                <!-- User Actions -->
+                <nav class="flex items-center space-x-4 text-sm font-medium">
+                    <a href="#" class="text-gray-600 hover:text-primary-color hidden sm:block">Catalog</a>
+                    <a href="#" class="text-gray-600 hover:text-primary-color hidden sm:block">Deals</a>
+                    <button class="text-gray-600 hover:text-primary-color relative">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4z"></path></svg>
+                        <span class="absolute -top-1 right-0 bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">3</span>
+                    </button>
+                    <button class="px-4 py-2 border border-primary-color text-primary-color rounded-lg hover:bg-primary-color hover:text-white transition duration-150">
+                        Sign In
+                    </button>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="p-6 lg:p-10">
+            
+            <!-- Breadcrumbs and Page Title/Subtitle -->
+            <div class="mb-8 border-b pb-4">
+                <div class="text-sm text-gray-500 mb-1">
+                    <a href="#" class="hover:text-primary-color">Home</a> / 
+                    <a href="#" class="hover:text-primary-color">Electronics</a> / 
+                    <a href="#" class="hover:text-primary-color">Audio Equipment</a> / 
+                    <span class="font-medium text-gray-700">AuraSound Pro Headphones</span>
+                </div>
+                <h1 class="text-4xl font-extrabold text-gray-900 mb-2">AuraSound Pro Noise-Cancelling Headphones</h1>
+                <p class="text-xl text-gray-600 font-light">Experience crystal-clear audio with industry-leading noise cancellation technology.</p>
+            </div>
+
+            <!-- Product Layout Grid (Image Gallery + Info/CTA) -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 xl:gap-16">
+                
+                <!-- LEFT COLUMN: Image Gallery (Visual Section 1) -->
+                <div class="lg:col-span-1">
+                    <div class="bg-gray-100 p-4 rounded-xl shadow-lg">
+                        <!-- Main Image View -->
+                        <div class="relative mb-6 aspect-square bg-gray-200 rounded-lg overflow-hidden">
+                            <div class="w-full h-full bg-cover bg-center flex items-center justify-center" style="background-image: url('placeholder_main_product_image.jpg');">
+                                <div class="absolute inset-0 bg-black opacity-10 flex items-center justify-center">
+                                    <span class="text-white text-xl font-semibold">High-Resolution Product View</span>
+                                </div>
+                            </div>
+                            <!-- Image Zoom/Indicator -->
+                            <div class="absolute bottom-4 right-4 bg-white p-2 rounded-full shadow-md cursor-pointer hover:scale-105 transition">
+                                <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                            </div>
+                        </div>
+
+                        <!-- Thumbnail Gallery -->
+                        <div class="flex space-x-4 overflow-x-auto pb-2">
+                            <div class="w-20 h-20 bg-gray-200 rounded-lg cursor-pointer border-2 border-primary-color shadow-md flex-shrink-0"></div>
+                            <div class="w-20 h-20 bg-gray-200 rounded-lg cursor-pointer hover:opacity-80 flex-shrink-0"></div>
+                            <div class="w-20 h-20 bg-gray-200 rounded-lg cursor-pointer hover:opacity-80 flex-shrink-0"></div>
+                            <div class="w-20 h-20 bg-gray-200 rounded-lg cursor-pointer hover:opacity-80 flex-shrink-0"></div>
+                            <div class="w-20 h-20 bg-gray-200 rounded-lg cursor-pointer hover:opacity-80 flex-shrink-0"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RIGHT COLUMN: Product Info, Purchase Options, and Summary (Visual Section 2) -->
+                <div class="lg:col-span-1 sticky top-24 self-start">
+                    <div class="p-6 border border-gray-200 rounded-xl shadow-lg bg-primary-light/50">
+                        
+                        <!-- Product Title and Rating -->
+                        <div class="mb-4">
+                            <h1 class="text-4xl font-extrabold text-gray-900 mb-1">AuraSound Pro Headphones</h1>
+                            <p class="text-lg text-gray-500 mb-3">Premium Over-Ear Noise Cancellation</p>
+                            
+                            <!-- Rating and Reviews -->
+                            <div class="flex items-center space-x-3 mb-4">
+                                <div class="flex text-yellow-500 text-xl">
+                                    <span class="mr-1">★★★★☆</span> (4.5/5)
+                                </div>
+                                <span class="text-sm text-gray-600">(1,240 Reviews)</span>
+                                <span class="text-xs text-green-600 font-semibold bg-green-100 px-2 py-1 rounded-full">In Stock</span>
+                            </div>
+                        </div>
+
+                        <!-- Price and Discount -->
+                        <div class="mb-6 border-b pb-4">
+                            <div class="flex items-baseline space-x-3">
+                                <span class="text-5xl font-bold text-red-600">$299.99</span>
+                                <span class="text-xl text-gray-400 line-through">$399.99</span>
+                                <span class="text-sm font-semibold text-green-600 bg-green-100 px-3 py-1 rounded-full">Save $100</span>
+                            </div>
+                            <p class="text-sm text-gray-500 mt-2">Limited time sale! Free shipping available.</p>
+                        </div>
+
+                        <!-- Options Selector (Color/Size) -->
+                        <div class="mb-6">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-3">Select Options</h3>
+                            <div class="flex space-x-4">
+                                <div class="flex items-center space-x-2">
+                                    <span class="text-sm font-medium text-gray-700">Color:</span>
+                                    <button class="w-8 h-8 rounded-full border-2 border-gray-300 hover:ring-2 ring-primary-color" style="background-color: #333;">
+                                        <!-- Placeholder for Black -->
+                                    </button>
+                                    <button class="w-8 h-8 rounded-full border-2 border-gray-300 hover:ring-2 ring-primary-color" style="background-color: #999;">
+                                        <!-- Placeholder for Silver -->
+                                    </button>
+                                    <button class="w-8 h-8 rounded-full border-2 border-gray-300 hover:ring-2 ring-primary-color" style="background-color: #666;">
+                                        <!-- Placeholder for Midnight Blue -->
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Quantity Selector and CTA -->
+                        <div class="flex items-center space-x-6 mb-8">
+                            <!-- Quantity -->
+                            <div class="flex items-center border border-gray-300 rounded-lg">
+                                <button class="p-2 text-gray-600 hover:bg-gray-100">-</button>
+                                <input type="number" value="1" min="1" class="w-12 text-center border-x border-gray-300 focus:ring-0 focus:border-0 p-2 text-lg">
+                                <button class="p-2 text-gray-600 hover:bg-gray-100">+</button>
+                            </div>
+
+                            <!-- Add to Cart Button (Primary Action) -->
+                            <button class="btn-primary w-full py-3 text-xl font-bold text-white rounded-lg shadow-lg hover:shadow-xl transition duration-200 flex items-center justify-center space-x-2">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4z"></path></svg>
+                                <span>Add to Cart</span>
+                            </button>
+                        </div>
+
+                        <!-- Secondary Actions and Shipping Info -->
+                        <div class="space-y-3 text-sm">
+                            <button class="w-full py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition duration-150">
+                                <span class="font-semibold">Buy Now (Express Checkout)</span>
+                            </button>
+                            <div class="flex items-center space-x-2 text-green-700">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m1-1v-6m0 0l-2-2m2 2l2-2"></path></svg>
+                                <span>Free Shipping on orders over $50. Estimated delivery: 3-5 business days.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Separator and Metadata -->
+            <div class="mt-12 pt-8 border-t border-gray-200">
+                <div class="text-xs text-gray-400 flex space-x-6">
+                    <span>Screen ID: UI-SCR-02</span>
+                    <span>FR ID: FR-002</span>
+                    <span>Related Module: Catalog Module (MOD-002)</span>
+                </div>
+            </div>
+
+            <!-- 3. Detailed Description and Tabs (Visual Section 3) -->
+            <div class="mt-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-6 border-b pb-2">Product Details & Specifications</h2>
+
+                <!-- Tab Navigation -->
+                <div class="flex border-b border-gray-200 mb-6">
+                    <button class="tab-button py-3 px-6 text-lg font-medium text-primary-color border-b-2 border-primary-color transition duration-150">Description</button>
+                    <button class="tab-button py-3 px-6 text-lg font-medium text-gray-500 hover:text-primary-color border-b-2 border-transparent hover:border-gray-300 transition duration-150">Specifications</button>
+                    <button class="tab-button py-3 px-6 text-lg font-medium text-gray-500 hover:text-primary-color border-b-2 border-transparent hover:border-gray-300 transition duration-150">Reviews (1,240)</button>
+                </div>
+
+                <!-- Tab Content: Description (Active) -->
+                <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-100">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">Immersive Sound, Unrivaled Silence</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <!-- Feature Card 1 -->
+                        <div class="p-5 bg-primary-light rounded-lg shadow-sm border-l-4 border-primary-color">
+                            <div class="flex items-center space-x-3 mb-2">
+                                <span class="text-2xl text-primary-color">🎧</span>
+                                <h4 class="text-xl font-semibold text-gray-900">Adaptive Noise Cancellation</h4>
+                            </div>
+                            <p class="text-gray-600 text-sm">Our proprietary ANC technology analyzes ambient noise in real-time, adapting to create a perfect pocket of silence, whether you're on a plane or in a busy cafe.</p>
+                        </div>
+                        <!-- Feature Card 2 -->
+                        <div class="p-5 bg-primary-light rounded-lg shadow-sm border-l-4 border-green-500">
+                            <div class="flex items-center space-x-3 mb-2">
+                                <span class="text-2xl text-green-500">🔋</span>
+                                <h4 class="text-xl font-semibold text-gray-900">40-Hour Battery Life</h4>
+                            </div>
+                            <p class="text-gray-600 text-sm">Enjoy marathon listening sessions. A single charge provides up to 40 hours of continuous playback, keeping the music going all week.</p>
+                        </div>
+                        <!-- Feature Card 3 -->
+                        <div class="p-5 bg-primary-light rounded-lg shadow-sm border-l-4 border-yellow-500">
+                            <div class="flex items-center space-x-3 mb-2">
+                                <span class="text-2xl text-yellow-500">☁️</span>
+                                <h4 class="text-xl font-semibold text-gray-900">Ergonomic Comfort Fit</h4>
+                            </div>
+                            <p class="text-gray-600 text-sm">Designed with memory foam earcups and lightweight materials for hours of comfortable wear, making them perfect for long flights.</p>
+                        </div>
+                    </div>
+
+                    <!-- Detailed Paragraphs -->
+                    <div class="mt-8 space-y-6 text-gray-700 leading-relaxed">
+                        <p>The AuraSound Pro headphones redefine the listening experience. We combined cutting-edge acoustic engineering with a focus on user comfort and durability. From the deep, resonant bass to the crisp, high-fidelity treble, every note is delivered with unparalleled clarity.</p>
+                        
+                        <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
+                            <h4 class="text-xl font-bold text-gray-800 mb-3 flex items-center">
+                                <svg class="w-6 h-6 mr-2 text-primary-color" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                                Key Features & Technology Breakdown
+                            </h4>
+                            <ul class="list-disc pl-5 space-y-2 text-sm text-gray-600">
+                                <li><strong>Bluetooth 5.2:</strong> Ultra-stable, low-energy connection for seamless pairing across all devices.</li>
+                                <li><strong>Hi-Res Audio Support:</strong> Supports up to 24-bit/96kHz audio streaming for audiophile quality.</li>
+                                <li><strong>Multipoint Connectivity:</strong> Connect to two devices simultaneously (e.g., laptop and phone) and switch instantly.</li>
+                                <li><strong>Voice Assistant Integration:</strong> Quick access to Spotify, Google Assistant, and Siri controls directly from the ear cup.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. Specifications Table (Visual Section 4) -->
+            <div class="mt-16">
+                <h2 class="text-3xl font-bold text-gray-900 mb-6 border-b pb-2">Technical Specifications</h2>
+                
+                <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-100">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/4">Feature</th>
+                                    <th class="px-6 text-left text-sm text-gray-700">Detail</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray
+</html>

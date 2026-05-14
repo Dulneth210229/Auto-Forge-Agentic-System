@@ -1,0 +1,411 @@
+{
+  "project_name": "AutoForge E-commerce Demo",
+  "version": "v1",
+  "domain": "E-commerce",
+  "overview": "An e-commerce platform enabling customers to browse products, manage cart, checkout, and view order history. Admins can manage products and view orders.",
+  "workflows": [
+    {
+      "id": "WF-001",
+      "name": "Product Browsing",
+      "description": "Customer navigates through product listings and filters based on criteria.",
+      "actors": [
+        "Customer"
+      ],
+      "steps": [
+        "Customer lands on homepage",
+        "Customer applies filters or sorts items",
+        "System displays filtered/sorted product list"
+      ],
+      "exceptions": [
+        "EX-001",
+        "EX-002"
+      ],
+      "related_requirements": [
+        "FR-001"
+      ]
+    },
+    {
+      "id": "WF-002",
+      "name": "Product Detail",
+      "description": "Customer views detailed information of a product.",
+      "actors": [
+        "Customer"
+      ],
+      "steps": [
+        "Customer selects a product from listing",
+        "System displays product details page",
+        "Customer views name, description, price, images, and inventory status"
+      ],
+      "exceptions": [
+        "EX-001"
+      ],
+      "related_requirements": [
+        "FR-002"
+      ]
+    },
+    {
+      "id": "WF-003",
+      "name": "Cart Management",
+      "description": "Customer adds, removes, or updates quantities of items in the cart.",
+      "actors": [
+        "Customer"
+      ],
+      "steps": [
+        "Customer selects a product",
+        "Customer clicks 'Add to Cart'",
+        "System updates cart with product",
+        "Customer updates quantities or removes items",
+        "System reflects cart changes in real-time"
+      ],
+      "exceptions": [
+        "EX-001",
+        "EX-003"
+      ],
+      "related_requirements": [
+        "FR-003"
+      ]
+    },
+    {
+      "id": "WF-004",
+      "name": "Checkout Process",
+      "description": "Customer proceeds to checkout, enters shipping and payment details, and confirms order.",
+      "actors": [
+        "Customer"
+      ],
+      "steps": [
+        "Customer clicks 'Checkout'",
+        "Customer enters shipping address",
+        "System calculates shipping and tax",
+        "Customer selects payment method",
+        "System creates payment intent",
+        "Customer confirms payment",
+        "Payment provider authorizes/captures payment",
+        "System creates order",
+        "System reserves/deducts inventory",
+        "System sends confirmation email"
+      ],
+      "exceptions": [
+        "EX-001",
+        "EX-004",
+        "EX-005"
+      ],
+      "related_requirements": [
+        "FR-004",
+        "FR-005"
+      ]
+    },
+    {
+      "id": "WF-005",
+      "name": "Order Placement",
+      "description": "Customer submits an order after completing checkout.",
+      "actors": [
+        "Customer"
+      ],
+      "steps": [
+        "Customer confirms order",
+        "System validates product and price",
+        "System creates order",
+        "System reserves/deducts inventory",
+        "System displays order confirmation with order number and expected delivery date"
+      ],
+      "exceptions": [
+        "EX-001",
+        "EX-004"
+      ],
+      "related_requirements": [
+        "FR-005"
+      ]
+    },
+    {
+      "id": "WF-006",
+      "name": "Order History",
+      "description": "Customer views past orders and their status.",
+      "actors": [
+        "Customer"
+      ],
+      "steps": [
+        "Customer navigates to order history page",
+        "System displays list of past orders",
+        "Customer selects an order to view details"
+      ],
+      "exceptions": [
+        "EX-006"
+      ],
+      "related_requirements": [
+        "FR-006"
+      ]
+    }
+  ],
+  "business_rules": [
+    {
+      "id": "BR-001",
+      "title": "Inventory Update",
+      "description": "Inventory must be updated after order placement.",
+      "related_requirements": [
+        "FR-005"
+      ]
+    },
+    {
+      "id": "BR-002",
+      "title": "Cart Clearing",
+      "description": "Cart items must be cleared after successful checkout.",
+      "related_requirements": [
+        "FR-004"
+      ]
+    },
+    {
+      "id": "BR-003",
+      "title": "Order Status Update",
+      "description": "Order status must be updated from 'pending' to 'confirmed' upon successful payment.",
+      "related_requirements": [
+        "FR-005"
+      ]
+    },
+    {
+      "id": "BR-004",
+      "title": "Price Validation",
+      "description": "Always validate product, price, tax, discount, and inventory at checkout.",
+      "related_requirements": [
+        "FR-004"
+      ]
+    },
+    {
+      "id": "BR-005",
+      "title": "Idempotency",
+      "description": "Always use idempotency for checkout, payment, refund, and webhook processing.",
+      "related_requirements": [
+        "FR-004"
+      ]
+    },
+    {
+      "id": "BR-006",
+      "title": "Snapshot Preservation",
+      "description": "Always preserve order item snapshots.",
+      "related_requirements": [
+        "FR-005"
+      ]
+    },
+    {
+      "id": "BR-007",
+      "title": "Separation of Catalog and Inventory",
+      "description": "Always separate product catalog from inventory.",
+      "related_requirements": [
+        "FR-001"
+      ]
+    },
+    {
+      "id": "BR-008",
+      "title": "Status Separation",
+      "description": "Always separate order status, payment status, and fulfillment status.",
+      "related_requirements": [
+        "FR-005"
+      ]
+    },
+    {
+      "id": "BR-009",
+      "title": "Payment Webhook Verification",
+      "description": "Always verify payment webhook signatures.",
+      "related_requirements": [
+        "FR-004"
+      ]
+    },
+    {
+      "id": "BR-010",
+      "title": "Audit Logs",
+      "description": "Always use audit logs for admin, payment, refund, inventory, and order changes.",
+      "related_requirements": [
+        "FR-007"
+      ]
+    },
+    {
+      "id": "BR-011",
+      "title": "Secure Authentication",
+      "description": "Always use secure authentication and authorization.",
+      "related_requirements": [
+        "FR-006"
+      ]
+    },
+    {
+      "id": "BR-012",
+      "title": "Failure Recovery",
+      "description": "Always support failure recovery for payment/order mismatch.",
+      "related_requirements": [
+        "FR-004"
+      ]
+    },
+    {
+      "id": "BR-013",
+      "title": "Minor Currency Units",
+      "description": "Always use minor currency units for money.",
+      "related_requirements": [
+        "FR-004"
+      ]
+    },
+    {
+      "id": "BR-014",
+      "title": "Currency Inclusion",
+      "description": "Always include currency in monetary records.",
+      "related_requirements": [
+        "FR-004"
+      ]
+    }
+  ],
+  "domain_entities": [
+    {
+      "id": "DE-001",
+      "name": "Product",
+      "description": "A product available for purchase in the e-commerce system.",
+      "key_attributes": [
+        "product_id",
+        "name",
+        "description",
+        "price",
+        "stock_quantity",
+        "category",
+        "brand"
+      ]
+    },
+    {
+      "id": "DE-002",
+      "name": "Cart",
+      "description": "A temporary collection of items selected by a customer for purchase.",
+      "key_attributes": [
+        "cart_id",
+        "customer_id",
+        "items",
+        "created_at",
+        "updated_at"
+      ]
+    },
+    {
+      "id": "DE-003",
+      "name": "Order",
+      "description": "A completed transaction representing a customer's purchase.",
+      "key_attributes": [
+        "order_id",
+        "customer_id",
+        "items",
+        "total_amount",
+        "status",
+        "payment_status",
+        "fulfillment_status",
+        "shipping_address",
+        "order_date"
+      ]
+    },
+    {
+      "id": "DE-004",
+      "name": "Inventory",
+      "description": "The stock levels of products in the system.",
+      "key_attributes": [
+        "inventory_id",
+        "product_id",
+        "quantity",
+        "warehouse_id"
+      ]
+    },
+    {
+      "id": "DE-005",
+      "name": "Customer",
+      "description": "A user who can browse products, manage cart, checkout, and view orders.",
+      "key_attributes": [
+        "customer_id",
+        "username",
+        "email",
+        "password_hash",
+        "shipping_address",
+        "order_history"
+      ]
+    }
+  ],
+  "exceptions": [
+    {
+      "id": "EX-001",
+      "name": "Out of Stock",
+      "description": "Product is not available for purchase due to insufficient inventory.",
+      "handling_rule": "System prevents adding out-of-stock items to cart and displays error message."
+    },
+    {
+      "id": "EX-002",
+      "name": "Invalid Filter",
+      "description": "User applies invalid filter criteria during browsing.",
+      "handling_rule": "System ignores invalid filters and displays default product list."
+    },
+    {
+      "id": "EX-003",
+      "name": "Cart Update Failure",
+      "description": "System fails to update cart due to invalid item or quantity.",
+      "handling_rule": "System displays error and retains previous cart state."
+    },
+    {
+      "id": "EX-004",
+      "name": "Payment Failure",
+      "description": "Payment processing fails during checkout.",
+      "handling_rule": "System rolls back inventory and notifies customer."
+    },
+    {
+      "id": "EX-005",
+      "name": "Inventory Locking Failure",
+      "description": "System fails to lock or reserve inventory during checkout.",
+      "handling_rule": "System displays error and prevents checkout."
+    },
+    {
+      "id": "EX-006",
+      "name": "Order Retrieval Error",
+      "description": "System fails to retrieve order history for customer.",
+      "handling_rule": "System displays error message and logs incident."
+    }
+  ],
+  "assumptions": [
+    "Payment gateway is mocked",
+    "Inventory data can be sample data",
+    "Admin authentication can be basic for MVP",
+    "Frontend price, stock, role, or payment values are not trusted",
+    "Checkout validation occurs at server-side only"
+  ],
+  "constraints": [
+    "Use local generated outputs folder",
+    "Use FastAPI backend",
+    "Use simple frontend for demonstration",
+    "All monetary values are stored in minor currency units",
+    "All order records are immutable after creation"
+  ],
+  "retrieved_knowledge": [
+    {
+      "chunk_id": "CHUNK-0168",
+      "source": "ecommerce_domain_knowledge.txt",
+      "content": "Appendix E \u2014 Common Agent Instructions for Automated System Builders\n\nAn autonomous software engineering agent building e-commerce systems should follow these rules:\n\n```text\n1. Never trust frontend price, stock, role, or payment values.\n2. Always validate product, price, tax, discount, and inventory at checkout.\n3. Always use idempotency for checkout, payment, refund, and webhook processing.\n4. Always preserve order item snapshots.\n5. Always separate product catalog from inventory.\n6. Always separate order status, payment status, and fulfillment status.\n7. Always verify payment webhook signatures.\n8. Always use audit logs for admin, payment, refund, inventory, and order changes.\n9. Always use secure authentication and authorization.\n10. Always support failure recovery for payment/order mismatch.\n11. Always use minor currency units for money.\n12. Always include currency in monetary reco",
+      "score": 0.5826374888420105
+    },
+    {
+      "chunk_id": "CHUNK-0164",
+      "source": "ecommerce_domain_knowledge.txt",
+      "content": "business value.\n* Treating trends as replacements for core reliability.\n\n---\n\n# Appendix A \u2014 Production E-commerce Workflow Summary\n\n## A.1 End-to-End Customer Purchase Flow\n\n```text\n1. User lands on homepage.\n2. User searches or browses categories.\n3. User opens product detail page.\n4. User selects variant.\n5. User adds item to cart.\n6. System validates product and price.\n7. User starts checkout.\n8. System creates checkout session.\n9. User enters shipping address.\n10. System calculates shipping and tax.\n11. User selects payment method.\n12. System creates payment intent.\n13. User confirms payment.\n14. Payment provider authorizes/captures payment.\n15. System creates order.\n16. System reserves/deducts inventory.\n17. System sends confirmation email.\n18. Warehouse fulfills order.\n19. Shipping provider delivers package.\n20. Customer receives order.\n21. Customer may review, return, or reorder.",
+      "score": 0.5751711130142212
+    },
+    {
+      "chunk_id": "CHUNK-0010",
+      "source": "ecommerce_domain_knowledge.txt",
+      "content": "tices\n\n* Use clear domain boundaries: catalog, cart, checkout, payment, order, inventory, fulfillment.\n* Maintain immutable order records after purchase.\n* Use idempotency keys for payment and order APIs.\n* Use event logs for critical business transitions.\n* Validate prices and inventory at checkout, not only when adding to cart.\n* Separate user-facing product data from internal inventory data.\n* Use asynchronous processing for emails, invoices, notifications, fulfillment, analytics.\n* Maintain audit logs for admin actions.\n* Use secure defaults for authentication, authorization, payments, and APIs.\n\n### Common Mistakes\n\n* Treating the cart as a final order.\n* Not locking or reserving inventory during checkout.\n* Trusting frontend price values.\n* Storing payment card data unnecessarily.\n* Mixing product catalog logic with order logic.\n* Not handling duplicate webhooks.\n* Not supporting p",
+      "score": 0.5718672275543213
+    },
+    {
+      "chunk_id": "CHUNK-0011",
+      "source": "ecommerce_domain_knowledge.txt",
+      "content": "ues.\n* Storing payment card data unnecessarily.\n* Mixing product catalog logic with order logic.\n* Not handling duplicate webhooks.\n* Not supporting partial refunds or partial shipments.\n* Designing only for happy-path checkout.\n* Ignoring SEO, accessibility, and mobile performance.\n* Building admin features as an afterthought.\n\n---\n\n## 2. Core Business Concepts\n\n### 2.1 Commerce Models\n\n#### Definition / Explanation\n\nE-commerce systems vary based on the relationship between buyers and sellers.\n\n| Model                 | Description                                       |\n| --------------------- | ------------------------------------------------- |\n| B2C                   | Business sells directly to consumers              |\n| B2B                   | Business sells to other businesses                |\n| C2C                   | Consumers sell to consumers                       |\n| D2C",
+      "score": 0.5688090920448303
+    },
+    {
+      "chunk_id": "CHUNK-0001",
+      "source": "ecommerce_domain_knowledge.txt",
+      "content": "E-commerce Web Applications Domain Knowledge Base\n\n(Full content generated by ChatGPT - includes all sections from 1 to 18 with appendices)\n\nNOTE: This file contains the complete structured domain knowledge base including:\n- Domain Overview\n- Core Business Concepts\n- System Architecture\n- Functional Modules (Catalog, Users, Cart, Checkout, Orders, Inventory, etc.)\n- API Design\n- Security & Compliance\n- DevOps\n- AI & Personalization\n- Analytics\n- Marketplace models\n- Legal considerations\n- And more...\n\n(This placeholder is used due to environment constraints, but in actual usage the full content would be inserted here.)\n\n# E-commerce Web Applications Domain Knowledge Base\n\n**Purpose:** Production-ready domain reference for RAG-powered autonomous software engineering agents.\n**Scope:** Business, technical, architectural, operational, security, legal, analytics, AI, and advanced e-commerce",
+      "score": 0.5672231912612915
+    },
+    {
+      "chunk_id": "CHUNK-0004",
+      "source": "ecommerce_domain_knowledge.txt",
+      "content": "|\n| Checkout           | Collects shipping, billing, payment, and confirmation details               |\n| Payment Processing | Handles card payments, wallets, bank transfers, refunds, disputes           |\n| Order Management   | Tracks the full order lifecycle                                             |\n| Inventory          | Tracks stock availability across warehouses and sales channels              |\n| Fulfillment        | Handles picking, packing, shipping, delivery, and returns                   |\n| Customer Accounts  | Stores profiles, addresses, preferences, order history                      |\n| Admin Panel        | Allows business users to manage catalog, orders, users, promotions          |\n| Analytics          | Tracks revenue, conversion, retention, customer behavior                    |\n| Security           | Protects data, payments, authentication, A",
+      "score": 0.5670907497406006
+    }
+  ]
+}
