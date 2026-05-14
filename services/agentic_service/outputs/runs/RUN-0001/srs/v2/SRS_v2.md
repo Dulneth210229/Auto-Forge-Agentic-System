@@ -1,4 +1,4 @@
-# Software Requirements Specification: AutoForge Shop
+# Software Requirements Specification: AutoForge E-commerce Demo
 
 **Version:** v2  
 **Domain:** E-commerce
@@ -7,7 +7,7 @@
 
 ## 1. Purpose
 
-To build a simple E-commerce web platform that allows customers to browse products, manage a cart, checkout with mock payment, place orders, and view order history.
+To build a functional web platform enabling customers to browse, purchase, and track products, and allowing administrators to manage inventory, users, and customer accounts.
 
 ---
 
@@ -15,153 +15,291 @@ To build a simple E-commerce web platform that allows customers to browse produc
 
 ### In Scope
 
+- Product browsing and search
+- Product detail viewing
+- Shopping cart management
+- Checkout process (Shipping/Payment selection)
+- Order placement and confirmation
+- Order history viewing (Customer)
+- Basic Admin product management
+- Admin customer management
 
 ### Out of Scope
 
-- Real payment gateway integration
-- Mobile application
-- Advanced recommendation engine
+- Advanced recommendation engines
+- Multi-currency support
+- Loyalty points system
+- Live chat support integration
 
 ---
 
 ## 3. Roles
 
-- A user who browses products, manages a cart, and places orders.
-- A system administrator responsible for managing product sales and order processing.
+- End-user who browses, adds items to cart, and places orders.
+- Internal user responsible for managing products, inventory, viewing orders, and customer accounts.
 
 ---
 
 ## 4. Stakeholders
 
-- **Business Analyst:** Collects and approves system requirements.
-- **Store Owner:** Manages product sales and order processing.
 
 ---
 
 ## 5. Workflows
 
+- {"workflow_name": "Customer Purchase Flow", "steps": ["Browse Catalog -> View Product Details -> Add to Cart -> Review Cart -> Checkout -> Place Order -> Receive Confirmation"]}
+- {"workflow_name": "Admin Product Update Flow", "steps": ["Login -> Navigate to Product Management -> Select Product -> Update Details/Inventory -> Save"]}
+- {"workflow_name": "Admin Customer Management Flow", "steps": ["Login -> Navigate to User Management -> Select Customer -> View/Update Details/Change Status -> Save"]}
 
 ---
 
 ## 6. Business Rules
 
-- Customers can only order products that are in stock.
-- Checkout must calculate the total price before order placement.
-- Payment is mocked in the MVP.
+- A customer must be logged in or provide shipping details to proceed to checkout.
+- Inventory levels must be checked and decremented upon successful order placement.
+- Discounts, if applicable, must be validated against the cart total before checkout.
+- The system must enforce positive quantities for all items.
+- Admin users must have the ability to view and modify customer account details (e.g., email, shipping address, account status).
 
 ---
 
 ## 7. Constraints
 
-- The system must run locally during development.
-- The first version should focus on catalog, cart, checkout, and orders.
+- Use local generated outputs folder
+- Use FastAPI backend
+- Use simple frontend for demonstration
 
 ---
 
 ## 8. Assumptions
 
-- Users access the system through a web browser.
-- Admin product management can be added after the MVP.
+- Payment gateway is mocked
+- Inventory data can be sample data
+- Admin authentication can be basic for MVP
 
 ---
 
 ## 9. Functional Requirements
 
-### FR-001 — Product Browsing
+### FR-001 — Product Catalog Browsing
 
 **Priority:** Must
 
-The system should allow customers to browse products by category, search for specific products, and view product details.
+The system must allow customers to view a browsable list of all available products, with filtering and sorting capabilities.
 
 **Acceptance Criteria:**
 
-- **AC-001:** The system displays a list of available products when browsing by category.
+- **AC-001:** The system must display all active products on the main catalog page.
+- **AC-002:** Users must be able to filter products by category (e.g., Electronics, Apparel).
+- **AC-003:** Users must be able to sort products by price (low to high, high to low) or popularity.
 
-### FR-002 — Product Details
+### FR-002 — Product Details Viewing
 
 **Priority:** Must
 
-The system should provide detailed information about each product, including price, description, and images.
+The system must display comprehensive information for a selected product, including images, description, price, and stock availability.
 
 **Acceptance Criteria:**
 
-- **AC-002:** The system displays the product name, price, and brief description.
+- **AC-004:** The product page must display multiple high-resolution images.
+- **AC-005:** The system must display the current stock level and warn the user if stock is low.
+- **AC-006:** Users must be able to select product variations (e.g., size, color) and view the updated price/SKU.
 
-### FR-003 — Cart Operations
+### FR-003 — Shopping Cart Management
 
 **Priority:** Must
 
-The system should allow customers to add and remove products from their cart, update quantities, and view the cart summary.
+The system must allow authenticated users to add, modify, and remove items from a persistent shopping cart.
 
 **Acceptance Criteria:**
 
-- **AC-003:** The system allows users to add a product to their cart.
+- **AC-007:** Users must be able to add a specified quantity of a product to the cart.
+- **AC-008:** Users must be able to update the quantity of an item already in the cart.
+- **AC-009:** Users must be able to remove items entirely from the cart.
 
-### FR-004 — Checkout
+### FR-004 — Checkout Process
 
 **Priority:** Must
 
-The system should provide a checkout process that calculates the total price, applies discounts (if available), and confirms the order.
+The system must guide the user through the checkout steps: shipping information, shipping method selection, and payment details.
 
 **Acceptance Criteria:**
 
-- **AC-004:** The system calculates the total price based on the products in the cart.
+- **AC-010:** The system must validate required shipping fields (address, zip code, etc.).
+- **AC-011:** The system must calculate estimated shipping costs based on the selected method and destination.
+- **AC-012:** The system must display a final order summary including subtotal, tax, shipping, and total.
 
 ### FR-005 — Order Placement
 
 **Priority:** Must
 
-The system should allow customers to place orders, including processing payment and sending order confirmation emails.
+The system must process the final transaction, reserving inventory and generating a unique order record.
 
 **Acceptance Criteria:**
 
-- **AC-005:** The system sends a confirmation email to the customer after successful order placement.
+- **AC-013:** Upon successful payment (mocked), the system must generate a unique Order ID.
+- **AC-014:** The system must decrement the inventory count for all purchased items.
+- **AC-015:** The system must send an order confirmation email/message to the customer.
 
-### FR-006 — Order History
+### FR-006 — Order History Viewing
 
 **Priority:** Must
 
-The system should provide customers with access to their order history, including order status and details.
+The system must allow logged-in customers to view a list of their past orders and their current status.
 
 **Acceptance Criteria:**
 
-- **AC-006:** The system displays the customer's order history.
+- **AC-016:** The customer must see the Order ID, date, total amount, and current status (e.g., Processing, Shipped, Delivered).
+- **AC-017:** The customer must be able to view the detailed items and costs for any past order.
 
-### FR-007 — Product Search
+### FR-007 — Admin Product Management
 
 **Priority:** Must
 
-The system should allow customers to search products by product name, category, and price range.
+The Admin user must be able to create, read, update, and delete product listings and manage associated inventory.
 
 **Acceptance Criteria:**
 
-- **AC-007:** The system allows users to search for products by name.
-- **AC-008:** The system allows users to search for products by category.
-- **AC-009:** The system allows users to search for products within a price range.
+- **AC-018:** Admin must be able to add a new product, including name, description, price, and initial stock count.
+- **AC-019:** Admin must be able to update the stock level of any existing product.
+- **AC-020:** Admin must be able to mark a product as 'Inactive' to remove it from the public catalog.
+
+### FR-008 — Admin Customer Management
+
+**Priority:** Must
+
+The Admin user must be able to view, update, and manage customer account details, including contact information and account status.
+
+**Acceptance Criteria:**
+
+- **AC-021:** Admin must be able to search for a customer by name, email, or ID.
+- **AC-022:** Admin must be able to update a customer's shipping address and contact details.
+- **AC-023:** Admin must be able to change a customer's account status (e.g., Active, Suspended, Blocked).
 
 
 ---
 
 ## 10. Non-Functional Requirements
 
+### NFR-001 — Performance
+
+The platform must load critical pages (Catalog, Product Detail) quickly to ensure a positive user experience.
+
+**Acceptance Criteria:**
+
+- **AC-N001:** The main catalog page must load completely within 3 seconds under normal network conditions.
+- **AC-N002:** API calls for adding items to the cart must respond within 500 milliseconds.
+
+### NFR-002 — Security
+
+The platform must protect user data and transaction integrity.
+
+**Acceptance Criteria:**
+
+- **AC-N003:** All user authentication endpoints must enforce password hashing (e.g., bcrypt).
+- **AC-N004:** Sensitive data (e.g., addresses, order details) must be transmitted over HTTPS.
+
+### NFR-003 — Usability
+
+The platform must be intuitive and accessible to first-time users.
+
+**Acceptance Criteria:**
+
+- **AC-N005:** The site must be fully responsive and functional on major mobile and desktop screen sizes.
+- **AC-N006:** The checkout process must be achievable in the minimum number of clicks possible.
+
 
 ---
 
 ## 11. Use Cases
 
-### UC-001 — Customer Browsing
+### UC-001 — Browse and Select Product
 
 **Actor:** Customer
 
 **Preconditions:**
 
+- User is on the homepage or catalog page.
 
 **Main Flow:**
 
-1. The customer browses products by category or searches for specific products.
+1. User searches/filters products.
+2. User views the list of results.
+3. User clicks on a product listing.
+4. System displays the Product Detail Page (PDP).
 
 **Alternative Flows:**
 
+- User navigates back to the catalog list.
+- User selects a variation (size/color) and adds the item to the cart.
 
-**Related Requirements:** FR-001, FR-002
+**Related Requirements:** FR-001, FR-002, FR-003
+
+### UC-002 — Place Order
+
+**Actor:** Customer
+
+**Preconditions:**
+
+- User is logged in.
+- The shopping cart contains at least one item.
+
+**Main Flow:**
+
+1. User proceeds to checkout.
+2. System validates shipping address.
+3. User selects shipping method and reviews costs.
+4. User enters/confirms payment details (mocked).
+5. User confirms the order.
+6. System processes payment, updates inventory, and creates the order record.
+
+**Alternative Flows:**
+
+- If payment fails, the system displays an error and allows retry.
+- If inventory is insufficient, the system alerts the user and removes the item from the cart.
+
+**Related Requirements:** FR-003, FR-004, FR-005
+
+### UC-003 — Manage Product Inventory
+
+**Actor:** Admin User
+
+**Preconditions:**
+
+- Admin user is logged in with appropriate permissions.
+
+**Main Flow:**
+
+1. Admin navigates to the Product Management dashboard.
+2. Admin selects a product to modify.
+3. Admin updates product details (description, price, stock).
+4. Admin saves the changes.
+
+**Alternative Flows:**
+
+- Admin creates a new product listing.
+- Admin deactivates a product listing.
+
+**Related Requirements:** FR-007
+
+### UC-004 — Manage Customer Accounts
+
+**Actor:** Admin User
+
+**Preconditions:**
+
+- Admin user is logged in with appropriate permissions.
+
+**Main Flow:**
+
+1. Admin navigates to the User Management dashboard.
+2. Admin searches for the target customer.
+3. Admin views and modifies the customer's profile details (address, contact info).
+4. Admin updates the customer's account status.
+
+**Alternative Flows:**
+
+- Admin views the customer's order history for auditing purposes.
+
+**Related Requirements:** FR-008
 

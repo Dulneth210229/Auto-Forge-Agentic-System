@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  title: AutoForge Shop API
+  title: AutoForge E-commerce Demo API
   version: 1.0.0
   description: Generated OpenAPI contract by AutoForge Architect Agent.
 servers:
@@ -15,7 +15,7 @@ paths:
       description: 'Creates a new customer account.
 
 
-        Related requirements: FR-001'
+        Related requirements: FR-003, FR-004, FR-007, FR-008'
       responses:
         '200':
           description: Successful response
@@ -43,7 +43,7 @@ paths:
       description: 'Authenticates a user and returns an access token.
 
 
-        Related requirements: FR-001'
+        Related requirements: FR-003, FR-004, FR-007, FR-008'
       responses:
         '200':
           description: Successful response
@@ -71,7 +71,7 @@ paths:
       description: 'Returns available products for catalog browsing.
 
 
-        Related requirements: FR-001, FR-002, FR-003'
+        Related requirements: FR-001, FR-002, FR-007'
       responses:
         '200':
           description: Successful response
@@ -93,7 +93,7 @@ paths:
       description: 'Returns detailed information for a selected product.
 
 
-        Related requirements: FR-001, FR-002, FR-003'
+        Related requirements: FR-001, FR-002, FR-007'
       responses:
         '200':
           description: Successful response
@@ -172,7 +172,7 @@ paths:
       description: 'Updates item quantity in the cart.
 
 
-        Related requirements: FR-003'
+        Related requirements: FR-003, FR-007, FR-008'
       responses:
         '200':
           description: Successful response
@@ -263,7 +263,7 @@ paths:
       description: 'Creates an order from checkout data.
 
 
-        Related requirements: FR-004, FR-005, FR-006'
+        Related requirements: FR-005, FR-006'
       responses:
         '200':
           description: Successful response
@@ -290,7 +290,7 @@ paths:
       description: 'Returns order history for the authenticated customer.
 
 
-        Related requirements: FR-005, FR-006'
+        Related requirements: FR-006'
       responses:
         '200':
           description: Successful response
@@ -312,7 +312,7 @@ paths:
       description: 'Allows admin to create a product.
 
 
-        Related requirements: FR-001'
+        Related requirements: FR-007, FR-008'
       responses:
         '200':
           description: Successful response

@@ -1,0 +1,398 @@
+{
+  "project_name": "AutoForge E-commerce Demo",
+  "version": "v1",
+  "status": "plan_generated",
+  "source_srs_version": "v2",
+  "source_domain_version": "v1",
+  "source_architecture_version": "v1",
+  "previous_version": null,
+  "user_prompt": "Generate a modern high-fidelity e-commerce UI with product catalog, product details, cart, checkout, order history, and admin product management screens.",
+  "screens": [
+    {
+      "id": "UI-SCR-01",
+      "name": "Product Catalog",
+      "file_name": "UI-SCR-01_product_catalog.html",
+      "description": "Displays browsable list of products with filtering and sorting options.",
+      "route": "/products",
+      "related_requirements": [
+        "FR-001"
+      ]
+    },
+    {
+      "id": "UI-SCR-02",
+      "name": "Product Details Page",
+      "file_name": "UI-SCR-02_product_details.html",
+      "description": "Comprehensive view of a single product, including variations, images, and stock status.",
+      "route": "/products/{product_id}",
+      "related_requirements": [
+        "FR-002"
+      ]
+    },
+    {
+      "id": "UI-SCR-03",
+      "name": "Shopping Cart View",
+      "file_name": "UI-SCR-03_shopping_cart.html",
+      "description": "Allows users to review, modify quantities, and remove items from the cart.",
+      "route": "/cart",
+      "related_requirements": [
+        "FR-003"
+      ]
+    },
+    {
+      "id": "UI-SCR-04",
+      "name": "Checkout: Shipping & Billing",
+      "file_name": "UI-SCR-04_checkout_shipping.html",
+      "description": "Collects and validates shipping and billing address information.",
+      "route": "/checkout/shipping",
+      "related_requirements": [
+        "FR-004"
+      ]
+    },
+    {
+      "id": "UI-SCR-05",
+      "name": "Checkout: Review & Payment",
+      "file_name": "UI-SCR-05_checkout_payment.html",
+      "description": "Displays final order summary, calculates totals, and collects payment details.",
+      "route": "/checkout/payment",
+      "related_requirements": [
+        "FR-004"
+      ]
+    },
+    {
+      "id": "UI-SCR-06",
+      "name": "Order Confirmation",
+      "file_name": "UI-SCR-06_order_confirmation.html",
+      "description": "Displays success message and unique Order ID after successful payment.",
+      "route": "/order/confirmation",
+      "related_requirements": [
+        "FR-005"
+      ]
+    },
+    {
+      "id": "UI-SCR-07",
+      "name": "Order History",
+      "file_name": "UI-SCR-07_order_history.html",
+      "description": "Lists past orders and their current status for the customer.",
+      "route": "/account/orders",
+      "related_requirements": [
+        "FR-006"
+      ]
+    },
+    {
+      "id": "UI-SCR-08",
+      "name": "Admin Dashboard & Product Management",
+      "file_name": "UI-SCR-08_admin_products.html",
+      "description": "Admin interface for CRUD operations on product listings and inventory.",
+      "route": "/admin/products",
+      "related_requirements": [
+        "FR-007"
+      ]
+    },
+    {
+      "id": "UI-SCR-09",
+      "name": "Admin Customer Management",
+      "file_name": "UI-SCR-09_admin_customers.html",
+      "description": "Admin interface for viewing and updating customer account details and status.",
+      "route": "/admin/customers",
+      "related_requirements": [
+        "FR-008"
+      ]
+    }
+  ],
+  "user_flows": [
+    {
+      "id": "UF-001",
+      "name": "Customer Purchase Journey",
+      "actor": "Customer",
+      "nodes": [
+        {
+          "id": "FLOW-N01",
+          "label": "Start Journey",
+          "screen_id": null,
+          "related_requirements": []
+        },
+        {
+          "id": "FLOW-N02",
+          "label": "Browse Product Catalog",
+          "screen_id": "UI-SCR-01",
+          "related_requirements": [
+            "FR-001"
+          ]
+        },
+        {
+          "id": "FLOW-N03",
+          "label": "View Product Details",
+          "screen_id": "UI-SCR-02",
+          "related_requirements": [
+            "FR-002"
+          ]
+        },
+        {
+          "id": "FLOW-N04",
+          "label": "Review Shopping Cart",
+          "screen_id": "UI-SCR-03",
+          "related_requirements": [
+            "FR-003"
+          ]
+        },
+        {
+          "id": "FLOW-N05",
+          "label": "Enter Shipping Details",
+          "screen_id": "UI-SCR-04",
+          "related_requirements": [
+            "FR-004"
+          ]
+        },
+        {
+          "id": "FLOW-N06",
+          "label": "Review and Select Payment",
+          "screen_id": "UI-SCR-05",
+          "related_requirements": [
+            "FR-004"
+          ]
+        },
+        {
+          "id": "FLOW-N07",
+          "label": "Order Confirmation",
+          "screen_id": "UI-SCR-06",
+          "related_requirements": [
+            "FR-005"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "from_node": "FLOW-N01",
+          "to_node": "FLOW-N02",
+          "condition": "Access site homepage"
+        },
+        {
+          "from_node": "FLOW-N02",
+          "to_node": "FLOW-N03",
+          "condition": "Select product listing"
+        },
+        {
+          "from_node": "FLOW-N03",
+          "to_node": "FLOW-N04",
+          "condition": "Click Add to Cart"
+        },
+        {
+          "from_node": "FLOW-N04",
+          "to_node": "FLOW-N05",
+          "condition": "Proceed to Checkout"
+        },
+        {
+          "from_node": "FLOW-N05",
+          "to_node": "FLOW-N06",
+          "condition": "Enter shipping details and continue"
+        },
+        {
+          "from_node": "FLOW-N06",
+          "to_node": "FLOW-N07",
+          "condition": "Submit payment details and place order"
+        }
+      ]
+    },
+    {
+      "id": "UF-002",
+      "name": "Customer Order History View",
+      "actor": "Customer",
+      "nodes": [
+        {
+          "id": "FLOW-N10",
+          "label": "Start Journey",
+          "screen_id": null,
+          "related_requirements": []
+        },
+        {
+          "id": "FLOW-N11",
+          "label": "View Order History List",
+          "screen_id": "UI-SCR-07",
+          "related_requirements": [
+            "FR-006"
+          ]
+        },
+        {
+          "id": "FLOW-N12",
+          "label": "View Detailed Order Snapshot",
+          "screen_id": null,
+          "related_requirements": [
+            "FR-006"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "from_node": "FLOW-N10",
+          "to_node": "FLOW-N11",
+          "condition": "Navigate to Account Dashboard"
+        },
+        {
+          "from_node": "FLOW-N11",
+          "to_node": "FLOW-N12",
+          "condition": "Click on specific Order ID"
+        }
+      ]
+    },
+    {
+      "id": "UF-003",
+      "name": "Admin Product Management Flow",
+      "actor": "Admin",
+      "nodes": [
+        {
+          "id": "FLOW-N20",
+          "label": "Start Journey",
+          "screen_id": null,
+          "related_requirements": []
+        },
+        {
+          "id": "FLOW-N21",
+          "label": "Admin Dashboard",
+          "screen_id": null,
+          "related_requirements": []
+        },
+        {
+          "id": "FLOW-N22",
+          "label": "Manage Product Listings",
+          "screen_id": "UI-SCR-08",
+          "related_requirements": [
+            "FR-007"
+          ]
+        },
+        {
+          "id": "FLOW-N23",
+          "label": "Edit Product Details and Inventory",
+          "screen_id": null,
+          "related_requirements": [
+            "FR-007"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "from_node": "FLOW-N20",
+          "to_node": "FLOW-N21",
+          "condition": "Admin Login Success"
+        },
+        {
+          "from_node": "FLOW-N21",
+          "to_node": "FLOW-N22",
+          "condition": "Select Product Management"
+        },
+        {
+          "from_node": "FLOW-N22",
+          "to_node": "FLOW-N23",
+          "condition": "Select product to edit/create"
+        }
+      ]
+    },
+    {
+      "id": "UF-004",
+      "name": "Admin Customer Management Flow",
+      "actor": "Admin",
+      "nodes": [
+        {
+          "id": "FLOW-N30",
+          "label": "Start Journey",
+          "screen_id": null,
+          "related_requirements": []
+        },
+        {
+          "id": "FLOW-N31",
+          "label": "Admin Dashboard",
+          "screen_id": null,
+          "related_requirements": []
+        },
+        {
+          "id": "FLOW-N32",
+          "label": "View Customer List",
+          "screen_id": "UI-SCR-09",
+          "related_requirements": [
+            "FR-008"
+          ]
+        },
+        {
+          "id": "FLOW-N33",
+          "label": "Update Customer Details and Status",
+          "screen_id": null,
+          "related_requirements": [
+            "FR-008"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "from_node": "FLOW-N30",
+          "to_node": "FLOW-N31",
+          "condition": "Admin Login Success"
+        },
+        {
+          "from_node": "FLOW-N31",
+          "to_node": "FLOW-N32",
+          "condition": "Select Customer Management"
+        },
+        {
+          "from_node": "FLOW-N32",
+          "to_node": "FLOW-N33",
+          "condition": "Select customer to modify"
+        }
+      ]
+    }
+  ],
+  "traceability": [
+    {
+      "requirement_id": "FR-001",
+      "screen_id": "UI-SCR-01",
+      "screen_name": "Product Catalog",
+      "reason": "Supports viewing a browsable list of products with filtering and sorting."
+    },
+    {
+      "requirement_id": "FR-002",
+      "screen_id": "UI-SCR-02",
+      "screen_name": "Product Details Page",
+      "reason": "Displays comprehensive product information, variations, and stock status."
+    },
+    {
+      "requirement_id": "FR-003",
+      "screen_id": "UI-SCR-03",
+      "screen_name": "Shopping Cart View",
+      "reason": "Allows users to add, modify, and remove items from the cart."
+    },
+    {
+      "requirement_id": "FR-004",
+      "screen_id": "UI-SCR-04",
+      "screen_name": "Checkout: Shipping & Billing",
+      "reason": "Handles collection and validation of shipping and billing addresses."
+    },
+    {
+      "requirement_id": "FR-004",
+      "screen_id": "UI-SCR-05",
+      "screen_name": "Checkout: Review & Payment",
+      "reason": "Displays final summary and collects payment details for checkout completion."
+    },
+    {
+      "requirement_id": "FR-005",
+      "screen_id": "UI-SCR-06",
+      "screen_name": "Order Confirmation",
+      "reason": "Confirms the successful placement of the order and transaction."
+    },
+    {
+      "requirement_id": "FR-006",
+      "screen_id": "UI-SCR-07",
+      "screen_name": "Order History",
+      "reason": "Allows logged-in customers to view past orders and their status."
+    },
+    {
+      "requirement_id": "FR-007",
+      "screen_id": "UI-SCR-08",
+      "screen_name": "Admin Dashboard & Product Management",
+      "reason": "Provides the interface for Admin to perform CRUD operations on products and inventory."
+    },
+    {
+      "requirement_id": "FR-008",
+      "screen_id": "UI-SCR-09",
+      "screen_name": "Admin Customer Management",
+      "reason": "Provides the interface for Admin to view and update customer account details and status."
+    }
+  ]
+}

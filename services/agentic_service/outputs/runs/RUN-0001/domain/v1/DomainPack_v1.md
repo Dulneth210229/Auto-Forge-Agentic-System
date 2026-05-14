@@ -1,4 +1,4 @@
-# Domain Workflow and Rules Pack: AutoForge Shop
+# Domain Workflow and Rules Pack: AutoForge E-commerce Demo
 
 **Version:** v1  
 **Domain:** E-commerce
@@ -7,15 +7,15 @@
 
 ## 1. Overview
 
-To build a simple E-commerce web platform that allows customers to browse products, manage a cart, checkout with mock payment, place orders, and view order history.
+This domain workflow package defines the core processes for a B2C e-commerce platform, covering the customer journey from product discovery to order history. It emphasizes robust validation, inventory management, and secure transaction handling, adhering to industry best practices for order integrity and payment processing.
 
 ---
 
 ## 2. Domain Workflows
 
-### WF-001 — Product Browsing
+### WF-001 — Product Browsing and Search
 
-The system should allow customers to browse products by category, search for specific products, and view product details.
+The customer discovers products using search, filtering, and sorting mechanisms.
 
 **Actors:**
 
@@ -23,33 +23,19 @@ The system should allow customers to browse products by category, search for spe
 
 **Steps:**
 
-1. The customer browses products by category or searches for specific products.
+1. Search/Filter/Sort Catalog (FR-001)
+2. View Product Listing Results
+3. Select Product Listing (Transition to WF-002)
 
 **Exceptions:**
 
+- EX-001
 
 **Related Requirements:** FR-001
 
-### WF-002 — Product Detail
+### WF-002 — Product Detail Viewing
 
-The system should provide detailed information about each product, including price, description, and images.
-
-**Actors:**
-
-- Customer
-
-**Steps:**
-
-1. The customer opens the product detail page.
-
-**Exceptions:**
-
-
-**Related Requirements:** FR-002
-
-### WF-003 — Cart Operations
-
-The system should allow customers to add and remove products from their cart, update quantities, and view the cart summary.
+The customer reviews comprehensive information about a single product, including variations and stock status.
 
 **Actors:**
 
@@ -57,16 +43,41 @@ The system should allow customers to add and remove products from their cart, up
 
 **Steps:**
 
-1. The customer adds or removes a product from their cart.
+1. Display Product Details (FR-002)
+2. Select Product Variation (Size/Color)
+3. Check Stock Availability (DE-001)
+4. Add Item to Cart (FR-003)
 
 **Exceptions:**
 
+- EX-001
+
+**Related Requirements:** FR-002, FR-003
+
+### WF-003 — Shopping Cart Management
+
+The customer manages the items intended for purchase.
+
+**Actors:**
+
+- Customer
+
+**Steps:**
+
+1. View Cart Contents (DE-002)
+2. Update Quantity (FR-003)
+3. Remove Item (FR-003)
+4. Proceed to Checkout (Transition to WF-004)
+
+**Exceptions:**
+
+- EX-001
 
 **Related Requirements:** FR-003
 
-### WF-004 — Checkout
+### WF-004 — Checkout Process
 
-The system should provide a checkout process that calculates the total price, applies discounts (if available), and confirms the order.
+The customer provides necessary details (shipping, payment) and reviews the final order summary.
 
 **Actors:**
 
@@ -74,33 +85,48 @@ The system should provide a checkout process that calculates the total price, ap
 
 **Steps:**
 
-1. The customer starts the checkout process.
+1. Input/Confirm Shipping Address (FR-004)
+2. Select Shipping Method & Calculate Cost (FR-004)
+3. Apply Discounts/Vouchers (BR-001)
+4. Review Final Summary (Subtotal + Tax + Shipping)
+5. Select Payment Method (DE-005)
+6. Attempt Order Placement (Transition to WF-005)
 
 **Exceptions:**
 
+- EX-002
+- EX-003
 
 **Related Requirements:** FR-004
 
-### WF-005 — Order Placement
+### WF-005 — Order Placement and Fulfillment
 
-The system should allow customers to place orders, including processing payment and sending order confirmation emails.
+The final transaction sequence, converting the cart into a confirmed, reserved order.
 
 **Actors:**
 
 - Customer
+- System
 
 **Steps:**
 
-1. The customer places an order.
+1. Validate Inventory and Pricing (BR-002, BR-001)
+2. Process Payment (DE-005) using Idempotency Key (BR-005)
+3. If Payment Success: Create Order Record (DE-003) and Snapshot Items (BR-003)
+4. Decrement Inventory (BR-002)
+5. Send Confirmation Email (FR-005)
+6. Update Order Status to 'Processing'
 
 **Exceptions:**
 
+- EX-002
+- EX-001
 
 **Related Requirements:** FR-005
 
-### WF-006 — Order History
+### WF-006 — Order History Viewing
 
-The system should provide customers with access to their order history, including order status and details.
+The logged-in customer reviews past transactions and their current status.
 
 **Actors:**
 
@@ -108,7 +134,9 @@ The system should provide customers with access to their order history, includin
 
 **Steps:**
 
-1. The customer views their order history.
+1. View List of Past Orders (FR-006)
+2. View Detailed Order Snapshot (FR-006)
+3. View Current Status (e.g., Shipped, Delivered)
 
 **Exceptions:**
 
@@ -120,11 +148,35 @@ The system should provide customers with access to their order history, includin
 
 ## 3. Business Rules
 
-### BR-001 — Customers can only order products that are in stock.
+### BR-001 — Pricing and Discount Validation
 
-The system should validate product availability before allowing the customer to place an order.
+All prices, taxes, and discounts must be validated server-side at the checkout stage (WF-004), regardless of the price displayed on the product detail page. The final total must be calculated using the current, authoritative price data.
 
-**Related Requirements:** FR-003
+**Related Requirements:** FR-002, FR-004
+
+### BR-002 — Inventory Reservation and Deduction
+
+Inventory must be checked, reserved (locked) during the checkout session, and only permanently decremented (deducted) upon successful payment confirmation (WF-005). If the order fails, the reservation must be released.
+
+**Related Requirements:** FR-005, FR-002
+
+### BR-003 — Order Immutability and Snapshotting
+
+Once an order is placed and confirmed, the order record (DE-003) must be immutable. The system must store a snapshot of all product details, prices, and quantities at the time of purchase to prevent discrepancies from catalog changes.
+
+**Related Requirements:** FR-005
+
+### BR-004 — Checkout Mandatory Validation
+
+The system must enforce that all required fields (shipping address, billing address, payment method) are provided and valid before allowing the user to proceed to payment.
+
+**Related Requirements:** FR-004
+
+### BR-005 — Idempotency Enforcement
+
+All critical API calls (Payment, Order Creation, Refund) must utilize an idempotency key to prevent duplicate processing if the client retries the request due to network failure.
+
+**Related Requirements:** 
 
 
 ---
@@ -133,14 +185,69 @@ The system should validate product availability before allowing the customer to 
 
 ### DE-001 — Product
 
-A product is a tangible or intangible item that can be purchased by customers.
+The core item sold by the business. Contains both public catalog data and internal inventory data.
 
 **Key Attributes:**
 
 - product_id
+- sku
 - name
-- price
-- stock_quantity
+- description
+- base_price
+- current_stock_level
+- is_active
+- category
+
+### DE-002 — Shopping Cart
+
+A temporary, persistent container holding items selected by the customer before checkout.
+
+**Key Attributes:**
+
+- cart_id
+- user_id
+- items_list
+- total_items
+- last_updated
+
+### DE-003 — Order
+
+The immutable record of a completed transaction. Must capture a snapshot of product details and pricing at the time of purchase.
+
+**Key Attributes:**
+
+- order_id
+- user_id
+- order_status
+- total_amount
+- shipping_address
+- items_snapshot
+- order_date
+
+### DE-004 — Customer Account
+
+The profile and personal data of the end-user.
+
+**Key Attributes:**
+
+- customer_id
+- email
+- shipping_address
+- account_status
+- password_hash
+
+### DE-005 — Payment Transaction
+
+The record of the financial exchange, linking the order to the payment gateway.
+
+**Key Attributes:**
+
+- transaction_id
+- gateway_reference
+- amount
+- currency
+- payment_status
+- idempotency_key
 
 
 ---
@@ -149,22 +256,38 @@ A product is a tangible or intangible item that can be purchased by customers.
 
 ### EX-001 — Out of Stock
 
-The system should handle the situation where a product is out of stock.
+Attempting to add or purchase a product where the available inventory count is zero or insufficient.
 
-**Handling Rule:** Notify the customer that the product is out of stock and provide alternative options.
+**Handling Rule:** The system must prevent the item from being added to the cart or proceeding to checkout. The user must be displayed an immediate, actionable alert, and the inventory check must be performed against the real-time stock level (DE-001).
+
+### EX-002 — Payment Failure
+
+The payment gateway rejects the transaction due to insufficient funds, invalid card details, or system error.
+
+**Handling Rule:** The system must halt the order placement process. The user must be presented with a clear error message and given options to retry the payment or select an alternative payment method. No inventory should be reserved or decremented until successful payment confirmation.
+
+### EX-003 — Invalid Shipping Details
+
+The provided shipping address fails validation (e.g., invalid zip code, missing required fields).
+
+**Handling Rule:** The system must prevent progression to the payment step. The user must be prompted to correct the specific invalid fields, and validation must be performed against a reliable address service.
 
 
 ---
 
 ## 6. Assumptions
 
-- Users access the system through a web browser.
+- The payment gateway integration is mocked but adheres to standard API patterns (e.g., requiring idempotency keys).
+- Inventory data is centralized and accessible for real-time checks.
+- The customer is authenticated via a session or token.
 
 ---
 
 ## 7. Constraints
 
-- The system must run locally during development.
+- All monetary calculations must use minor currency units (e.g., cents) to prevent floating-point errors.
+- Order status transitions must follow a defined state machine (e.g., Pending -> Paid -> Shipped -> Delivered).
+- Admin actions (inventory updates, customer status changes) must be logged in an audit trail.
 
 ---
 
@@ -173,7 +296,7 @@ The system should handle the situation where a product is out of stock.
 ### CHUNK-0010
 
 **Source:** ecommerce_domain_knowledge.txt  
-**Score:** 0.6339499950408936
+**Score:** 0.6591380834579468
 
 tices
 
@@ -200,7 +323,7 @@ tices
 ### CHUNK-0164
 
 **Source:** ecommerce_domain_knowledge.txt  
-**Score:** 0.6320551633834839
+**Score:** 0.6250460147857666
 
 business value.
 * Treating trends as replacements for core reliability.
@@ -237,7 +360,7 @@ business value.
 ### CHUNK-0168
 
 **Source:** ecommerce_domain_knowledge.txt  
-**Score:** 0.6059932708740234
+**Score:** 0.6154781579971313
 
 Appendix E — Common Agent Instructions for Automated System Builders
 
@@ -257,10 +380,26 @@ An autonomous software engineering agent building e-commerce systems should foll
 11. Always use minor currency units for money.
 12. Always include currency in monetary reco
 
+### CHUNK-0004
+
+**Source:** ecommerce_domain_knowledge.txt  
+**Score:** 0.6117256879806519
+
+|
+| Checkout           | Collects shipping, billing, payment, and confirmation details               |
+| Payment Processing | Handles card payments, wallets, bank transfers, refunds, disputes           |
+| Order Management   | Tracks the full order lifecycle                                             |
+| Inventory          | Tracks stock availability across warehouses and sales channels              |
+| Fulfillment        | Handles picking, packing, shipping, delivery, and returns                   |
+| Customer Accounts  | Stores profiles, addresses, preferences, order history                      |
+| Admin Panel        | Allows business users to manage catalog, orders, users, promotions          |
+| Analytics          | Tracks revenue, conversion, retention, customer behavior                    |
+| Security           | Protects data, payments, authentication, A
+
 ### CHUNK-0011
 
 **Source:** ecommerce_domain_knowledge.txt  
-**Score:** 0.5876213312149048
+**Score:** 0.5866187810897827
 
 ues.
 * Storing payment card data unnecessarily.
@@ -288,43 +427,10 @@ E-commerce systems vary based on the relationship between buyers and sellers.
 | C2C                   | Consumers sell to consumers                       |
 | D2C
 
-### CHUNK-0054
-
-**Source:** ecommerce_domain_knowledge.txt  
-**Score:** 0.5684393644332886
-
-kout pages fast and minimal.
-* Provide guest checkout.
-* Avoid unnecessary account creation before purchase.
-* Validate shipping and billing data server-side.
-* Record payment provider references.
-* Use webhooks to confirm payment states.
-
-## Common Mistakes
-
-* Trusting client-side totals.
-* Creating orders before payment strategy is clear.
-* Not handling payment webhooks.
-* Not supporting retry after failed payment.
-* Not validating inventory at final step.
-* Having too many checkout form fields.
-
----
-
-# 4.5 Order Management Module
-
-## Definition / Explanation
-
-The order management module manages confirmed purchases from creation through payment, fulfillment, shipment, delivery, cancellation, return, refund, and completion. Orders are legally and financially significant records and must preserve the state of the transaction at the time of purchase.
-
-## Key Components
-
-| Component
-
 ### CHUNK-0060
 
 **Source:** ecommerce_domain_knowledge.txt  
-**Score:** 0.5623995661735535
+**Score:** 0.5775415897369385
 
 es
 

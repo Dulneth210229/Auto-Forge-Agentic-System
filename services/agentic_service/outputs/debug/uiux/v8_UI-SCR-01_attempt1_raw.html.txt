@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AutoForge E-commerce Demo</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#3b82f6',
+            secondary: '#10b981',
+            accent: '#8b5cf6',
+            dark: '#1f2937',
+            light: '#f9fafb'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f9fafb;
+    }
+    .product-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+    .category-chip.active {
+      background-color: #3b82f6;
+      color: white;
+    }
+    .badge {
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+    .status-badge {
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+    .status-pending {
+      background-color: #fef3c7;
+      color: #92400e;
+    }
+    .status-confirmed {
+      background-color: #d1fae5;
+      color: #047857;
+    }
+    .status-shipped {
+      background-color: #dbeafe;
+      color: #1d4ed8;
+    }
+    .status-delivered {
+      background-color: #e0f2fe;
+      color: #0369a1;
+    }
+    .status-cancelled {
+      background-color: #fee2e2;
+      color: #991b1b;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+  <!-- Screen ID: UI-SCR-01 | FR IDs: FR-001 -->
+  <div class="min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="bg-white shadow-sm">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16 items-center">
+          <div class="flex items-center">
+            <div class="flex-shrink-0 flex items-center">
+              <i class="fas fa-cube text-primary text-2xl mr-2"></i>
+              <span class="text-xl font-bold text-gray-900">AutoForge</span>
+            </div>
+            <nav class="ml-10 flex space-x-8">
+              <a href="#" class="text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 border-primary text-sm font-medium">Products</a>
+              <a href="#" class="text-gray-500 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 border-transparent hover:border-gray-300 text-sm font-medium">Categories</a>
+              <a href="#" class="text-gray-500 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 border-transparent hover:border-gray-300 text-sm font-medium">Deals</a>
+              <a href="#" class="text-gray-500 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 border-transparent hover:border-gray-300 text-sm font-medium">About</a>
+            </nav>
+          </div>
+          <div class="flex items-center">
+            <div class="flex items-center space-x-4">
+              <button class="p-2 rounded-full text-gray-500 hover:text-gray-700 focus:outline-none">
+                <i class="fas fa-search"></i>
+              </button>
+              <button class="p-2 rounded-full text-gray-500 hover:text-gray-700 focus:outline-none">
+                <i class="fas fa-heart"></i>
+              </button>
+              <button class="p-2 rounded-full text-gray-500 hover:text-gray-700 focus:outline-none relative">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">3</span>
+              </button>
+              <div class="ml-3 relative">
+                <div class="flex items-center">
+                  <div class="text-sm font-medium text-gray-700">John Doe</div>
+                  <i class="fas fa-chevron-down ml-1 text-gray-500"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Hero Section -->
+    <div class="bg-gradient-to-r from-primary to-accent py-12">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+          <h1 class="text-4xl font-extrabold text-white tracking-tight sm:text-5xl md:text-6xl">
+            <span class="block">Discover Amazing</span>
+            <span class="block text-white mt-2">Products for Your Needs</span>
+          </h1>
+          <p class="mt-3 max-w-md mx-auto text-base text-blue-100 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
+            Browse our curated collection of high-quality products designed to enhance your daily life.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="flex-grow">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Search and Filters -->
+        <div class="mb-8">
+          <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div class="flex-1">
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <i class="fas fa-search text-gray-400"></i>
+                </div>
+                <input type="text" class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary" placeholder="Search products...">
+              </div>
+            </div>
+            <div class="flex space-x-2">
+              <button class="px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary">
+                <i class="fas fa-filter mr-2"></i> Filters
+              </button>
+              <button class="px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary">
+                <i class="fas fa-sort mr-2"></i> Sort
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Category Chips -->
+        <div class="mb-8">
+          <div class="flex flex-wrap gap-2">
+            <button class="category-chip px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-200 transition">All Products</button>
+            <button class="category-chip px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-200 transition">Electronics</button>
+            <button class="category-chip px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-200 transition">Home & Kitchen</button>
+            <button class="category-chip px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-200 transition">Fashion</button>
+            <button class="category-chip px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-200 transition">Beauty</button>
+            <button class="category-chip px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-200 transition">Sports</button>
+            <button class="category-chip px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-200 transition">Books</button>
+          </div>
+        </div>
+
+        <!-- Featured Products -->
+        <div class="mb-12">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-gray-900">Featured Products</h2>
+            <a href="#" class="text-primary hover:text-blue-800 text-sm font-medium">View All</a>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Product Card 1 -->
+            <div class="product-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300 ease-in-out">
+              <div class="bg-gray-200 border-2 border-dashed rounded-xl w-full h-48 flex items-center justify-center">
+                <i class="fas fa-laptop text-gray-400 text-4xl"></i>
+              </div>
+              <div class="p-4">
+                <div class="flex justify-between items-start">
+                  <h3 class="text-lg font-semibold text-gray-900">Premium Laptop</h3>
+                  <span class="badge bg-secondary text-white text-xs">New</span>
+                </div>
+                <p class="text-gray-600 text-sm mt-1">High-performance laptop for professionals</p>
+                <div class="mt-3 flex items-center">
+                  <div class="flex items-center">
+                    <i class="fas fa-star text-yellow-400"></i>
+                    <span class="text-sm font-medium text-gray-700 ml-1">4.8</span>
+                  </div>
+                  <span class="text-gray-500 text-sm ml-2">(128)</span>
+                </div>
+                <div class="mt-3 flex justify-between items-center">
+                  <span class="text-lg font-bold text-gray-900">$1,299.99</span>
+                  <span class="text-sm text-gray-500 line-through">$1,499.99</span>
+                </div>
+                <div class="mt-4 flex space-x-2">
+                  <button class="flex-1 bg-primary hover:bg-blue-700 text-white py-2 px-4 rounded-lg text-sm font-medium transition">Add to Cart</button>
+                  <button class="p-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                    <i class="fas fa-heart text-gray-500"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Product Card 2 -->
+            <div class="product-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300 ease-in-out">
+              <div class="bg-gray-200 border-2 border-dashed rounded-xl w-full h-48 flex items-center justify-center">
+                <i class="fas fa-headphones text-gray-400 text-4xl"></i>
+              </div>
+              <div class="p-4">
+                <div class="flex justify-between items-start">
+                  <h3 class="text-lg font-semibold text-gray-900">Wireless Headphones</h3>
+                  <span class="badge bg-accent text-white text-xs">Sale</span>
+                </div>
+                <p class="text-gray-600 text-sm mt-1">Noise-cancelling wireless headphones</p>
+                <div class="mt-3 flex items-center">
+                  <div class="flex items-center">
+                    <i class="fas fa-star text-yellow-400"></i>
+                    <span class="text-sm font-medium text-gray-700 ml-1">4.6</span>
+                  </div>
+                  <span class="text-gray-500 text-sm ml-2">(96)</span>
+                </div>
+                <div class="mt-3 flex justify-between items-center">
+                  <span class="text-lg font-bold text-gray-900">$199.99</span>
+                  <span class="text-sm text-gray-500 line-through">$249.99</span>
+                </div>
+                <div class="mt-4 flex space-x-2">
+                  <button class="flex-1 bg-primary hover:bg-blue-700 text-white py-2 px-4 rounded-lg text-sm font-medium transition">Add to Cart</button>
+                  <button class="p-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                    <i class="fas fa-heart text-gray-500"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Product Card 3 -->
+            <div class="product-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300 ease-in-out">
+              <div class="bg-gray-200 border-2 border-dashed rounded-xl w-full h-48 flex items-center justify-center">
+                <i class="fas fa-mobile-alt text-gray-400 text-4xl"></i>
+              </div>
+              <div class="p-4">
+                <div class="flex justify-between items-start">
+                  <h3 class="text-lg font-semibold text-gray-900">Smartphone Pro</h3>
+                  <span class="badge bg-primary text-white text-xs">Hot</span>
+                </div>
+                <p class="text-gray-600 text-sm mt-1">Latest smartphone with advanced camera</p>
+                <div class="mt-3 flex items-center">
+                  <div class="flex items-center">
+                    <i class="fas fa-star text-yellow-400"></i>
+                    <span class="text-sm font-medium text-gray-700 ml-1">4.9</span>
+                  </div>
+                  <span class="text-gray-500 text-sm ml-2">(204)</span>
+                </div>
+                <div class="mt-3 flex justify-between items-center">
+                  <span class="text-lg font-bold text-gray-900">$899.99</span>
+                  <span class="text-sm text-gray-500 line-through">$999.99</span>
+                </div>
+                <div class="mt-4 flex space-x-2">
+                  <button class="flex-1 bg-primary hover:bg-blue-700 text-white py-2 px-4 rounded-lg text-sm font-medium transition">Add to Cart</button>
+                  <button class="p-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                    <i class="fas fa-heart text-gray-500"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Product Card 4 -->
+            <div class="product-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300 ease-in-out">
+              <div class="bg-gray-200 border-2 border-dashed rounded-xl w-full h-48 flex items-center justify-center">
+                <i class="fas fa-watch text-gray-400 text-4xl"></i>
+              </div>
+              <div class="p-4">
+                <div class="flex justify-between items-start">
+                  <h3 class="text-lg font-semibold text-gray-900">Smart Watch</h3>
+                  <span class="badge bg-secondary text-white text-xs">New</span>
+                </div>
+                <p class="text-gray-600 text-sm mt-1">Fitness tracker with heart rate monitor</p>
+                <div class="mt-3 flex items-center">
+                  <div class="flex items-center">
+                    <i class="fas fa-star text-yellow-400"></i>
+                    <span class="text-sm font-medium text-gray-700 ml-1">4.7</span>
+                  </div>
+                  <span class="text-gray-500 text-sm ml-2">(156)</span>
+                </div>
+                <div class="mt-3 flex justify-between items-center">
+                  <span class="text-lg font-bold text-gray-900">$249.99</span>
+                  <span class="text-sm text-gray-500 line-through">$299.99</span>
+                </div>
+                <div class="mt-4 flex space-x-2">
+                  <button class="flex-1 bg-primary hover:bg-blue-700 text-white py-2 px-4 rounded-lg text-sm font-medium transition">Add to Cart</button>
+                  <button class="p-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                    <i class="fas fa-heart text-gray-500"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product Grid -->
+        <div class="mb-12">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-gray-900">All Products</h2>
+            <div class="text-sm text-gray-500">
+              Showing 1-12 of 48 products
+            </div>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <!-- Product Card 5 -->
+            <div class="product-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300 ease-in-out">
+              <div class="bg-gray-200 border-2 border-dashed rounded-xl w-full h-40 flex items-center justify-center">
+                <i class="fas fa-tablet-alt text-gray-400 text-3xl"></i>
+              </div>
+              <div class="p-4">
+                <div class="flex justify-between items-start">
+                  <h3 class="text-lg font-semibold text-gray-900">Tablet 10"</h3>
+                  <span class="badge bg-gray-100 text-gray-800 text-xs">In Stock</span>
+                </div>
+                <p class="text-gray-600 text-sm mt-1">10-inch tablet with high-resolution display</p>
+                <div class="mt-3 flex items-center">
+                  <div class="flex items-center">
+                    <i class="fas fa-star text-yellow-400"></i>
+                    <span class="text-sm font-medium text-gray-700 ml-1">4.5</span>
+                  </div>
+                  <span class="text-gray-500 text-sm ml-2">(87)</span>
+                </div>
+                <div class="mt-3 flex justify-between items-center">
+                  <span class="text-lg font-bold text-gray-900">$399.99</span>
+                </div>
+                <div class="mt-4 flex space-x-2">
+                  <button class="flex-1 bg-primary hover:bg-blue-700 text-white py-2 px-4 rounded-lg text-sm font-medium transition">Add to Cart</button>
+                  <button class="p-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                    <i class="fas fa-heart text-gray-500"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Product Card 6 -->
+            <div class="product-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300 ease-in-out">
+              <div class="bg-gray-200 border-2 border-dashed rounded-xl w-full h-40 flex items-center justify-center">
+                <i class="fas fa-camera text-gray-400 text-3xl"></i>
+              </div>
+              <div class="p-4">
+                <div class="flex justify-between items-start">
+                  <h3 class="text-lg font-semibold text-gray-900">Digital Camera</h3>
+                  <span class="badge bg-gray-100 text-gray-800 text-xs">In Stock</span>
+                </div>
+                <p class="text-gray-600 text-sm mt-1">24MP digital camera with 4K video</p>
+                <div class="mt-3 flex items-center">
+                  <div class="flex items-center">
+                    <i class="fas fa-star text-yellow-400"></i>
+                    <span class="text-sm font-medium text-gray-700 ml-1">4.4</span>
+                  </div>
+                  <span class="text-gray-500 text-sm ml-2">(64)</span>
+                </div>
+                <div class="mt-3 flex justify-between items-center">
+                  <span class="text-lg font-bold text-gray-900">$599.99</span>
+                </div>
+                <div class="mt-4 flex space-x-2">
+                  <button class="flex-1 bg-primary hover:bg-blue-700 text-white py-2 px-4 rounded-lg text-sm font-medium transition">Add to Cart</button>
+                  <button class="p-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                    <i class="fas fa-heart text-gray-500"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Product Card 7 -->
+            <div class="product-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300 ease-in-out">
+              <div class="bg-gray-200 border-2 border-dashed rounded-xl w-full h-40 flex items-center justify-center">
+                <i class="fas fa-tshirt text-gray-400 text-3xl"></i>
+              </div>
+              <div class="p-4">
+                <div class="flex justify-between items-start">
+                  <h3 class="text-lg font-semibold text-gray-900">Cotton T-Shirt</h3>
+                  <span class="badge bg-gray-100 text-gray-800 text-xs">In Stock</span>
+                </div>
+                <p class="text-gray-600 text-sm mt-1">Premium quality cotton t-shirt</p>
+                <div class="mt-3 flex items-center">
+                  <div class="flex items-center">
+                    <i class="fas fa-star text-yellow-400"></i>
+                    <span class="text-sm font-medium text-gray-700 ml-1">4.3</span>
+                  </div>
+                  <span class="text-gray-500 text-sm ml-2">(42)</span>
+                </div>
+                <div class="mt-3 flex justify-between items-center">
+                  <span class="text-lg font-bold text-gray-900">$29.99</span>
+                </div>
+                <div class="mt-4 flex space-x-2">
+                  <button class="flex-1 bg-primary hover:bg-blue-700 text-white py-2 px-4 rounded-lg text-sm font-medium transition">Add to Cart</button>
+                  <button class="p-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                    <i class="fas fa-heart text-gray-500"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Product Card 8 -->
+            <div class="product-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300 ease-in-out">
+              <div class="bg-gray-200 border-2 border-dashed rounded-xl w-full h-40 flex items-center justify-center">
+                <i class="fas fa-blender text-gray-400 text-3xl"></i>
+              </div>
+              <div class="p-4">
+                <div class="flex justify-between items-start">
+                  <h3 class="text-lg font-semibold text-gray-900">Blender</h3>
+                  <span class="badge bg-gray-100 text-gray-800 text-xs">In Stock</span>
+                </div>
+                <p class="text-gray-600 text-sm mt-1">High-powered kitchen blender</p>
+                <div class="mt-3 flex items-center">
+                  <div class="flex items-center">
+                    <i class="fas fa-star text-yellow-400"></i>
+                    <span class="text-sm font-medium text-gray-700 ml-1">4.2</span>
+                  </div>
+                  <span class="text-gray-500 text-sm ml-2">(31)</span>
+                </div>
+                <div class="mt-3 flex justify-between items-center">
+                  <span class="text-lg font-bold text-gray-900">$79.99</span>
+                </div>
+                <div class="mt-4 flex space-x-2">
+                  <button class="flex-1 bg-primary hover:bg-blue-700 text-white py-2 px-4 rounded-lg text-sm font-medium transition">Add to Cart</button>
+                  <button class="p-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                    <i class="fas fa-heart text-gray-500"></i>

@@ -1,0 +1,65 @@
+{
+  "version": "v1",
+  "screens": [
+    {
+      "id": "UI-SCR-01",
+      "name": "Product Catalog",
+      "file_name": "UI-SCR-01_product_catalog.html",
+      "description": "Displays browsable list of products with filtering and sorting options.",
+      "route": "/products",
+      "related_requirements": [
+        "FR-001"
+      ]
+    },
+    {
+      "id": "UI-SCR-02",
+      "name": "Product Details Page",
+      "file_name": "UI-SCR-02_product_details.html",
+      "description": "Comprehensive view of a single product, including variations, images, and stock status.",
+      "route": "/products/{product_id}",
+      "related_requirements": [
+        "FR-002"
+      ]
+    },
+    {
+      "id": "UI-SCR-03",
+      "name": "Shopping Cart View",
+      "file_name": "UI-SCR-03_shopping_cart.html",
+      "description": "Allows users to review, modify quantities, and remove items from the cart.",
+      "route": "/cart",
+      "related_requirements": [
+        "FR-003"
+      ]
+    },
+    {
+      "id": "UI-SCR-04",
+      "name": "Checkout: Shipping & Billing",
+      "file_name": "UI-SCR-04_checkout_shipping.html",
+      "description": "Collects and validates shipping and billing address information.",
+      "route": "/checkout/shipping",
+      "related_requirements": [
+        "FR-004"
+      ]
+    },
+    {
+      "id": "UI-SCR-05",
+      "name": "Checkout: Review & Payment",
+      "file_name": "UI-SCR-05_checkout_payment.html",
+      "description": "Displays final order summary, calculates totals, and collects payment details.",
+      "route": "/checkout/payment",
+      "related_requirements": [
+        "FR-004"
+      ]
+    },
+    {
+      "id": "UI-SCR-06",
+      "name": "Order Confirmation",
+      "file_name": "UI-SCR-06_order_confirmation.html",
+      "description": "Displays success message and unique Order ID after successful payment.",
+      "route": "/order/confirmation",
+      "related_requirements": [
+        "FR-005"
+      ]
+    }
+  ]
+}

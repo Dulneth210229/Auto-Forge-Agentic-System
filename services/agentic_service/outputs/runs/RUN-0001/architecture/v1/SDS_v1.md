@@ -1,4 +1,4 @@
-# Software Design Specification: AutoForge Shop
+# Software Design Specification: AutoForge E-commerce Demo
 
 **Version:** v1  
 **Architecture Style:** modular_monolith
@@ -27,13 +27,13 @@ The system follows a modular monolith architecture for the MVP. The application 
 
 Handles user registration, login, authentication, and role-based access.
 
-**Related Requirements:** FR-001
+**Related Requirements:** FR-003, FR-004, FR-007, FR-008
 
 ### MOD-002 — Catalog Module
 
 Handles product browsing, searching, filtering, and product details.
 
-**Related Requirements:** FR-001, FR-002, FR-003
+**Related Requirements:** FR-001, FR-002, FR-007
 
 ### MOD-003 — Cart Module
 
@@ -45,19 +45,19 @@ Handles cart creation, adding items, updating quantities, and removing items.
 
 Validates cart, calculates totals, applies business rules, and prepares order creation.
 
-**Related Requirements:** FR-004, FR-005
+**Related Requirements:** FR-004
 
 ### MOD-005 — Order Module
 
 Handles order placement, order status, and order history.
 
-**Related Requirements:** FR-004, FR-005, FR-006
+**Related Requirements:** FR-005, FR-006
 
 ### MOD-006 — Admin Module
 
 Handles basic product management for administrators.
 
-**Related Requirements:** FR-001
+**Related Requirements:** FR-007, FR-008
 
 
 ---
@@ -72,7 +72,7 @@ Creates a new customer account.
 
 **Request Schema:** RegisterRequest  
 **Response Schema:** AuthResponse  
-**Related Requirements:** FR-001
+**Related Requirements:** FR-003, FR-004, FR-007, FR-008
 
 ### API-002 — POST /auth/login
 
@@ -82,7 +82,7 @@ Authenticates a user and returns an access token.
 
 **Request Schema:** LoginRequest  
 **Response Schema:** AuthResponse  
-**Related Requirements:** FR-001
+**Related Requirements:** FR-003, FR-004, FR-007, FR-008
 
 ### API-003 — GET /products
 
@@ -92,7 +92,7 @@ Returns available products for catalog browsing.
 
 **Request Schema:** None  
 **Response Schema:** ProductListResponse  
-**Related Requirements:** FR-001, FR-002, FR-003
+**Related Requirements:** FR-001, FR-002, FR-007
 
 ### API-004 — GET /products/{product_id}
 
@@ -102,7 +102,7 @@ Returns detailed information for a selected product.
 
 **Request Schema:** None  
 **Response Schema:** ProductResponse  
-**Related Requirements:** FR-001, FR-002, FR-003
+**Related Requirements:** FR-001, FR-002, FR-007
 
 ### API-005 — GET /cart
 
@@ -132,7 +132,7 @@ Updates item quantity in the cart.
 
 **Request Schema:** UpdateCartItemRequest  
 **Response Schema:** CartResponse  
-**Related Requirements:** FR-003
+**Related Requirements:** FR-003, FR-007, FR-008
 
 ### API-008 — DELETE /cart/items/{item_id}
 
@@ -162,7 +162,7 @@ Creates an order from checkout data.
 
 **Request Schema:** CreateOrderRequest  
 **Response Schema:** OrderResponse  
-**Related Requirements:** FR-004, FR-005, FR-006
+**Related Requirements:** FR-005, FR-006
 
 ### API-011 — GET /orders
 
@@ -172,7 +172,7 @@ Returns order history for the authenticated customer.
 
 **Request Schema:** None  
 **Response Schema:** OrderListResponse  
-**Related Requirements:** FR-005, FR-006
+**Related Requirements:** FR-006
 
 ### API-012 — POST /admin/products
 
@@ -182,7 +182,7 @@ Allows admin to create a product.
 
 **Request Schema:** ProductCreateRequest  
 **Response Schema:** ProductResponse  
-**Related Requirements:** FR-001
+**Related Requirements:** FR-007, FR-008
 
 
 ---

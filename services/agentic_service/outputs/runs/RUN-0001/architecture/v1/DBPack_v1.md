@@ -1,4 +1,4 @@
-# Database Design Pack: AutoForge Shop
+# Database Design Pack: AutoForge E-commerce Demo
 
 **Version:** v1  
 **Database Type:** relational

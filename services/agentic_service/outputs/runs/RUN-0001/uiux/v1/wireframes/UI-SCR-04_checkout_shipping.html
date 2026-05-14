@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout: Shipping & Billing | AutoForge E-commerce Demo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for better visual separation and depth */
+        .card-shadow {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        .input-focus:focus {
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 1px #4f46e5;
+            outline: none;
+        }
+        /* Custom scrollbar for aesthetic purposes */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #d1d5db;
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background-color: #f1f1f1;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans antialiased">
+
+    <div class="max-w-7xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
+
+        <!-- Header/Navigation -->
+        <header class="bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+                <div class="text-2xl font-bold text-indigo-600">
+                    AutoForge <span class="text-gray-800">E-commerce</span>
+                </div>
+                <nav class="hidden md:flex space-x-8 text-sm font-medium">
+                    <a href="#" class="text-gray-600 hover:text-indigo-600 transition duration-150">Catalog</a>
+                    <a href="#" class="text-gray-600 hover:text-indigo-600 transition duration-150">Account</a>
+                    <a href="#" class="text-gray-600 hover:text-indigo-600 transition duration-150">Help</a>
+                </nav>
+                <div class="flex items-center space-x-4">
+                    <button class="text-gray-600 hover:text-indigo-600 transition duration-150">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4z"></path></svg>
+                    </button>
+                    <button class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 transition duration-150 shadow-md">
+                        Sign Out
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Checkout Content Area -->
+        <div class="bg-white border border-gray-200 rounded-xl shadow-lg p-8 lg:p-10">
+            
+            <!-- Page Title and Breadcrumbs -->
+            <div class="mb-8 border-b pb-4">
+                <h1 class="text-3xl font-extrabold text-gray-900">Checkout</h1>
+                <p class="text-xl text-indigo-600 font-semibold mt-1">Shipping & Billing Information</p>
+                <p class="text-sm text-gray-500 mt-2">
+                    <span class="font-medium">Step 1 of 3:</span> Shipping Address & Method (UI-SCR-04 | FR-004)
+                </p>
+            </div>
+
+            <!-- Main Grid Layout: Forms (Left) | Summary (Right) -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+
+                <!-- LEFT COLUMN: Forms and Inputs (2/3 width) -->
+                <div class="lg:col-span-2 space-y-10">
+
+                    <!-- 1. Shipping Address Section -->
+                    <section id="shipping-address" class="p-6 border border-indigo-200 bg-indigo-50 rounded-xl card-shadow">
+                        <h2 class="text-2xl font-bold text-indigo-800 mb-4 flex items-center">
+                            <span class="text-3xl mr-3">🏠</span> Shipping Address
+                        </h2>
+                        <p class="text-gray-600 mb-6">
+                            Please enter the address where you would like your order delivered. This information is required for shipping calculation (AC-010).
+                        </p>
+
+                        <form id="shipping-form" class="space-y-6">
+                            <!-- Row 1: Full Name & Contact -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="full_name" class="block text-sm font-medium text-gray-700 mb-1">Full Name <span class="text-red-500">*</span></label>
+                                    <input type="text" id="full_name" name="full_name" required class="w-full p-3 border border-gray-300 rounded-lg input-focus transition duration-150" placeholder="John Doe">
+                                </div>
+                                <div>
+                                    <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Phone Number <span class="text-red-500">*</span></label>
+                                    <input type="tel" id="phone" name="phone" required class="w-full p-3 border border-gray-300 rounded-lg input-focus transition duration-150" placeholder="(555) 123-4567">
+                                </div>
+                            </div>
+
+                            <!-- Row 2: Address Lines -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="line1" class="block text-sm font-medium text-gray-700 mb-1">Address Line 1 <span class="text-red-500">*</span></label>
+                                    <input type="text" id="line1" name="line1" required class="w-full p-3 border border-gray-300 rounded-lg input-focus transition duration-150" placeholder="123 Main Street">
+                                </div>
+                                <div>
+                                    <label for="line2" class="block text-sm font-medium text-gray-700 mb-1">Address Line 2 (Apt, Suite) <span class="text-red-500">*</span></label>
+                                    <input type="text" id="line2" name="line2" required class="w-full p-3 border border-gray-300 rounded-lg input-focus transition duration-150" placeholder="Apt 4B">
+                                </div>
+                            </div>
+
+                            <!-- Row 3: City, State, Zip -->
+                            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                                <div>
+                                    <label for="city" class="block text-sm font-medium text-gray-700 mb-1">City <span class="text-red-500">*</span></label>
+                                    <input type="text" id="city" name="city" required class="w-full p-3 border border-gray-300 rounded-lg input-focus transition duration-150" placeholder="Springfield">
+                                </div>
+                                <div>
+                                    <label for="state" class="block text-sm font-medium text-gray-700 mb-1">State/Province <span class="text-red-500">*</span></label>
+                                    <select id="state" name="state" required class="w-full p-3 border border-gray-300 rounded-lg input-focus transition duration-150 bg-white">
+                                        <option value="">Select State</option>
+                                        <option value="IL">Illinois</option>
+                                        <option value="NY">New York</option>
+                                        <option value="CA">California</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="zip" class="block text-sm font-medium text-gray-700 mb-1">Zip/Postal Code <span class="text-red-500">*</span></label>
+                                    <input type="text" id="zip" name="zip" required class="w-full p-3 border border-gray-300 rounded-lg input-focus transition duration-150" placeholder="12345">
+                                </div>
+                                <div>
+                                    <label for="country" class="block text-sm font-medium text-gray-700 mb-1">Country <span class="text-red-500">*</span></label>
+                                    <select id="country" name="country" required class="w-full p-3 border border-gray-300 rounded-lg input-focus transition duration-150 bg-white">
+                                        <option value="USA">United States</option>
+                                        <option value="CAN">Canada</option>
+                                        <option value="MEX">Mexico</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </form>
+                    </section>
+
+                    <!-- 2. Billing Address & Shipping Method Section -->
+                    <div class="space-y-8">
+                        
+                        <!-- Billing Address -->
+                        <section id="billing-address" class="p-6 border border-gray-200 rounded-xl card-shadow bg-white">
+                            <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+                                <span class="text-3xl mr-3">💳</span> Billing Address
+                            </h2>
+                            <p class="text-gray-600 mb-6">
+                                Is your billing address the same as your shipping address? (AC-010)
+                            </p>
+
+                            <div class="flex items-center space-x-6">
+                                <input type="checkbox" id="same_address" checked class="h-5 w-5 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500 cursor-pointer">
+                                <label for="same_address" class="text-lg font-medium text-gray-700 cursor-pointer">
+                                    Yes, my billing address is the same as my shipping address.
+                                </label>
+                            </div>
+
+                            <div id="billing-form-details" class="mt-6 p-4 border-t border-dashed border-gray-200 hidden">
+                                <p class="text-sm text-gray-500">
+                                    If different, please update the details below.
+                                </p>
+                                <!-- Placeholder for additional billing fields if checkbox is unchecked -->
+                            </div>
+                        </section>
+
+                        <!-- Shipping Method Selection -->
+                        <section id="shipping-methods" class="p-6 border border-gray-200 rounded-xl card-shadow bg-white">
+                            <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                                <span class="text-3xl mr-3">🚚</span> Shipping Method
+                            </h2>
+                            <p class="text-gray-600 mb-8">
+                                Select the preferred shipping method. Costs are calculated based on the destination (AC-011).
+                            </p>
+
+                            <div class="space-y-4">
+                                <!-- Option 1: Standard -->
+                                <label class="flex items-start p-4 border border-gray-200 rounded-lg cursor-pointer hover:bg-indigo-50 transition duration-150 bg-white">
+                                    <input type="radio" name="shipping_method" value="standard" class="h-5 w-5 text-indigo-600 border-gray-300 mt-1 flex-shrink-0" checked>
+                                    <div class="ml-4 flex-grow">
+                                        <p class="text-lg font-semibold text-gray-900">Standard Ground Shipping</p>
+                                        <p class="text-sm text-gray-500">Arrives in 5-7 business days. Economical option for non-urgent items.</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="text-xl font-bold text-indigo-600">$7.99</span>
+                                    </div>
+                                </label>
+
+                                <!-- Option 2: Express -->
+                                <label class="flex items-start p-4 border border-gray-200 rounded-lg cursor-pointer hover:bg-indigo-50 transition duration-150 bg-white">
+                                    <input type="radio" name="shipping_method" value="express" class="h-5 w-5 text-indigo-600 border-gray-300 mt-1 flex-shrink-0">
+                                    <div class="ml-4 flex-grow">
+                                        <p class="text-lg font-semibold text-gray-900">Express 2-Day Shipping</p>
+                                        <p class="text-sm text-gray-500">Guaranteed delivery within 2 business days. Ideal for time-sensitive purchases.</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="text-xl font-bold text-indigo-600">$19.99</span>
+                                    </div>
+                                </label>
+
+                                <!-- Option 3: Overnight -->
+                                <label class="flex items-start p-4 border border-gray-200 rounded-lg cursor-pointer hover:bg-indigo-50 transition duration-150 bg-white">
+                                    <input type="radio" name="shipping_method" value="overnight" class="h-5 w-5 text-indigo-600 border-gray-300 mt-1 flex-shrink-0">
+                                    <div class="ml-4 flex-grow">
+                                        <p class="text-lg font-semibold text-gray-900">Overnight Priority</p>
+                                        <p class="text-sm text-gray-500">Delivered by the next business day. Requires careful packaging.</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="text-xl font-bold text-indigo-600">$34.99</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+
+                <!-- RIGHT COLUMN: Order Summary (1/3 width) -->
+                <div class="lg:col-span-1 sticky top-24 h-fit">
+                    <div class="bg-gray-50 p-6 rounded-xl card-shadow border border-gray-200">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-3">
+                            Order Summary
+                        </h2>
+
+                        <!-- Items List -->
+                        <div class="space-y-4 mb-8 max-h-64 overflow-y-auto custom-scrollbar pr-2">
+                            <!-- Item 1 -->
+                            <div class="flex items-start space-x-4 border-b pb-4 last:border-b-0">
+                                <div class="w-16 h-16 flex-shrink-0 bg-gray-200 rounded-md flex items-center justify-center text-xs text-gray-500">
+                                    [Image]
+                                </div>
+                                <div class="flex-grow">
+                                    <p class="font-semibold text-gray-900">Ergonomic Mechanical Keyboard</p>
+                                    <p class="text-sm text-gray-500">Color: Midnight Black | SKU: KEY-MB-001</p>
+                                    <div class="flex items-center mt-1 text-sm text-green-600">
+                                        <span class="mr-2">✅ In Stock</span>
+                                        <span class="text-xs text-gray-400">Qty: 1</span>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-lg font-bold text-indigo-700">$129.99</p>
+                                </div>
+                            </div>
+                            <!-- Item 2 -->
+                            <div class="flex items-start space-x-4 border-b pb-4 last:border-b-0">
+                                <div class="w-16 h-16 flex-shrink-0 bg-gray-200 rounded-md flex items-center justify-center text-xs text-gray-500">
+                                    [Image]
+                                </div>
+                                <div class="flex-grow">
+                                    <p class="font-semibold text-gray-900">Ultra HD Wireless Mouse</p>
+                                    <p class="text-sm text-gray-500">Black</p>
+                                </div>
+                                <div class="text-right">
+                                    <span class="font-semibold">$49.99</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Totals Summary -->
+                        <div class="mt-8 pt-6 border-t border-gray-200">
+                            <div class="flex justify-between py-2 text-gray-600">
+                                <span>Subtotal:</span>
+                                <span class="font-medium">$179.98</span>
+                            </div>
+                            <div class="flex justify-between py-2 text-gray-600">
+                                <span>Shipping Estimate:</span>
+                                <span class="font-medium">$15.00</span>
+                            </div>
+                            <div class="flex justify-between py-2 text-gray-600">
+                                <span>Taxes (Est.):</span>
+                                <span class="font-medium">$14.99</span>
+                            </div>
+                            <div class="flex justify-between py-3 text-xl font-bold text-gray-900 border-t pt-3">
+                                <span>Order Total:</span>
+                                <span class="text-2xl">$210.00</span>
+                            </div>
+                        </div>
+
+                        <!-- Payment Method -->
+                        <div class="mt-6 p-4 bg-indigo-50 border border-indigo-200 rounded-lg">
+                            <label class="block text-sm font-medium text-indigo-700 mb-2">Payment Method:</label>
+                            <div class="flex items-center space-x-3">
+                                <input type="radio" name="payment" checked class="form-radio h-4 w-4 text-indigo-600">
+                                <label for="card" class="text-indigo-700">Visa ending in **** 1234</label>
+                            </div>
+                        </div>
+
+                        <!-- CTA Button -->
+                        <button type="submit" class="w-full py-3 mt-6 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition duration-150 shadow-md hover:shadow-lg">
+                            Place Order ($210.00)
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

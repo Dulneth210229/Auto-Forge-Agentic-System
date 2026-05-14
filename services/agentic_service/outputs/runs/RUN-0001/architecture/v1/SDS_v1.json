@@ -1,5 +1,5 @@
 {
-  "project_name": "AutoForge Shop",
+  "project_name": "AutoForge E-commerce Demo",
   "version": "v1",
   "architecture_style": "modular_monolith",
   "overview": "The system follows a modular monolith architecture for the MVP. The application is deployed as one backend service, but internally separated into Identity, Catalog, Cart, Checkout, Order, and Admin modules.",
@@ -9,7 +9,10 @@
       "name": "Identity Module",
       "responsibility": "Handles user registration, login, authentication, and role-based access.",
       "related_requirements": [
-        "FR-001"
+        "FR-003",
+        "FR-004",
+        "FR-007",
+        "FR-008"
       ]
     },
     {
@@ -19,7 +22,7 @@
       "related_requirements": [
         "FR-001",
         "FR-002",
-        "FR-003"
+        "FR-007"
       ]
     },
     {
@@ -35,8 +38,7 @@
       "name": "Checkout Module",
       "responsibility": "Validates cart, calculates totals, applies business rules, and prepares order creation.",
       "related_requirements": [
-        "FR-004",
-        "FR-005"
+        "FR-004"
       ]
     },
     {
@@ -44,7 +46,6 @@
       "name": "Order Module",
       "responsibility": "Handles order placement, order status, and order history.",
       "related_requirements": [
-        "FR-004",
         "FR-005",
         "FR-006"
       ]
@@ -54,7 +55,8 @@
       "name": "Admin Module",
       "responsibility": "Handles basic product management for administrators.",
       "related_requirements": [
-        "FR-001"
+        "FR-007",
+        "FR-008"
       ]
     }
   ],
@@ -69,7 +71,10 @@
       "request_schema": "RegisterRequest",
       "response_schema": "AuthResponse",
       "related_requirements": [
-        "FR-001"
+        "FR-003",
+        "FR-004",
+        "FR-007",
+        "FR-008"
       ]
     },
     {
@@ -82,7 +87,10 @@
       "request_schema": "LoginRequest",
       "response_schema": "AuthResponse",
       "related_requirements": [
-        "FR-001"
+        "FR-003",
+        "FR-004",
+        "FR-007",
+        "FR-008"
       ]
     },
     {
@@ -97,7 +105,7 @@
       "related_requirements": [
         "FR-001",
         "FR-002",
-        "FR-003"
+        "FR-007"
       ]
     },
     {
@@ -112,7 +120,7 @@
       "related_requirements": [
         "FR-001",
         "FR-002",
-        "FR-003"
+        "FR-007"
       ]
     },
     {
@@ -151,7 +159,9 @@
       "request_schema": "UpdateCartItemRequest",
       "response_schema": "CartResponse",
       "related_requirements": [
-        "FR-003"
+        "FR-003",
+        "FR-007",
+        "FR-008"
       ]
     },
     {
@@ -190,7 +200,6 @@
       "request_schema": "CreateOrderRequest",
       "response_schema": "OrderResponse",
       "related_requirements": [
-        "FR-004",
         "FR-005",
         "FR-006"
       ]
@@ -205,7 +214,6 @@
       "request_schema": null,
       "response_schema": "OrderListResponse",
       "related_requirements": [
-        "FR-005",
         "FR-006"
       ]
     },
@@ -219,7 +227,8 @@
       "request_schema": "ProductCreateRequest",
       "response_schema": "ProductResponse",
       "related_requirements": [
-        "FR-001"
+        "FR-007",
+        "FR-008"
       ]
     }
   ],
